@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#534AB7" id="theme-color-meta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SR Tracker">
+<title>SR Tracker</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ac: #534AB7; --ac-light: #EEEDFE; --ac-dark: #3C3489;
+  --ac2: #AFA9EC; --ac4: #7F77DD;
+  --teal-50:#E1F5EE;--teal-400:#1D9E75;--teal-600:#0F6E56;--teal-800:#085041;
+  --green-50:#EAF3DE;--green-100:#C0DD97;--green-600:#3B6D11;--green-800:#27500A;
+  --amber-50:#FAEEDA;--amber-100:#FAC775;--amber-600:#854F0B;--amber-800:#633806;
+  --coral-50:#FAECE7;--coral-200:#F0997B;--coral-600:#993C1D;--coral-800:#712B13;
+  --bg:#F7F7F9;--surface:#FFFFFF;--text:#1A1A2E;
+  --ts:#6B6B80;--tt:#9999AA;
+  --bd:rgba(0,0,0,0.09);--bds:rgba(0,0,0,0.15);
+  --r1:8px;--r2:12px;--r3:16px;
+  --sh:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0F0F1A;--surface:#1A1A2A;--text:#F0F0FA;--ts:#9090A8;--tt:#5A5A70;
+    --bd:rgba(255,255,255,0.08);--bds:rgba(255,255,255,0.14);
+    --sh:0 1px 3px rgba(0,0,0,0.3);
+    --teal-50:#0A2018;--green-50:#142010;--green-100:#1E3018;
+    --amber-50:#241A08;--amber-100:#3A2808;--coral-50:#2A1008;
+    --ac-light:#1E1B3A;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto;}
+.hdr{display:flex;align-items:center;gap:10px;padding:52px 20px 12px;background:var(--surface);border-bottom:0.5px solid var(--bd);flex-shrink:0;}
+.hdr-icon{width:34px;height:34px;border-radius:10px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.hdr h1{font-size:17px;font-weight:600;color:var(--text);flex:1;}
+.hdr-date{font-size:12px;color:var(--ts);margin-top:1px;}
+.cog-btn{border:none;background:transparent;cursor:pointer;font-size:22px;padding:6px;color:var(--ts);line-height:1;-webkit-appearance:none;}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 24px;}
+.tabs{display:flex;background:var(--surface);border-top:0.5px solid var(--bd);padding:8px 0 max(8px,env(safe-area-inset-bottom));flex-shrink:0;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:10px;font-weight:500;}
+.tab.on{color:var(--ac);}
+.tab-ic{font-size:20px;line-height:1;}
+.sec{display:none;}.sec.on{display:block;}
+.card{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r3);padding:16px;margin-bottom:12px;box-shadow:var(--sh);}
+.lbl{font-size:11px;font-weight:600;color:var(--ts);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.streak-block{display:flex;align-items:flex-start;gap:16px;}
+.streak-left{flex-shrink:0;text-align:center;}
+.streak-num{font-size:52px;font-weight:600;color:var(--text);line-height:1;}
+.streak-days{font-size:12px;color:var(--ts);margin-top:2px;}
+.ph-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:10px;}
+.ph-green{background:var(--green-100);color:var(--green-800);}
+.ph-purple{background:var(--ac-light);color:var(--ac-dark);}
+.ph-amber{background:var(--amber-100);color:var(--amber-800);}
+.q-side{flex:1;border-left:2px solid var(--ac4);padding-left:14px;}
+.q-text{font-size:13px;color:var(--ac-dark);line-height:1.6;font-style:italic;min-height:60px;}
+@media(prefers-color-scheme:dark){.q-text{color:var(--ac2);}}
+.q-nav{display:flex;align-items:center;gap:6px;margin-top:10px;}
+.qbtn{border:none;background:transparent;cursor:pointer;color:var(--ts);font-size:18px;padding:2px 4px;}
+.qdots{display:flex;gap:4px;flex:1;}
+.qdot{width:5px;height:5px;border-radius:50%;background:var(--bds);cursor:pointer;}
+.qdot.on{background:var(--ac4);}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
+.metric{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r2);padding:12px 10px;text-align:center;box-shadow:var(--sh);}
+.m-val{font-size:22px;font-weight:600;color:var(--text);}
+.m-lbl{font-size:10px;color:var(--ts);margin-top:2px;font-weight:500;}
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:4px;}
+.mood-btn{border:0.5px solid var(--bds);background:var(--bg);border-radius:var(--r1);padding:8px 2px;cursor:pointer;text-align:center;font-size:10px;color:var(--ts);font-family:'Inter',sans-serif;font-weight:500;-webkit-appearance:none;}
+.mood-btn.on{border-color:var(--ac4);background:var(--ac-light);color:var(--ac-dark);}
+.mood-ic{font-size:18px;display:block;margin-bottom:3px;}
+.sl-row{margin-bottom:14px;}
+.sl-row:last-child{margin-bottom:0;}
+.sl-lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--ts);margin-bottom:6px;}
+.sl-lbl span{font-weight:600;color:var(--text);}
+input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--bds);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ac);cursor:pointer;box-shadow:0 0 0 3px var(--ac-light);}
+textarea,input[type=text],input[type=date]{width:100%;border:0.5px solid var(--bds);border-radius:var(--r1);padding:12px;font-family:'Inter',sans-serif;font-size:14px;background:var(--bg);color:var(--text);line-height:1.6;outline:none;-webkit-appearance:none;appearance:none;}
+textarea{resize:none;}
+textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--ac4);}
+.btn{width:100%;padding:14px;background:var(--ac);color:white;border:none;border-radius:var(--r2);font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px;-webkit-appearance:none;}
+.btn:active{opacity:.85;}
+.btn-g{flex:1;padding:12px;background:var(--surface);border:0.5px solid var(--bds);border-radius:var(--r2);font-size:13px;font-weight:500;cursor:pointer;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
+.btn-g:active{background:var(--bg);}
+.btn-d{border-color:#E24B4A;color:#A32D2D;}
+.btn-row{display:flex;gap:8px;}
+.entry{border-left:2px solid var(--ac2);padding:10px 14px;margin-bottom:10px;}
+.e-date{font-size:11px;color:var(--tt);margin-bottom:4px;font-weight:500;}
+.e-mood{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text);}
+.e-note{font-size:13px;color:var(--ts);line-height:1.5;margin-top:4px;}
+.ins-card{background:var(--ac-light);border:0.5px solid var(--ac2);border-radius:var(--r2);padding:14px;margin-bottom:10px;}
+.ins-title{font-size:12px;font-weight:600;color:var(--ac-dark);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
+.ins-text{font-size:13px;color:var(--ac);line-height:1.5;}
+.bars{margin-top:4px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;}
+.bar-lbl{width:72px;color:var(--ts);flex-shrink:0;font-weight:500;}
+.bar-track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:0.5px solid var(--bd);}
+.bar-fill{height:100%;border-radius:3px;background:var(--ac4);}
+.bar-val{width:20px;text-align:right;color:var(--ts);font-weight:600;}
+.trig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.trig-btn{border:0.5px solid var(--bds);background:var(--bg);border-radius:var(--r1);padding:9px 4px;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
+.trig-btn.on{border-color:#D85A30;background:var(--coral-50);color:var(--coral-800);}
+.ph-block{border-radius:var(--r2);padding:14px;margin-bottom:10px;}
+.ph1{background:var(--teal-50);border:0.5px solid var(--teal-400);}
+.ph2{background:var(--ac-light);border:0.5px solid var(--ac2);}
+.ph3{background:var(--amber-50);border:0.5px solid var(--amber-100);}
+.ph4{background:var(--green-50);border:0.5px solid var(--green-100);}
+.ph1 .ph-title{color:var(--teal-800);}.ph2 .ph-title{color:var(--ac-dark);}
+.ph3 .ph-title{color:var(--amber-800);}.ph4 .ph-title{color:var(--green-800);}
+.ph1 .ph-text{color:var(--teal-600);}.ph2 .ph-text{color:var(--ac);}
+.ph3 .ph-text{color:var(--amber-600);}.ph4 .ph-text{color:var(--green-600);}
+.ph-title{font-size:13px;font-weight:600;margin-bottom:6px;}
+.ph-text{font-size:13px;line-height:1.6;}
+.sep{border:none;border-top:0.5px solid var(--bd);margin:14px 0;}
+.week-card{background:var(--bg);border-radius:var(--r1);padding:12px 14px;margin-bottom:8px;border:0.5px solid var(--bd);}
+.w-banner{background:var(--amber-50);border:0.5px solid var(--amber-100);border-radius:var(--r2);padding:14px;margin-bottom:12px;}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;white-space:nowrap;}
+.toast.on{opacity:1;}
+/* Settings */
+.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;}
+.settings-panel{position:absolute;top:0;right:0;width:88%;max-width:360px;height:100%;background:var(--surface);overflow-y:auto;padding:60px 20px 40px;box-shadow:-4px 0 24px rgba(0,0,0,0.25);}
+.lang-btn,.theme-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border:0.5px solid var(--bds);border-radius:var(--r1);background:var(--bg);font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:'Inter',sans-serif;width:100%;text-align:left;-webkit-appearance:none;margin-bottom:0;}
+.lang-btn.on,.theme-btn.on{border-color:var(--ac);background:var(--ac-light);color:var(--ac-dark);}
+.theme-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.theme-list{display:flex;flex-direction:column;gap:8px;}
+@media(prefers-color-scheme:dark){
+  .ph1 .ph-title{color:#9FE1CB;}.ph2 .ph-title{color:var(--ac2);}
+  .ph3 .ph-title{color:var(--amber-100);}.ph4 .ph-title{color:var(--green-100);}
+  .ph1 .ph-text{color:#5DCAA5;}.ph2 .ph-text{color:var(--ac2);}
+  .ph3 .ph-text{color:var(--amber-100);}.ph4 .ph-text{color:var(--green-100);}
+  .btn-d{color:#F09595;border-color:#E24B4A;}
+  .ins-text{color:var(--ac2);}
+}
+
+  /* Aura meter */
+  .aura-wrap{position:relative;width:120px;height:120px;margin:0 auto 4px;}
+  .aura-svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+  .aura-bg{fill:none;stroke:var(--bd);stroke-width:7;}
+  .aura-ring{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),stroke 0.8s;}
+  .aura-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .aura-inner .streak-num{font-size:34px;font-weight:600;color:var(--text);line-height:1;}
+  .aura-inner .streak-days{font-size:10px;color:var(--ts);}
+
+  /* Flame */
+  .flame-wrap{width:44px;height:56px;margin:4px auto 6px;display:flex;align-items:center;justify-content:center;}
+  #flame-svg{width:100%;height:100%;overflow:visible;}
+
+  /* Milestone badges */
+  .ph-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px;letter-spacing:0.02em;}
+  .badge-d0{background:#E8E8EE;color:#666;}
+  .badge-d7{background:linear-gradient(135deg,#C0DD97,#7EC85A);color:#1A4A08;border:1.5px solid #7EC85A;}
+  .badge-d14{background:linear-gradient(135deg,#AFA9EC,#7F77DD);color:#1A0A5A;border:1.5px solid #7F77DD;}
+  .badge-d21{background:linear-gradient(135deg,#FFD700,#FFA500);color:#4A2800;border:1.5px solid #FFA500;}
+  .badge-d30{background:linear-gradient(135deg,#F0997B,#E05A10);color:#2A0A00;border:1.5px solid #E05A10;}
+  .badge-d40{background:linear-gradient(135deg,#00E0C0,#0A9E88);color:#002A24;border:1.5px solid #0A9E88;}
+  .badge-d60{background:linear-gradient(135deg,#EE88FF,#9933CC);color:#1A0030;border:1.5px solid #9933CC;}
+  .badge-d90{background:linear-gradient(135deg,#FFD700,#FF8C00,#FF4500);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 10px rgba(255,180,0,0.4);}
+
+  /* Milestone modal */
+  .milestone-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:400;align-items:center;justify-content:center;}
+  .milestone-overlay.on{display:flex;}
+  .milestone-modal{background:var(--surface);border-radius:24px;padding:32px 24px;max-width:320px;width:90%;text-align:center;animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .milestone-flame{font-size:52px;margin-bottom:8px;display:block;}
+  .milestone-day{font-size:13px;font-weight:600;color:var(--ts);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+  .milestone-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.2;}
+  .milestone-msg{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:20px;}
+  .milestone-close{background:var(--ac);color:white;border:none;border-radius:12px;padding:12px 32px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hdr">
+    <div class="hdr-icon">🔥</div>
+    <div style="flex:1;">
+      <h1>SR Tracker</h1>
+      <div class="hdr-date" id="today-date"></div>
+    </div>
+    <button class="cog-btn" id="cog-btn" aria-label="Settings">⚙️</button>
+  </div>
+
+  <div class="scroll" id="main-scroll">
+
+    <div id="s-home" class="sec on">
+      <div class="card">
+        <div class="streak-block">
+          <div class="streak-left">
+            <!-- AURA METER -->
+            <div class="aura-wrap" id="aura-wrap">
+              <svg class="aura-svg" id="aura-svg" viewBox="0 0 120 120" width="120" height="120">
+                <circle class="aura-bg" cx="60" cy="60" r="52"/>
+                <circle class="aura-ring" id="aura-ring" cx="60" cy="60" r="52"
+                  stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+              </svg>
+              <div class="aura-inner">
+                <div class="streak-num" id="streak-num">0</div>
+                <div class="streak-days">days</div>
+              </div>
+            </div>
+            <!-- FLAME -->
+            <div class="flame-wrap" id="flame-wrap">
+              <svg id="flame-svg" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg"></svg>
+            </div>
+            <!-- MILESTONE BADGE -->
+            <div class="ph-badge ph-green" id="ph-badge">Foundation</div>
+          </div>
+          <div class="q-side">
+            <div class="q-text" id="q-text">Remember how it felt to be high up the journey — that clarity, that power is still inside you.</div>
+            <div class="q-nav">
+              <button class="qbtn" id="q-prev" aria-label="Previous">‹</button>
+              <div class="qdots" id="qdots"></div>
+              <button class="qbtn" id="q-next" aria-label="Next">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-grid">
+        <div class="metric"><div class="m-val" id="m-best">0</div><div class="m-lbl">Best streak</div></div>
+        <div class="metric"><div class="m-val" id="m-entries">0</div><div class="m-lbl">Check-ins</div></div>
+        <div class="metric"><div class="m-val" id="m-energy">–</div><div class="m-lbl">Avg energy</div></div>
+      </div>
+
+      <div class="card">
+        <div class="lbl">Latest check-in</div>
+        <div id="latest-entry" style="font-size:13px;color:var(--ts);">No entries yet. Do your first check-in.</div>
+      </div>
+
+      <div id="weekly-prompt" style="display:none;">
+        <div class="w-banner">
+          <p style="font-size:13px;font-weight:600;color:var(--amber-800);margin-bottom:3px;">Weekly review due</p>
+          <p style="font-size:12px;color:var(--amber-600);">7+ days since your last review.</p>
+        </div>
+        <button class="btn" style="margin-top:0;margin-bottom:12px;" id="start-review-btn">Start weekly review</button>
+      </div>
+
+      <div id="start-date-block" style="display:none;margin-bottom:12px;">
+        <div class="card" style="margin-bottom:0;">
+          <div class="lbl">Streak start date</div>
+          <input type="date" id="start-date-input" style="margin-bottom:8px;">
+          <button class="btn" style="margin-top:0;" id="set-date-btn">Set start date</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-g" id="pick-date-btn">📅 Set start date</button>
+        <button class="btn-g btn-d" id="reset-btn">↺ Reset</button>
+      </div>
+    </div>
+
+    <div id="s-checkin" class="sec">
+      <div id="daily-form">
+        <div class="card">
+          <div class="lbl">How are you feeling right now?</div>
+          <div class="mood-grid" id="mood-grid">
+            <button class="mood-btn" data-mood="Powerful"><span class="mood-ic">⚡</span>Powerful</button>
+            <button class="mood-btn" data-mood="Calm"><span class="mood-ic">🌊</span>Calm</button>
+            <button class="mood-btn" data-mood="Focused"><span class="mood-ic">🎯</span>Focused</button>
+            <button class="mood-btn" data-mood="Restless"><span class="mood-ic">🌀</span>Restless</button>
+            <button class="mood-btn" data-mood="Irritable"><span class="mood-ic">😤</span>Irritable</button>
+            <button class="mood-btn" data-mood="Anxious"><span class="mood-ic">😰</span>Anxious</button>
+            <button class="mood-btn" data-mood="Confident"><span class="mood-ic">💪</span>Confident</button>
+            <button class="mood-btn" data-mood="Foggy"><span class="mood-ic">🌫️</span>Foggy</button>
+            <button class="mood-btn" data-mood="Creative"><span class="mood-ic">✨</span>Creative</button>
+            <button class="mood-btn" data-mood="Low"><span class="mood-ic">🌑</span>Low</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sl-row"><div class="sl-lbl">Energy <span id="ev">5</span>/10</div><input type="range" min="1" max="10" value="5" id="s-energy"></div>
+          <div class="sl-row"><div class="sl-lbl">Mental clarity <span id="cv">5</span>/10</div><input type="range" min="1" max="10" value="5" id="s-clarity"></div>
+          <div class="sl-row"><div class="sl-lbl">Urge intensity <span id="uv">3</span>/10</div><input type="range" min="1" max="10" value="3" id="s-urge"></div>
+          <div class="sl-row"><div class="sl-lbl">Social confidence <span id="sv">5</span>/10</div><input type="range" min="1" max="10" value="5" id="s-social"></div>
+        </div>
+        <div class="card">
+          <div class="lbl">Urge triggers today?</div>
+          <div class="trig-grid" id="trig-grid">
+            <button class="trig-btn">Social media</button>
+            <button class="trig-btn">Loneliness</button>
+            <button class="trig-btn">Stress</button>
+            <button class="trig-btn">Boredom</button>
+            <button class="trig-btn">Fantasy</button>
+            <button class="trig-btn">Alcohol</button>
+            <button class="trig-btn">Tiredness</button>
+            <button class="trig-btn">Procrastination</button>
+            <button class="trig-btn">Other</button>
+          </div>
+          <input type="text" id="custom-trigger" placeholder="Custom trigger (optional)">
+        </div>
+        <div class="card">
+          <div class="lbl">Journal note</div>
+          <textarea id="journal-text" rows="4" placeholder="How's the day been? Wins, challenges, insights..."></textarea>
+          <button class="btn" id="save-entry-btn">Save check-in</button>
+        </div>
+      </div>
+
+      <div id="weekly-form" style="display:none;">
+        <div class="w-banner">
+          <p style="font-size:13px;font-weight:600;color:var(--amber-800);margin-bottom:2px;">Weekly review</p>
+          <p style="font-size:12px;color:var(--amber-600);">Take 5 minutes to reflect honestly.</p>
+        </div>
+        <div class="card">
+          <div style="margin-bottom:14px;"><div class="lbl">What went well this week?</div><textarea id="rq1" rows="3" placeholder="Wins, moments of discipline..."></textarea></div>
+          <hr class="sep">
+          <div style="margin-bottom:14px;"><div class="lbl">What was hardest?</div><textarea id="rq2" rows="3" placeholder="Challenges, temptations..."></textarea></div>
+          <hr class="sep">
+          <div style="margin-bottom:14px;"><div class="lbl">What did you notice about yourself?</div><textarea id="rq3" rows="3" placeholder="Patterns, insights..."></textarea></div>
+          <hr class="sep">
+          <div><div class="lbl">Intention for next week</div><textarea id="rq4" rows="2" placeholder="One focus or commitment..."></textarea></div>
+        </div>
+        <button class="btn" id="save-review-btn">Save weekly review</button>
+        <button class="btn-g" style="width:100%;margin-top:8px;" id="back-to-daily-btn">Back to daily check-in</button>
+      </div>
+    </div>
+
+    <div id="s-history" class="sec">
+      <div class="btn-row" style="margin-bottom:12px;">
+        <button class="btn-g on" id="hf-all" style="border-color:var(--ac);color:var(--ac);">All</button>
+        <button class="btn-g" id="hf-daily">Daily</button>
+        <button class="btn-g" id="hf-weekly">Weekly</button>
+      </div>
+      <div id="history-list" style="font-size:13px;color:var(--ts);">No entries yet.</div>
+      <button class="btn-g" style="width:100%;margin-top:12px;" id="export-btn">⬇ Export as CSV</button>
+    </div>
+
+    <div id="s-insights" class="sec">
+      <div id="insights-content"><p style="font-size:13px;color:var(--ts);">Log at least 3 check-ins to see insights.</p></div>
+    </div>
+
+    <div id="s-phases" class="sec">
+      <div id="phase-current" class="ph-block ph1" style="margin-bottom:16px;">
+        <div class="ph-title" id="pc-title">Your current phase</div>
+        <div class="ph-text" id="pc-text">Set your start date to see phase guidance.</div>
+      </div>
+      <div class="lbl" style="margin-bottom:8px;">All phases</div>
+      <div class="ph-block ph1"><div class="ph-title">Days 1–7 · Foundation phase</div><div class="ph-text">Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding. The foundation is being laid.</div></div>
+      <div class="ph-block ph2"><div class="ph-title">Days 8–21 · Rewiring phase</div><div class="ph-text">Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.</div></div>
+      <div class="ph-block ph3"><div class="ph-title">Days 22–40 · Peak energy phase</div><div class="ph-text">Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.</div></div>
+      <div class="ph-block ph4"><div class="ph-title">Day 41+ · Mastery phase</div><div class="ph-text">The practice becomes identity. Urges stabilise. Energy is sustained. Focus shifts inward — deeper meditation, purpose, long-term clarity.</div></div>
+    </div>
+
+  </div>
+
+  <nav class="tabs">
+    <button class="tab on" data-tab="home" id="tab-home"><span class="tab-ic">🏠</span>Today</button>
+    <button class="tab" data-tab="checkin" id="tab-checkin"><span class="tab-ic">✏️</span>Check-in</button>
+    <button class="tab" data-tab="history" id="tab-history"><span class="tab-ic">📋</span>History</button>
+    <button class="tab" data-tab="insights" id="tab-insights"><span class="tab-ic">📊</span>Insights</button>
+    <button class="tab" data-tab="phases" id="tab-phases"><span class="tab-ic">🗺️</span>Phases</button>
+  </nav>
+
+</div>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settings-overlay">
+  <div class="settings-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <span style="font-size:17px;font-weight:600;color:var(--text);">Settings</span>
+      <button id="close-settings-btn" style="border:none;background:var(--bg);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--ts);">✕</button>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div class="lbl">Language</div>
+      <div class="lang-grid">
+        <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+        <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="fr">🇫🇷 Français</button>
+        <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+        <button class="lang-btn" data-lang="pt">🇧🇷 Português</button>
+        <button class="lang-btn" data-lang="ar">🇸🇦 العربية</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div class="lbl">Colour theme</div>
+      <div class="theme-list">
+        <button class="theme-btn" data-theme="purple"><span class="theme-dot" style="background:#534AB7;"></span>Cosmic purple (default)</button>
+        <button class="theme-btn" data-theme="forest"><span class="theme-dot" style="background:#1A7A4A;"></span>Forest green</button>
+        <button class="theme-btn" data-theme="fire"><span class="theme-dot" style="background:#C84B00;"></span>Fire orange</button>
+        <button class="theme-btn" data-theme="ocean"><span class="theme-dot" style="background:#0A6EBD;"></span>Deep ocean</button>
+        <button class="theme-btn" data-theme="gold"><span class="theme-dot" style="background:#8A6A00;"></span>Sacred gold</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div class="lbl">Bug report</div>
+      <p style="font-size:13px;color:var(--ts);margin-bottom:10px;">Found an issue? Describe it below and send it to the developer.</p>
+      <textarea id="bug-text" rows="4" placeholder="Describe the bug or error..." style="margin-bottom:8px;"></textarea>
+      <button class="btn" style="margin-top:0;" id="send-bug-btn">Send bug report</button>
+    </div>
+
+    <p style="font-size:11px;color:var(--tt);text-align:center;">SR Tracker · v1.0</p>
+  </div>
+</div>
+
+
+<!-- MILESTONE MODAL -->
+<div class="milestone-overlay" id="milestone-overlay">
+  <div class="milestone-modal">
+    <span class="milestone-flame" id="ms-flame">🔥</span>
+    <div class="milestone-day" id="ms-day">Day 7</div>
+    <div class="milestone-title" id="ms-title">One Week Strong</div>
+    <div class="milestone-msg" id="ms-msg">Your body has begun to recalibrate.</div>
+    <button class="milestone-close" id="ms-close">Keep going 🔥</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const QUOTES = [
+  "Remember how it felt to be high up the journey — that clarity, that power is still inside you.",
+  "Every day you hold is a day you chose yourself over the pull. That's not small. That's everything.",
+  "The energy you're building right now is real. You can feel it, even if you can't name it yet.",
+  "Men who master themselves master their world. You're doing the work most will never start.",
+  "Discipline compounds just like interest. Each day you hold, the returns grow.",
+  "The urge will pass in minutes. The regret of breaking takes days to recover from. Hold.",
+  "Your ancestors didn't have these distractions. You're reclaiming something ancient and powerful.",
+  "Clarity, confidence, drive — you already know what waits on the other side. Keep going.",
+  "The version of you at day 30 is waiting. He's built differently. Don't let him down.",
+  "Right now, most men are draining the very thing you're storing. That's your edge.",
+  "Hard days are proof you're doing something real. Easy doesn't build anything worth having.",
+  "You are not fighting your urges — you're redirecting your power. Big difference.",
+  "Every cold shower, every redirected thought, every held day — it's all compounding.",
+  "The man you want to become doesn't break under momentary pressure. You're training him now.",
+  "Stay on the path. The path is working, even when you can't feel it yet."
+];
+
+const THEMES = {
+  purple:{ac:'#534AB7',light:'#EEEDFE',dark:'#3C3489',a2:'#AFA9EC',a4:'#7F77DD'},
+  forest:{ac:'#1A7A4A',light:'#E1F5EE',dark:'#0A4A2A',a2:'#7DCAA0',a4:'#2EA86A'},
+  fire:  {ac:'#C84B00',light:'#FFF0E6',dark:'#8A2E00',a2:'#F0997B',a4:'#E05A10'},
+  ocean: {ac:'#0A6EBD',light:'#E6F3FF',dark:'#064A80',a2:'#7ABFEF',a4:'#1A8FD8'},
+  gold:  {ac:'#8A6A00',light:'#FFF8E6',dark:'#5A4200',a2:'#D4AA44',a4:'#B88A10'},
+};
+
+let S = JSON.parse(localStorage.getItem('sr_app')||'null') || {startDate:null,best:0,entries:[],reviews:[],mood:null};
+if(S.streak!==undefined && !S.startDate && S.streak>0){
+  const d=new Date(); d.setDate(d.getDate()-S.streak);
+  S.startDate=d.toISOString().split('T')[0]; delete S.streak;
+}
+function save(){localStorage.setItem('sr_app',JSON.stringify(S));}
+
+let curTheme = localStorage.getItem('sr_theme')||'purple';
+let curLang  = localStorage.getItem('sr_lang')||'en';
+let qIdx=0, qTimer=null;
+
+// ---- THEME ----
+function applyTheme(name){
+  const th=THEMES[name]||THEMES.purple;
+  const r=document.documentElement.style;
+  r.setProperty('--ac',th.ac);
+  r.setProperty('--ac-light',th.light);
+  r.setProperty('--ac-dark',th.dark);
+  r.setProperty('--ac2',th.a2);
+  r.setProperty('--ac4',th.a4);
+  document.getElementById('theme-color-meta').content=th.ac;
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===name));
+}
+
+// ---- QUOTES ----
+function renderDots(){
+  document.getElementById('qdots').innerHTML=QUOTES.map((_,i)=>`<div class="qdot${i===qIdx?' on':''}" data-qi="${i}"></div>`).join('');
+}
+function goQ(i){
+  qIdx=i;
+  document.getElementById('q-text').textContent=QUOTES[i];
+  renderDots();
+  clearInterval(qTimer);
+  qTimer=setInterval(()=>goQ((qIdx+1)%QUOTES.length),8000);
+}
+
+// ---- STREAK ----
+function calcStreak(){
+  if(!S.startDate)return 0;
+  const start=new Date(S.startDate),now=new Date();
+  start.setHours(0,0,0,0); now.setHours(0,0,0,0);
+  return Math.max(0,Math.floor((now-start)/86400000));
+}
+
+function getPhase(d){
+  if(d<=7)  return{name:'Foundation phase',cls:'ph1',badge:'ph-green'};
+  if(d<=21) return{name:'Rewiring phase',cls:'ph2',badge:'ph-purple'};
+  if(d<=40) return{name:'Peak energy phase',cls:'ph3',badge:'ph-amber'};
+  return{name:'Mastery phase',cls:'ph4',badge:'ph-green'};
+}
+function getPhaseText(d){
+  if(d<=7)  return'Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding. The foundation is being laid.';
+  if(d<=21) return'Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.';
+  if(d<=40) return'Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.';
+  return'The practice becomes identity. Urges stabilise. Energy is sustained. Focus shifts inward — deeper meditation, purpose, long-term clarity.';
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('on');
+  setTimeout(()=>el.classList.remove('on'),2200);
+}
+
+
+// ---- MILESTONES ----
+const MILESTONES = {
+  7:  {flame:'🌱', title:'One Week Strong',      badge:'badge-d7',  icon:'🟢', msg:'Your dopamine receptors are beginning to reset. The flatline you may feel is a sign of healing — not failure. Your nervous system is recalibrating for the better.'},
+  14: {flame:'⚡', title:'Two Weeks of Power',   badge:'badge-d14', icon:'💜', msg:'Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material.'},
+  21: {flame:'🔥', title:'21 Days — Rewired',    badge:'badge-d21', icon:'🥇', msg:'Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice.'},
+  30: {flame:'💥', title:'30 Day Warrior',       badge:'badge-d30', icon:'🔥', msg:'One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them.'},
+  40: {flame:'🌟', title:'Peak Energy Unlocked', badge:'badge-d40', icon:'🌊', msg:'You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding together.'},
+  60: {flame:'👑', title:'60 Days — The Elite',  badge:'badge-d60', icon:'👑', msg:'Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own.'},
+  90: {flame:'🏆', title:'90 Days — LEGEND',     badge:'badge-d90', icon:'🏆', msg:'Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery.'},
+};
+
+// Badge data per milestone
+const BADGE_INFO = [
+  {day:0,  cls:'badge-d0',  label:'Day 0 · Begin',        icon:''},
+  {day:7,  cls:'badge-d7',  label:'Week 1 · Foundation',  icon:'🟢'},
+  {day:14, cls:'badge-d14', label:'Week 2 · Rewiring',    icon:'⚡'},
+  {day:21, cls:'badge-d21', label:'Week 3 · Momentum',    icon:'🔥'},
+  {day:30, cls:'badge-d30', label:'Month 1 · Warrior',    icon:'💥'},
+  {day:40, cls:'badge-d40', label:'Day 40 · Peak',        icon:'🌊'},
+  {day:60, cls:'badge-d60', label:'Month 2 · Elite',      icon:'👑'},
+  {day:90, cls:'badge-d90', label:'90 Days · Legend',     icon:'🏆'},
+];
+
+function getBadgeForStreak(d) {
+  let badge = BADGE_INFO[0];
+  for(const b of BADGE_INFO) { if(d >= b.day) badge = b; }
+  return badge;
+}
+
+// Aura ring — fills based on progress within current 90-day cycle
+function updateAura(streak) {
+  const ring = document.getElementById('aura-ring');
+  if(!ring) return;
+  const max = 90;
+  const pct = Math.min(streak / max, 1);
+  const circ = 326.7;
+  ring.style.strokeDashoffset = circ - (circ * pct);
+  // Colour evolves: green → purple → gold → orange → white
+  let colour;
+  if(streak < 7)  colour = '#5DCAA5';
+  else if(streak < 21) colour = '#7F77DD';
+  else if(streak < 40) colour = '#FFD700';
+  else if(streak < 60) colour = '#FF6B00';
+  else colour = '#FFFFFF';
+  ring.style.stroke = colour;
+  // Outer glow on aura wrap
+  const wrap = document.getElementById('aura-wrap');
+  if(wrap) wrap.style.filter = streak > 0 ? `drop-shadow(0 0 ${6 + Math.min(streak/2,14)}px ${colour}55)` : 'none';
+}
+
+// Flame — evolves SVG based on streak size
+function updateFlame(streak) {
+  const svg = document.getElementById('flame-svg');
+  if(!svg) return;
+  // Scale: 0-6 = spark, 7-20 = small flame, 21-39 = med flame, 40-59 = big flame, 60-89 = roaring, 90+ = inferno
+  let html = '';
+  if(streak === 0) {
+    // Just a spark
+    html = `<circle cx="30" cy="60" r="5" fill="#FFD700" opacity="0.7"/>
+            <circle cx="30" cy="52" r="2.5" fill="#FFF8D0" opacity="0.5"/>`;
+  } else if(streak < 7) {
+    // Tiny flicker
+    html = `<defs><linearGradient id="fg1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="100%" stop-color="#FFD700"/></linearGradient></defs>
+            <polygon points="30,18 24,45 27,58 33,58 36,45" fill="url(#fg1)" opacity="0.9"/>
+            <polygon points="30,28 27,46 29,56 31,56 33,46" fill="#FFF0A0"/>`;
+  } else if(streak < 21) {
+    // Growing flame
+    html = `<defs><linearGradient id="fg2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="50%" stop-color="#FF9900"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
+            <polygon points="30,8 20,36 18,52 22,62 38,62 42,52 40,36" fill="#FF4400" opacity="0.4"/>
+            <polygon points="30,8 22,36 20,55 27,64 33,64 40,55 38,36" fill="url(#fg2)" opacity="0.9"/>
+            <polygon points="30,14 25,38 24,56 29,63 31,63 36,56 35,38" fill="#FFD060"/>
+            <polygon points="30,20 27,40 27,57 30,62 33,57 33,40" fill="#FFF8C0"/>
+            <circle cx="30" cy="5" r="3" fill="#FFF8D0" opacity="0.8"/>`;
+  } else if(streak < 40) {
+    // Strong flame with side tongues
+    html = `<defs><linearGradient id="fg3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF2200"/><stop offset="40%" stop-color="#FF8800"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
+            <polygon points="30,4 14,32 12,50 16,64 44,64 48,50 46,32" fill="#FF3300" opacity="0.25"/>
+            <polygon points="30,4 16,34 14,52 20,66 40,66 46,52 44,34" fill="#FF5500" opacity="0.5"/>
+            <polygon points="30,4 19,34 17,54 24,66 36,66 43,54 41,34" fill="url(#fg3)"/>
+            <polygon points="30,10 23,36 22,55 28,65 32,65 38,55 37,36" fill="#FFD060"/>
+            <polygon points="30,18 26,38 26,56 30,64 34,56 34,38" fill="#FFF8C0"/>
+            <polygon points="30,4 26,22 28,36 30,42 32,36 34,22" fill="white" opacity="0.7"/>
+            <circle cx="22" cy="28" r="2.5" fill="#FFB800" opacity="0.7"/>
+            <circle cx="38" cy="24" r="2" fill="#FFB800" opacity="0.7"/>
+            <circle cx="30" cy="2" r="3" fill="white" opacity="0.9"/>`;
+  } else if(streak < 60) {
+    // Roaring fire
+    html = `<defs>
+              <linearGradient id="fg4" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF1100"/><stop offset="35%" stop-color="#FF7700"/><stop offset="70%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient>
+            </defs>
+            <polygon points="30,2 10,28 8,48 12,66 48,66 52,48 50,28" fill="#FF2200" opacity="0.2"/>
+            <polygon points="30,2 12,30 10,50 16,68 44,68 50,50 48,30" fill="#FF4400" opacity="0.45"/>
+            <polygon points="30,2 15,30 13,52 20,68 40,68 47,52 45,30" fill="#FF6600" opacity="0.7"/>
+            <polygon points="30,2 17,32 15,54 22,68 38,68 45,54 43,32" fill="url(#fg4)"/>
+            <polygon points="30,8 22,34 20,55 27,67 33,67 40,55 38,34" fill="#FFD060"/>
+            <polygon points="30,16 25,36 24,56 29,66 31,66 36,56 35,36" fill="#FFF8D0"/>
+            <polygon points="30,2 27,20 29,38 30,48 31,38 33,20" fill="white" opacity="0.85"/>
+            <circle cx="18" cy="22" r="3" fill="#FF9900" opacity="0.8"/>
+            <circle cx="42" cy="18" r="2.5" fill="#FF9900" opacity="0.8"/>
+            <circle cx="12" cy="38" r="2" fill="#FFD700" opacity="0.7"/>
+            <circle cx="48" cy="35" r="2" fill="#FFD700" opacity="0.7"/>
+            <circle cx="30" cy="0" r="3.5" fill="white"/>`;
+  } else {
+    // INFERNO — 60+ days
+    html = `<defs>
+              <linearGradient id="fg5" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF0000"/><stop offset="25%" stop-color="#FF5500"/><stop offset="55%" stop-color="#FFD700"/><stop offset="80%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#E0F0FF"/></linearGradient>
+              <radialGradient id="glow5" cx="50%" cy="80%" r="50%"><stop offset="0%" stop-color="#FF6600" stop-opacity="0.3"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+            </defs>
+            <ellipse cx="30" cy="65" rx="26" ry="8" fill="url(#glow5)"/>
+            <polygon points="30,0 6,24 4,46 8,68 52,68 56,46 54,24" fill="#FF1100" opacity="0.15"/>
+            <polygon points="30,0 8,26 6,48 12,70 48,70 54,48 52,26" fill="#FF3300" opacity="0.35"/>
+            <polygon points="30,0 10,28 8,50 15,70 45,70 52,50 50,28" fill="#FF5500" opacity="0.6"/>
+            <polygon points="30,0 13,28 11,52 18,70 42,70 49,52 47,28" fill="url(#fg5)"/>
+            <polygon points="30,6 20,30 18,52 25,69 35,69 42,52 40,30" fill="#FFE060"/>
+            <polygon points="30,14 23,34 22,54 28,68 32,68 38,54 37,34" fill="#FFF8D0"/>
+            <polygon points="30,0 27,18 29,36 30,46 31,36 33,18" fill="white" opacity="0.95"/>
+            <circle cx="14" cy="18" r="3.5" fill="#FF8800" opacity="0.85"/>
+            <circle cx="46" cy="14" r="3" fill="#FF8800" opacity="0.85"/>
+            <circle cx="8" cy="36" r="2.5" fill="#FFD700"/>
+            <circle cx="52" cy="32" r="2.5" fill="#FFD700"/>
+            <circle cx="18" cy="8" r="2" fill="#FFEE88" opacity="0.9"/>
+            <circle cx="42" cy="6" r="2" fill="#FFEE88" opacity="0.9"/>
+            <circle cx="30" cy="-2" r="4" fill="white"/>
+            <circle cx="24" cy="-4" r="2" fill="#E0F0FF" opacity="0.8"/>
+            <circle cx="36" cy="-4" r="2" fill="#E0F0FF" opacity="0.8"/>`;
+  }
+  svg.innerHTML = html;
+
+  // Scale flame bigger as streak grows
+  const scale = 1 + Math.min(streak / 90, 1) * 0.7;
+  const wrap = document.getElementById('flame-wrap');
+  if(wrap) {
+    const w = Math.round(44 * scale);
+    const h = Math.round(56 * scale);
+    wrap.style.width = w + 'px';
+    wrap.style.height = h + 'px';
+    svg.style.width = w + 'px';
+    svg.style.height = h + 'px';
+  }
+}
+
+// Check and show milestone popup
+function checkMilestone(streak) {
+  if(!MILESTONES[streak]) return;
+  const key = 'ms_shown_' + streak;
+  if(localStorage.getItem(key)) return; // already shown
+  localStorage.setItem(key, '1');
+  const ms = MILESTONES[streak];
+  document.getElementById('ms-flame').textContent = ms.flame;
+  document.getElementById('ms-day').textContent = 'Day ' + streak + ' Milestone';
+  document.getElementById('ms-title').textContent = ms.title;
+  document.getElementById('ms-msg').textContent = ms.msg;
+  setTimeout(() => document.getElementById('milestone-overlay').classList.add('on'), 400);
+}
+
+// ---- HOME ----
+function updateHome(){
+  const streak=calcStreak();
+  if(streak>S.best){S.best=streak;save();}
+  document.getElementById('streak-num').textContent=streak;
+  document.getElementById('m-best').textContent=S.best;
+  document.getElementById('m-entries').textContent=S.entries.length;
+  // Aura ring
+  updateAura(streak);
+  // Flame
+  updateFlame(streak);
+  // Milestone badge
+  const bdg = getBadgeForStreak(streak);
+  const badgeEl = document.getElementById('ph-badge');
+  badgeEl.textContent = (bdg.icon ? bdg.icon + ' ' : '') + bdg.label;
+  badgeEl.className = 'ph-badge ' + bdg.cls;
+  // Milestone popup
+  checkMilestone(streak);
+  // Phase (for phases tab)
+  const ph=getPhase(streak);
+  const daily=S.entries.filter(e=>e.type==='daily');
+  if(daily.length){
+    const avgE=Math.round(daily.reduce((a,e)=>a+e.energy,0)/daily.length);
+    document.getElementById('m-energy').textContent=avgE;
+    const last=S.entries[S.entries.length-1];
+    document.getElementById('latest-entry').innerHTML=
+      '<strong>'+(last.mood||'–')+'</strong>'+(last.energy?' · energy '+last.energy+'/10 · clarity '+last.clarity+'/10':'')+
+      (last.note?'<br><span style="color:var(--tt);font-size:12px">'+last.note+'</span>':'');
+  } else {
+    document.getElementById('latest-entry').textContent=S.startDate
+      ?'Running since '+new Date(S.startDate).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'. Do your first check-in.'
+      :'Set your start date below to begin tracking.';
+  }
+  const lastRD=S.reviews.length?S.reviews[S.reviews.length-1].day:0;
+  document.getElementById('weekly-prompt').style.display=(streak>0&&streak-lastRD>=7)?'block':'none';
+}
+
+// ---- TABS ----
+function goTab(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('s-'+id).classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+  document.getElementById('main-scroll').scrollTop=0;
+  if(id==='history')renderHistory('all');
+  if(id==='insights')renderInsights();
+  if(id==='phases')renderPhaseGuide();
+}
+
+// ---- CHECK-IN ----
+function saveEntry(){
+  const energy=parseInt(document.getElementById('s-energy').value);
+  const clarity=parseInt(document.getElementById('s-clarity').value);
+  const urge=parseInt(document.getElementById('s-urge').value);
+  const social=parseInt(document.getElementById('s-social').value);
+  const note=document.getElementById('journal-text').value.trim();
+  const mood=S.mood||'Unset';
+  const triggers=[...document.querySelectorAll('.trig-btn.on')].map(b=>b.textContent.trim());
+  const custom=document.getElementById('custom-trigger').value.trim();
+  if(custom)triggers.push(custom);
+  S.entries.push({type:'daily',date:new Date().toISOString(),day:calcStreak(),mood,energy,clarity,urge,social,triggers,note});
+  save(); updateHome();
+  document.getElementById('journal-text').value='';
+  document.getElementById('custom-trigger').value='';
+  document.querySelectorAll('.mood-btn.on,.trig-btn.on').forEach(b=>b.classList.remove('on'));
+  S.mood=null;
+  toast('Check-in saved ✓');
+  goTab('home');
+}
+
+function showReview(){document.getElementById('daily-form').style.display='none';document.getElementById('weekly-form').style.display='block';}
+function hideReview(){document.getElementById('daily-form').style.display='block';document.getElementById('weekly-form').style.display='none';}
+
+function saveReview(){
+  const r={type:'weekly',date:new Date().toISOString(),day:calcStreak(),
+    wentWell:document.getElementById('rq1').value.trim(),
+    hardest:document.getElementById('rq2').value.trim(),
+    noticed:document.getElementById('rq3').value.trim(),
+    intention:document.getElementById('rq4').value.trim()};
+  S.reviews.push(r);S.entries.push(r);save();hideReview();updateHome();
+  ['rq1','rq2','rq3','rq4'].forEach(id=>document.getElementById(id).value='');
+  toast('Weekly review saved ✓');
+  goTab('home');
+}
+
+// ---- HISTORY ----
+let hFilter='all';
+function renderHistory(f){
+  hFilter=f;
+  ['all','daily','weekly'].forEach(x=>{
+    const el=document.getElementById('hf-'+x);
+    if(el){el.style.borderColor=x===f?'var(--ac)':'';el.style.color=x===f?'var(--ac)':'';}
+  });
+  const el=document.getElementById('history-list');
+  if(!S.entries.length){el.innerHTML='<p>No entries yet.</p>';return;}
+  const list=f==='weekly'?S.entries.filter(e=>e.type==='weekly'):f==='daily'?S.entries.filter(e=>e.type==='daily'):S.entries;
+  if(!list.length){el.innerHTML='<p>No entries of this type yet.</p>';return;}
+  el.innerHTML=[...list].reverse().map(e=>{
+    const dt=new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · day '+e.day;
+    if(e.type==='weekly')return`<div class="week-card"><div class="e-date">${dt} · <span style="color:var(--amber-800);font-weight:600;">Weekly review</span></div>${e.wentWell?'<div class="e-note"><b>Went well:</b> '+e.wentWell+'</div>':''}${e.hardest?'<div class="e-note"><b>Hardest:</b> '+e.hardest+'</div>':''}${e.intention?'<div class="e-note"><b>Intention:</b> '+e.intention+'</div>':''}</div>`;
+    return`<div class="entry"><div class="e-date">${dt}</div><div class="e-mood">${e.mood} · E${e.energy} C${e.clarity} U${e.urge}</div>${e.triggers&&e.triggers.length?'<div class="e-note">Triggers: '+e.triggers.join(', ')+'</div>':''}${e.note?'<div class="e-note">'+e.note+'</div>':''}</div>`;
+  }).join('');
+}
+
+// ---- INSIGHTS ----
+function renderInsights(){
+  const el=document.getElementById('insights-content');
+  const daily=S.entries.filter(e=>e.type==='daily');
+  if(daily.length<3){el.innerHTML='<p style="font-size:13px;color:var(--ts)">Log at least 3 check-ins to see insights.</p>';return;}
+  const avg=k=>Math.round(daily.reduce((a,e)=>a+e[k],0)/daily.length);
+  const rec=daily.slice(-7);
+  const rAvg=k=>Math.round(rec.reduce((a,e)=>a+e[k],0)/rec.length);
+  const mC={};daily.forEach(e=>mC[e.mood]=(mC[e.mood]||0)+1);
+  const topM=Object.entries(mC).sort((a,b)=>b[1]-a[1])[0];
+  const tC={};daily.forEach(e=>(e.triggers||[]).forEach(t=>tC[t]=(tC[t]||0)+1));
+  const topT=Object.entries(tC).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const trend=rAvg('energy')>=avg('energy')?'Trending up recently':'Trending down recently';
+  const urgeNote=rAvg('urge')>6?'High urge pressure lately — stay alert.':rAvg('urge')<4?'Urges are low — strong control phase.':'Moderate, steady urge levels.';
+  el.innerHTML=`
+    <div class="ins-card"><div class="ins-title">⚡ Energy</div><div class="ins-text">All-time avg ${avg('energy')}/10 · ${trend} (${rAvg('energy')}/10 last 7)</div></div>
+    <div class="ins-card"><div class="ins-title">🧠 Mental clarity</div><div class="ins-text">All-time avg ${avg('clarity')}/10 · Recent avg ${rAvg('clarity')}/10</div></div>
+    <div class="ins-card"><div class="ins-title">🔥 Urge patterns</div><div class="ins-text">${urgeNote} Avg intensity: ${avg('urge')}/10</div></div>
+    <div class="ins-card"><div class="ins-title">😌 Most common state</div><div class="ins-text">${topM[0]} (${topM[1]} time${topM[1]>1?'s':''})</div></div>
+    ${topT.length?`<div class="ins-card" style="background:var(--coral-50);border-color:var(--coral-200);"><div class="ins-title" style="color:var(--coral-800);">⚠️ Top triggers</div><div class="ins-text" style="color:var(--coral-600);">${topT.map(([t,c])=>t+' (×'+c+')').join(' · ')}</div></div>`:''}
+    <div class="card"><div class="lbl">All-time averages</div><div class="bars">${['energy','clarity','social'].map(k=>`<div class="bar-row"><div class="bar-lbl">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${avg(k)*10}%"></div></div><div class="bar-val">${avg(k)}</div></div>`).join('')}</div></div>
+  `;
+}
+
+// ---- PHASES ----
+function renderPhaseGuide(){
+  const s=calcStreak();
+  const p=getPhase(s);
+  document.getElementById('phase-current').className='ph-block '+p.cls;
+  document.getElementById('pc-title').textContent='Day '+s+' — '+p.name;
+  document.getElementById('pc-text').textContent=getPhaseText(s);
+}
+
+// ---- SETTINGS ----
+function openSettings(){
+  document.getElementById('settings-overlay').style.display='block';
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===curTheme));
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===curLang));
+}
+function closeSettings(){
+  document.getElementById('settings-overlay').style.display='none';
+}
+
+function setTheme(name){
+  curTheme=name;
+  localStorage.setItem('sr_theme',name);
+  applyTheme(name);
+  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===name));
+}
+
+function setLang(lang){
+  curLang=lang;
+  localStorage.setItem('sr_lang',lang);
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
+  toast('Language updated');
+}
+
+function sendBugReport(){
+  const msg=document.getElementById('bug-text').value.trim();
+  if(!msg){toast('Please describe the bug first');return;}
+  const sub=encodeURIComponent('SR Tracker Bug Report');
+  const body=encodeURIComponent('Bug:\n\n'+msg+'\n\n---\nDay: '+calcStreak()+'\nTheme: '+curTheme+'\nLang: '+curLang+'\nEntries: '+S.entries.length);
+  window.location.href='mailto:lewiscurtis2@hotmail.co.uk?subject='+sub+'&body='+body;
+  document.getElementById('bug-text').value='';
+  toast('Opening email app...');
+}
+
+// ---- EXPORT ----
+function exportCSV(){
+  const daily=S.entries.filter(e=>e.type==='daily');
+  if(!daily.length){toast('No data to export yet.');return;}
+  const rows=[['Date','Day','Mood','Energy','Clarity','Urge','Social','Triggers','Note'],
+    ...daily.map(e=>[new Date(e.date).toLocaleDateString('en-GB'),e.day,e.mood,e.energy,e.clarity,e.urge,e.social,(e.triggers||[]).join('|'),e.note||''])];
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  const a=document.createElement('a');a.href=url;a.download='sr-tracker.csv';a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---- WIRE UP ALL EVENTS HERE (no inline onclick) ----
+document.addEventListener('DOMContentLoaded', function() {
+
+  document.getElementById('ms-close').addEventListener('click',function(){
+    document.getElementById('milestone-overlay').classList.remove('on');
+  });
+  document.getElementById('milestone-overlay').addEventListener('click',function(e){
+    if(e.target===this)this.classList.remove('on');
+  });
+
+  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+
+  // Tabs
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click',function(){goTab(this.dataset.tab);});
+  });
+
+  // Cog
+  document.getElementById('cog-btn').addEventListener('click',openSettings);
+  document.getElementById('close-settings-btn').addEventListener('click',closeSettings);
+  document.getElementById('settings-overlay').addEventListener('click',function(e){
+    if(e.target===this)closeSettings();
+  });
+
+  // Theme buttons
+  document.querySelectorAll('.theme-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){setTheme(this.dataset.theme);});
+  });
+
+  // Lang buttons
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){setLang(this.dataset.lang);});
+  });
+
+  // Bug report
+  document.getElementById('send-bug-btn').addEventListener('click',sendBugReport);
+
+  // Quotes
+  document.getElementById('q-prev').addEventListener('click',function(){goQ((qIdx-1+QUOTES.length)%QUOTES.length);});
+  document.getElementById('q-next').addEventListener('click',function(){goQ((qIdx+1)%QUOTES.length);});
+  document.getElementById('qdots').addEventListener('click',function(e){
+    if(e.target.dataset.qi!==undefined)goQ(parseInt(e.target.dataset.qi));
+  });
+
+  // Mood
+  document.getElementById('mood-grid').addEventListener('click',function(e){
+    const btn=e.target.closest('.mood-btn');
+    if(!btn)return;
+    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    S.mood=btn.dataset.mood;
+  });
+
+  // Triggers
+  document.getElementById('trig-grid').addEventListener('click',function(e){
+    const btn=e.target.closest('.trig-btn');
+    if(btn)btn.classList.toggle('on');
+  });
+
+  // Sliders
+  document.getElementById('s-energy').addEventListener('input',function(){document.getElementById('ev').textContent=this.value;});
+  document.getElementById('s-clarity').addEventListener('input',function(){document.getElementById('cv').textContent=this.value;});
+  document.getElementById('s-urge').addEventListener('input',function(){document.getElementById('uv').textContent=this.value;});
+  document.getElementById('s-social').addEventListener('input',function(){document.getElementById('sv').textContent=this.value;});
+
+  // Save entry
+  document.getElementById('save-entry-btn').addEventListener('click',saveEntry);
+
+  // Weekly review
+  document.getElementById('start-review-btn').addEventListener('click',function(){goTab('checkin');setTimeout(showReview,100);});
+  document.getElementById('save-review-btn').addEventListener('click',saveReview);
+  document.getElementById('back-to-daily-btn').addEventListener('click',hideReview);
+
+  // Start date
+  document.getElementById('pick-date-btn').addEventListener('click',function(){
+    const bl=document.getElementById('start-date-block');
+    bl.style.display=bl.style.display==='none'?'block':'none';
+    if(S.startDate)document.getElementById('start-date-input').value=S.startDate;
+  });
+  document.getElementById('set-date-btn').addEventListener('click',function(){
+    const val=document.getElementById('start-date-input').value;
+    if(!val){toast('Please pick a date');return;}
+    if(new Date(val)>new Date()){toast("Start date can't be in the future");return;}
+    S.startDate=val;save();updateHome();
+    document.getElementById('start-date-block').style.display='none';
+    toast('Streak set — day '+calcStreak()+' 🔥');
+  });
+  document.getElementById('reset-btn').addEventListener('click',function(){
+    if(confirm('Reset your streak? This will clear your start date.')){
+      S.startDate=null;save();updateHome();toast('Streak reset. Start again.');
+    }
+  });
+
+  // History filters
+  document.getElementById('hf-all').addEventListener('click',function(){renderHistory('all');});
+  document.getElementById('hf-daily').addEventListener('click',function(){renderHistory('daily');});
+  document.getElementById('hf-weekly').addEventListener('click',function(){renderHistory('weekly');});
+
+  // Export
+  document.getElementById('export-btn').addEventListener('click',exportCSV);
+
+  // Apply saved theme
+  applyTheme(curTheme);
+
+  // Init quotes
+  renderDots();
+  qTimer=setInterval(()=>goQ((qIdx+1)%QUOTES.length),8000);
+
+  updateHome();
+});
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{});});
+}
+</script>
+</body>
+</html>
