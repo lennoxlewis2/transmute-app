@@ -198,6 +198,43 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .med-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all .4s;}
   .med-dot.on{background:#9977EE;transform:scale(1.3);}
   .med-dot.done{background:#4433AA;}
+
+  /* Urge surf */
+  .urge-sos-btn{width:100%;padding:20px;background:#E24B4A;color:white;border:none;border-radius:18px;font-size:17px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:14px;letter-spacing:0.01em;-webkit-appearance:none;}
+  .urge-sos-btn:active{transform:scale(0.98);opacity:.9;}
+  .wave-wrap{position:relative;height:110px;overflow:hidden;border-radius:14px;background:var(--bg);border:.5px solid var(--bd);margin-bottom:12px;}
+  .wave-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+  .wave-lbl{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:var(--ts);letter-spacing:.06em;text-transform:uppercase;}
+  .intensity-bar{height:6px;border-radius:3px;background:var(--bd);margin-bottom:18px;overflow:hidden;}
+  .intensity-fill{height:100%;border-radius:3px;transition:width .8s ease,background .8s ease;width:80%;background:#E24B4A;}
+  .urge-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+  .utool-btn{padding:14px 8px;border:.5px solid var(--bds);border-radius:12px;background:var(--sf);cursor:pointer;text-align:center;font-family:'Inter',sans-serif;-webkit-appearance:none;transition:all .15s;}
+  .utool-btn:active{background:var(--bg);}
+  .utool-btn.on{border-color:var(--ac);background:var(--acl);}
+  .utool-btn .ui{font-size:22px;display:block;margin-bottom:5px;}
+  .utool-btn .ul{font-size:11px;font-weight:500;color:var(--ts);}
+  .utool-btn.on .ul{color:var(--ac);}
+  .utool-sec{display:none;}.utool-sec.on{display:block;}
+  .breath-ring-wrap{width:100px;height:100px;border-radius:50%;border:3px solid var(--ac);display:flex;align-items:center;justify-content:center;margin:14px auto;transition:all 3.5s ease-in-out;}
+  .breath-ring-inner{width:58px;height:58px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;transition:all 3.5s ease-in-out;}
+  .breath-ring-lbl{font-size:10px;font-weight:600;color:var(--ac);text-align:center;line-height:1.3;}
+  .timer-wrap{position:relative;width:120px;height:120px;margin:0 auto 10px;}
+  .timer-wrap svg{transform:rotate(-90deg);}
+  .timer-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:600;color:var(--tx);}
+  .affirm-box{background:var(--bg);border:.5px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px;font-size:14px;color:var(--tx);line-height:1.7;text-align:center;font-style:italic;min-height:80px;display:flex;align-items:center;justify-content:center;transition:opacity .3s;}
+  .affirm-dots{display:flex;justify-content:center;gap:5px;margin-bottom:12px;}
+  .adot{width:7px;height:7px;border-radius:50%;background:var(--bds);}
+  .adot.on{background:var(--ac);}
+  .remind-card{background:var(--sf);border:.5px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:10px;text-align:center;}
+  .remind-icon{font-size:32px;display:block;margin-bottom:8px;}
+  .remind-title{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:6px;}
+  .remind-text{font-size:13px;color:var(--ts);line-height:1.6;}
+  .streak-remind-card{background:var(--acl);border:.5px solid var(--ac2);border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+  .streak-remind-num{font-size:30px;font-weight:700;color:var(--ac);flex-shrink:0;}
+  .streak-remind-txt{font-size:13px;color:var(--acd);line-height:1.5;}
+  .win-card{background:linear-gradient(135deg,var(--acl),var(--teal50));border:.5px solid var(--ac2);border-radius:18px;padding:24px;text-align:center;margin-bottom:12px;}
+  .survived-btn{width:100%;padding:13px;background:transparent;border:.5px solid var(--bds);border-radius:12px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
+  .survived-btn.green{border-color:var(--teal4);color:var(--teal6);}
 </style>
 </head>
 <body>
@@ -519,15 +556,158 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <button class="btn-g" id="snext">Next →</button>
     </div>
     <button class="btn-g" style="width:100%;margin-top:8px" id="sshuffle">🔀 Shuffle</button>
-  </div>
+  
+    <!-- URGE SURF -->
+    <div id="s-urge" class="sec">
+
+      <!-- HOME STATE -->
+      <div id="urge-home">
+        <div class="card" style="text-align:center;padding:20px;">
+          <div style="font-size:44px;margin-bottom:10px;">🌊</div>
+          <div style="font-size:16px;font-weight:600;color:var(--tx);margin-bottom:6px;">Urge Surfing</div>
+          <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:16px;">The average urge peaks and passes in <strong style="color:var(--tx)">3–7 minutes.</strong> You don't need to fight it — just ride the wave.</div>
+          <button class="urge-sos-btn" id="sos-btn">🌊 I'm feeling an urge — surf it now</button>
+          <div style="background:var(--bg);border-radius:10px;padding:12px;font-size:12px;color:var(--ts);line-height:1.6;">Urges are like ocean waves — they build, peak, and always break. Open this the moment one starts.</div>
+        </div>
+        <div class="card">
+          <div class="lbl">How urge surfing works</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ts);">
+              <div style="background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div>
+              <span><strong style="color:var(--tx)">Notice it</strong> — acknowledge the urge without judgement. It's energy, not a command.</span>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ts);">
+              <div style="background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div>
+              <span><strong style="color:var(--tx)">Ride it</strong> — use one of the tools below to stay present as it peaks.</span>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ts);">
+              <div style="background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div>
+              <span><strong style="color:var(--tx)">Watch it pass</strong> — it always does. Every wave breaks.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SURF STATE -->
+      <div id="urge-surf" style="display:none;">
+        <div class="wave-wrap">
+          <canvas id="urge-canvas"></canvas>
+          <div class="wave-lbl" id="wave-lbl">urge intensity</div>
+        </div>
+        <div class="intensity-bar"><div class="intensity-fill" id="int-fill"></div></div>
+
+        <!-- Tool chooser -->
+        <div id="utool-chooser">
+          <p style="font-size:13px;color:var(--ts);text-align:center;margin-bottom:10px;">Choose a tool to ride the wave:</p>
+          <div class="urge-tool-grid">
+            <button class="utool-btn" id="tb-breath" onclick="uShowTool('breath')">
+              <span class="ui">🌬️</span><span class="ul">Breathe through it</span>
+            </button>
+            <button class="utool-btn" id="tb-timer" onclick="uShowTool('timer')">
+              <span class="ui">⏱️</span><span class="ul">Ride the timer</span>
+            </button>
+            <button class="utool-btn" id="tb-affirm" onclick="uShowTool('affirm')">
+              <span class="ui">⚡</span><span class="ul">Power affirmation</span>
+            </button>
+            <button class="utool-btn" id="tb-remind" onclick="uShowTool('remind')">
+              <span class="ui">🔥</span><span class="ul">Remember why</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- BREATH TOOL -->
+        <div id="utool-breath" class="utool-sec">
+          <div class="card" style="text-align:center;">
+            <div class="breath-ring-wrap" id="u-br">
+              <div class="breath-ring-inner" id="u-bi">
+                <span class="breath-ring-lbl" id="u-bl">TAP<br>START</span>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Box breathing redirects energy upward and out of the urge. 4 cycles kills almost any craving.</p>
+            <button class="urge-sos-btn" id="u-breath-btn" style="background:var(--ac);margin-bottom:0;padding:13px;font-size:14px;">Start breathing</button>
+          </div>
+          <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:8px;">← Back to tools</button>
+        </div>
+
+        <!-- TIMER TOOL -->
+        <div id="utool-timer" class="utool-sec">
+          <div class="card" style="text-align:center;">
+            <div class="timer-wrap">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" fill="none" stroke="var(--bd)" stroke-width="8"/>
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#7F77DD" stroke-width="8"
+                  stroke-dasharray="326.7" id="u-timer-arc" stroke-dashoffset="0" stroke-linecap="round"/>
+              </svg>
+              <div class="timer-num" id="u-timer-num">5:00</div>
+            </div>
+            <div style="font-size:11px;color:var(--ts);margin-bottom:12px;">The urge will pass before this timer ends — guaranteed</div>
+            <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Don't act. Just watch the seconds pass. Every tick is the urge getting weaker.</p>
+            <button class="urge-sos-btn" id="u-timer-btn" style="background:var(--ac);margin-bottom:0;padding:13px;font-size:14px;">Start the countdown</button>
+          </div>
+          <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:8px;">← Back to tools</button>
+        </div>
+
+        <!-- AFFIRM TOOL -->
+        <div id="utool-affirm" class="utool-sec">
+          <div class="affirm-box" id="u-affirm-box">"I am not my urges. I am the awareness that watches them pass."</div>
+          <div class="affirm-dots" id="u-affirm-dots"></div>
+          <button class="urge-sos-btn" id="u-next-affirm" style="background:var(--ac);margin-bottom:8px;padding:13px;font-size:14px;">Next affirmation</button>
+          <button class="survived-btn" onclick="uShowTool(null)">← Back to tools</button>
+        </div>
+
+        <!-- REMIND TOOL -->
+        <div id="utool-remind" class="utool-sec">
+          <div class="streak-remind-card">
+            <div class="streak-remind-num" id="u-streak-num">–</div>
+            <div class="streak-remind-txt">days of power stored. One urge is not worth losing that.</div>
+          </div>
+          <div class="remind-card">
+            <span class="remind-icon">🏆</span>
+            <div class="remind-title">You've already won</div>
+            <div class="remind-text">Every man who ever broke said "just this once." That's exactly what the urge is saying right now. You know how that story ends. Write a different one.</div>
+          </div>
+          <div class="remind-card">
+            <span class="remind-icon">⚡</span>
+            <div class="remind-title">This feeling is your power</div>
+            <div class="remind-text">What you're feeling right now is energy trying to escape. Hold it. In 10 minutes it becomes clarity, drive, and presence. Let it go and it becomes regret.</div>
+          </div>
+          <div class="remind-card">
+            <span class="remind-icon">👑</span>
+            <div class="remind-title">Most men will give in today</div>
+            <div class="remind-text">Right now, thousands of men are facing the same wave and breaking. You're still here. That already makes you different. Prove it.</div>
+          </div>
+          <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:4px;">← Back to tools</button>
+        </div>
+
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+          <button class="survived-btn green" id="u-survived-btn" style="display:none;" onclick="uWin()">✓ I surfed it — urge has passed</button>
+          <button class="survived-btn" onclick="uClose()">← Back to app</button>
+        </div>
+      </div>
+
+      <!-- WIN STATE -->
+      <div id="urge-win" style="display:none;">
+        <div class="win-card">
+          <div style="font-size:52px;margin-bottom:12px;">🌊</div>
+          <div style="font-size:22px;font-weight:600;color:var(--ac);margin-bottom:8px;">You surfed it.</div>
+          <div style="font-size:14px;color:var(--teal6);line-height:1.6;">That urge is gone. The energy stayed yours. This is exactly what the practice looks like from the inside.</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-size:13px;color:var(--ts);line-height:1.6;">Every wave you ride makes the next one smaller. You are training your nervous system to be stronger than your impulses.</div>
+        </div>
+        <button class="urge-sos-btn" style="background:var(--teal4);margin-top:4px;" onclick="uReset()">Back to app</button>
+      </div>
+
+    </div>
+
 
 </div><!-- end scroll -->
 
 <nav class="tabs">
   <button class="tab on" data-tab="home"><span class="tab-ic">🏠</span>Today</button>
   <button class="tab" data-tab="checkin"><span class="tab-ic">✏️</span>Check-in</button>
+  <button class="tab" data-tab="urge"><span class="tab-ic">🌊</span>Urge SOS</button>
   <button class="tab" data-tab="transmute"><span class="tab-ic">⚡</span>Transmute</button>
-  <button class="tab" data-tab="stories"><span class="tab-ic">📖</span>Stories</button>
   <button class="tab" data-tab="phases"><span class="tab-ic">🗺️</span>Phases</button>
 </nav>
 
@@ -1434,6 +1614,165 @@ function medFinish() {
   medTone(432, 8, 0.07);
 }
 
+
+// ===================== URGE SURFING =====================
+const AFFIRMATIONS = [
+  '"I am not my urges. I am the awareness that watches them pass."',
+  '"Every urge I survive makes me stronger. This one will pass."',
+  '"The energy I hold right now is becoming the man I am becoming."',
+  '"Discipline is choosing who you want to be over what you want right now."',
+  '"Right now I am storing power that most men are throwing away."',
+  '"In 5 minutes this urge will be gone. My streak will still be intact."',
+  '"I have done hard things. This is a hard thing. I do hard things."',
+  '"The version of me at day 90 made it through moments exactly like this one."',
+  '"An urge is just energy looking for direction. I choose the direction."',
+  '"This feeling is not weakness. Feeling it and holding anyway — that is strength."',
+];
+
+let uAffirmIdx = 0;
+let uWaveAnim = null, uIntInterval = null;
+let uBreathInterval = null, uBreathPhase = 0;
+let uTimerRAF = null, uTimerRunning = false, uTimerStart = null;
+
+function uStart() {
+  document.getElementById('urge-home').style.display = 'none';
+  document.getElementById('urge-surf').style.display = 'block';
+  document.getElementById('urge-win').style.display = 'none';
+  uShowTool(null);
+  uStartWave();
+  uStartIntensity();
+  // Update streak display
+  const n = calcStreak();
+  const el = document.getElementById('u-streak-num');
+  if(el) el.textContent = n;
+  // Show survived button after 20 seconds
+  setTimeout(() => {
+    const btn = document.getElementById('u-survived-btn');
+    if(btn) btn.style.display = 'block';
+  }, 20000);
+}
+
+function uStartWave() {
+  const canvas = document.getElementById('urge-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const setSize = () => {
+    canvas.width = canvas.offsetWidth * (window.devicePixelRatio||1);
+    canvas.height = canvas.offsetHeight * (window.devicePixelRatio||1);
+  };
+  setSize();
+  const dpr = window.devicePixelRatio||1;
+  ctx.scale(dpr, dpr);
+  const W = canvas.offsetWidth||400;
+  const H = canvas.offsetHeight||110;
+  let t = 0, intensity = 0.85;
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+    const amp = intensity * H * 0.32;
+    const baseY = H * 0.5;
+    ctx.beginPath();
+    ctx.moveTo(0,H);
+    for(let x=0;x<=W;x+=2) {
+      const y = baseY - amp * (Math.sin((x/W)*Math.PI*3+t) * 0.7 + Math.sin((x/W)*Math.PI*1.5+t*1.3)*0.3);
+      ctx.lineTo(x,y);
+    }
+    ctx.lineTo(W,H); ctx.closePath();
+    const r = Math.round(127+intensity*(226-127));
+    const g = Math.round(119+intensity*(75-119));
+    const b = Math.round(221+intensity*(75-221));
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0, `rgba(${r},${g},${b},0.65)`);
+    grad.addColorStop(1, `rgba(${r},${g},${b},0.1)`);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath();
+    for(let x=0;x<=W;x+=2) {
+      const y = baseY - amp * (Math.sin((x/W)*Math.PI*3+t)*0.7+Math.sin((x/W)*Math.PI*1.5+t*1.3)*0.3);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=`rgba(${r},${g},${b},0.9)`;ctx.lineWidth=2;ctx.stroke();
+    t+=0.022;
+    uWaveAnim=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function uStartIntensity() {
+  let prog = 0;
+  uIntInterval = setInterval(() => {
+    prog = Math.min(prog+1,100);
+    let v;
+    if(prog<25) v=0.35+(prog/25)*0.55;
+    else if(prog<55) v=0.9-((prog-25)/30)*0.45;
+    else v=0.45-((prog-55)/45)*0.38;
+    v=Math.max(0.07,v);
+    const fill=document.getElementById('int-fill');
+    if(fill){fill.style.width=Math.round(v*100)+'%';fill.style.background=v>0.65?'#E24B4A':v>0.38?'#EF9F27':'#1D9E75';}
+    const lbl=document.getElementById('wave-lbl');
+    if(lbl) lbl.textContent=v>0.65?'peak — breathe through it':v>0.38?'subsiding — keep holding':'fading — almost gone';
+  },1400);
+}
+
+function uShowTool(name) {
+  document.querySelectorAll('.utool-sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.utool-btn').forEach(b=>b.classList.remove('on'));
+  const chooser=document.getElementById('utool-chooser');
+  if(chooser) chooser.style.display=name?'none':'block';
+  if(!name) return;
+  const sec=document.getElementById('utool-'+name);
+  if(sec) sec.classList.add('on');
+  const btn=document.getElementById('tb-'+name);
+  if(btn) btn.classList.add('on');
+  if(name==='affirm') uRenderAffirmDots();
+}
+
+function uRenderAffirmDots() {
+  const d=document.getElementById('u-affirm-dots');
+  if(!d) return;
+  d.innerHTML=AFFIRMATIONS.map((_,i)=>`<div class="adot${i===uAffirmIdx?' on':''}"></div>`).join('');
+}
+
+function uWin() {
+  uClose(true);
+  document.getElementById('urge-surf').style.display='none';
+  document.getElementById('urge-win').style.display='block';
+}
+
+function uClose(keepState) {
+  cancelAnimationFrame(uWaveAnim);
+  clearInterval(uIntInterval);
+  clearInterval(uBreathInterval);
+  uBreathInterval=null;
+  uTimerRunning=false;
+  cancelAnimationFrame(uTimerRAF);
+  if(!keepState) {
+    document.getElementById('urge-surf').style.display='none';
+    document.getElementById('urge-home').style.display='block';
+    document.getElementById('urge-win').style.display='none';
+    uShowTool(null);
+  }
+}
+
+function uReset() {
+  document.getElementById('urge-win').style.display='none';
+  document.getElementById('urge-home').style.display='block';
+  document.getElementById('u-survived-btn').style.display='none';
+  uAffirmIdx=0;
+  const arc=document.getElementById('u-timer-arc');
+  if(arc){arc.style.strokeDashoffset='0';arc.style.stroke='#7F77DD';}
+  const tnum=document.getElementById('u-timer-num');
+  if(tnum) tnum.textContent='5:00';
+  const tbtn=document.getElementById('u-timer-btn');
+  if(tbtn) tbtn.textContent='Start the countdown';
+  const bbtn=document.getElementById('u-breath-btn');
+  if(bbtn) bbtn.textContent='Start breathing';
+  const br=document.getElementById('u-br');
+  if(br){br.style.transform='';br.style.transition='';}
+  const bi=document.getElementById('u-bi');
+  if(bi){bi.style.transform='';bi.style.background='';}
+  const bl=document.getElementById('u-bl');
+  if(bl) bl.innerHTML='TAP<br>START';
+}
+
 // ===================== INIT =====================
 document.addEventListener('DOMContentLoaded', function() {
   // Date
@@ -1582,6 +1921,87 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('med-stop').addEventListener('click', medStop);
 
   // ---- MILESTONE ----
+  // ---- URGE SURF ----
+  document.getElementById('sos-btn').addEventListener('click', uStart);
+
+  // Breath tool
+  document.getElementById('u-breath-btn').addEventListener('click', function() {
+    if(uBreathInterval) {
+      clearInterval(uBreathInterval); uBreathInterval=null;
+      this.textContent='Start breathing';
+      const br=document.getElementById('u-br');
+      const bi=document.getElementById('u-bi');
+      const bl=document.getElementById('u-bl');
+      if(br){br.style.transform='scale(1)';br.style.borderColor='';}
+      if(bi){bi.style.transform='scale(1)';bi.style.background='';}
+      if(bl) bl.innerHTML='TAP<br>START';
+      return;
+    }
+    this.textContent='Stop';
+    const phases=[
+      {lbl:'INHALE',dur:4,rs:'scale(1.22)',is:'scale(1.35)',ib:'rgba(127,119,221,0.35)',bc:'var(--ac)'},
+      {lbl:'HOLD',dur:4,rs:'scale(1.22)',is:'scale(1.35)',ib:'rgba(127,119,221,0.5)',bc:'#9977EE'},
+      {lbl:'EXHALE',dur:6,rs:'scale(1)',is:'scale(1)',ib:'rgba(127,119,221,0.1)',bc:'var(--ac2)'},
+      {lbl:'HOLD',dur:2,rs:'scale(1)',is:'scale(1)',ib:'rgba(127,119,221,0.08)',bc:'var(--bd)'},
+    ];
+    let pi=0;
+    const next=()=>{
+      const p=phases[pi%phases.length];
+      const br=document.getElementById('u-br');
+      const bi=document.getElementById('u-bi');
+      const bl=document.getElementById('u-bl');
+      if(!br) return;
+      br.style.transform=p.rs; br.style.borderColor=p.bc;
+      br.style.transition='all '+p.dur+'s ease-in-out';
+      bi.style.transform=p.is; bi.style.background=p.ib;
+      bi.style.transition='all '+p.dur+'s ease-in-out';
+      bl.textContent=p.lbl;
+      pi++;
+    };
+    next();
+    uBreathInterval=setInterval(next,4000);
+  });
+
+  // Timer tool
+  document.getElementById('u-timer-btn').addEventListener('click', function() {
+    if(uTimerRunning) {
+      uTimerRunning=false; cancelAnimationFrame(uTimerRAF);
+      this.textContent='Start the countdown';
+      document.getElementById('u-timer-num').textContent='5:00';
+      document.getElementById('u-timer-arc').style.strokeDashoffset='0';
+      return;
+    }
+    uTimerRunning=true; this.textContent='Stop';
+    uTimerStart=Date.now();
+    const total=300;
+    const tick=()=>{
+      const elapsed=(Date.now()-uTimerStart)/1000;
+      const rem=Math.max(0,total-elapsed);
+      const m=Math.floor(rem/60),s=Math.floor(rem%60);
+      const tnum=document.getElementById('u-timer-num');
+      const tarc=document.getElementById('u-timer-arc');
+      if(tnum) tnum.textContent=m+':'+(s<10?'0':'')+s;
+      if(tarc) tarc.style.strokeDashoffset=''+(326.7*(elapsed/total));
+      if(rem>0&&uTimerRunning){uTimerRAF=requestAnimationFrame(tick);}
+      else if(rem<=0){
+        uTimerRunning=false;
+        if(tnum) tnum.textContent='Done ✓';
+        if(tarc) tarc.style.stroke='#1D9E75';
+        document.getElementById('u-timer-btn').textContent='The urge is gone ✓';
+      }
+    };
+    tick();
+  });
+
+  // Affirmation next
+  document.getElementById('u-next-affirm').addEventListener('click', function() {
+    uAffirmIdx=(uAffirmIdx+1)%AFFIRMATIONS.length;
+    const el=document.getElementById('u-affirm-box');
+    if(!el) return;
+    el.style.opacity='0';
+    setTimeout(()=>{el.textContent=AFFIRMATIONS[uAffirmIdx];el.style.opacity='1';uRenderAffirmDots();},280);
+  });
+
   document.getElementById('ms-close').addEventListener('click', function() {
     document.getElementById('ms-overlay').classList.remove('on');
   });
