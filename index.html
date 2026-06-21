@@ -1194,20 +1194,82 @@ function medUpdateHeader(phase) {
   if(dur) dur.textContent = 'Phase ' + (medPhaseIdx + 1) + ' of ' + MED_PHASES.length;
 }
 
+// ---- Voice selection ----
+let medVoice = null;
+function medPickVoice() {
+  if(medVoice) return;
+  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+  // Priority order: best soothing voices on Android/Chrome
+  const preferred = [
+    'Google UK English Male',
+    'Google UK English Female',
+    'Google US English',
+    'Microsoft David - English (United States)',
+    'Microsoft Mark - English (United States)',
+    'en-GB',
+    'en-US',
+  ];
+  for(const name of preferred) {
+    const v = voices.find(v => v.name.includes(name) || v.lang === name);
+    if(v) { medVoice = v; break; }
+  }
+  // Fallback: any English voice
+  if(!medVoice) {
+    medVoice = voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
+  }
+}
+
+function medSpeak(text, onDone) {
+  if(!window.speechSynthesis || medStopFlag) { if(onDone) onDone(); return; }
+  window.speechSynthesis.cancel();
+  medPickVoice();
+  // Split into sentences so pauses feel natural between them
+  const sentences = text.match(/[^.!?]+[.!?]*\s*/g) || [text];
+  let idx = 0;
+  function speakNext() {
+    if(medStopFlag || idx >= sentences.length) { if(onDone) onDone(); return; }
+    const sentence = sentences[idx].trim();
+    idx++;
+    if(!sentence) { speakNext(); return; }
+    const u = new SpeechSynthesisUtterance(sentence);
+    if(medVoice) u.voice = medVoice;
+    u.rate = 0.72;      // Very slow and deliberate
+    u.pitch = 0.88;     // Slightly lower = more soothing
+    u.volume = 0.95;
+    // Gap between sentences — the pause that makes it feel guided
+    u.onend = () => {
+      if(medStopFlag) { if(onDone) onDone(); return; }
+      const gap = sentence.endsWith('...') ? 1400 : 900;
+      const t = setTimeout(speakNext, gap);
+      medTimers.push(t);
+    };
+    u.onerror = () => { if(onDone) onDone(); };
+    try { window.speechSynthesis.speak(u); } catch(e) { if(onDone) onDone(); }
+  }
+  speakNext();
+}
+
 function medRunStep(phaseIdx, stepIdx) {
   if(medStopFlag || phaseIdx >= MED_PHASES.length) {
     medFinish(); return;
   }
   const phase = MED_PHASES[phaseIdx];
   if(stepIdx >= phase.steps.length) {
-    // Next phase
     medPhaseIdx = phaseIdx + 1;
     medStepIdx = 0;
     if(medPhaseIdx < MED_PHASES.length) {
       medBowl();
       medUpdateDots(medPhaseIdx);
       medUpdateHeader(MED_PHASES[medPhaseIdx]);
-      const t = setTimeout(() => { if(!medStopFlag) medRunStep(medPhaseIdx, 0); }, 3000);
+      // Announce phase transition
+      const phaseName = MED_PHASES[medPhaseIdx].name;
+      const t = setTimeout(() => {
+        if(medStopFlag) return;
+        medSpeak(phaseName + '...', () => {
+          const t2 = setTimeout(() => { if(!medStopFlag) medRunStep(medPhaseIdx, 0); }, 1500);
+          medTimers.push(t2);
+        });
+      }, 1500);
       medTimers.push(t);
     } else {
       medFinish();
@@ -1222,11 +1284,18 @@ function medRunStep(phaseIdx, stepIdx) {
     medSetBreath(null, '', 0);
   }
   const status = document.getElementById('med-status');
-  if(status) status.textContent = 'Step ' + (stepIdx + 1) + ' of ' + phase.steps.length;
-  const t = setTimeout(() => {
-    if(!medStopFlag) medRunStep(phaseIdx, stepIdx + 1);
-  }, step.pause);
-  medTimers.push(t);
+  if(status) status.textContent = 'Phase ' + (phaseIdx + 1) + ' · Step ' + (stepIdx + 1) + ' of ' + phase.steps.length;
+
+  // Speak the step text, then wait the pause, then go to next step
+  medSpeak(step.text, () => {
+    if(medStopFlag) return;
+    // After speaking, hold the silence (pause) before next step
+    const silenceDur = step.breath === 'hold' ? step.pause : Math.max(step.pause - 1000, 800);
+    const t = setTimeout(() => {
+      if(!medStopFlag) medRunStep(phaseIdx, stepIdx + 1);
+    }, silenceDur);
+    medTimers.push(t);
+  });
 }
 
 function medStart() {
@@ -1235,17 +1304,38 @@ function medStart() {
   medPhaseIdx = 0; medStepIdx = 0;
   const btn = document.getElementById('med-btn');
   if(btn) btn.textContent = '⏸ Running...';
+
+  // Pre-load voices — Chrome needs a trigger to populate them
+  if(window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    const dummy = new SpeechSynthesisUtterance(' ');
+    dummy.volume = 0;
+    window.speechSynthesis.speak(dummy);
+    // Give voices time to load
+    setTimeout(() => { medPickVoice(); }, 300);
+  }
+
   medBowl();
   medUpdateDots(0);
   medUpdateHeader(MED_PHASES[0]);
-  setTimeout(() => medAmbient(), 2000);
-  const t = setTimeout(() => { if(!medStopFlag) medRunStep(0, 0); }, 2000);
+  setTimeout(() => medAmbient(), 3000);
+
+  // Opening intro with voice then begin
+  const t = setTimeout(() => {
+    if(medStopFlag) return;
+    medSpeak('Welcome... Find a comfortable position... and gently close your eyes...', () => {
+      if(medStopFlag) return;
+      const t2 = setTimeout(() => { if(!medStopFlag) medRunStep(0, 0); }, 2000);
+      medTimers.push(t2);
+    });
+  }, 1500);
   medTimers.push(t);
 }
 
 function medStop() {
   medStopFlag = true; medRunning = false;
   medClearTimers();
+  try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
   try { if(medCtx) { medCtx.close(); medCtx = null; } } catch(e){}
   const btn = document.getElementById('med-btn');
   if(btn) btn.textContent = '▶ Begin';
@@ -1268,6 +1358,7 @@ function medStop() {
 function medFinish() {
   medRunning = false;
   medClearTimers();
+  try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
   try { if(medCtx) { medCtx.close(); medCtx = null; } } catch(e){}
   const btn = document.getElementById('med-btn');
   if(btn) btn.textContent = '▶ Begin again';
