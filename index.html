@@ -2,584 +2,499 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#534AB7" id="theme-color-meta">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#534AB7" id="tc">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SR Tracker">
 <title>SR Tracker</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ac: #534AB7; --ac-light: #EEEDFE; --ac-dark: #3C3489;
-  --ac2: #AFA9EC; --ac4: #7F77DD;
-  --teal-50:#E1F5EE;--teal-400:#1D9E75;--teal-600:#0F6E56;--teal-800:#085041;
-  --green-50:#EAF3DE;--green-100:#C0DD97;--green-600:#3B6D11;--green-800:#27500A;
-  --amber-50:#FAEEDA;--amber-100:#FAC775;--amber-600:#854F0B;--amber-800:#633806;
-  --coral-50:#FAECE7;--coral-200:#F0997B;--coral-600:#993C1D;--coral-800:#712B13;
-  --bg:#F7F7F9;--surface:#FFFFFF;--text:#1A1A2E;
-  --ts:#6B6B80;--tt:#9999AA;
+:root{
+  --ac:#534AB7;--acl:#EEEDFE;--acd:#3C3489;--ac2:#AFA9EC;--ac4:#7F77DD;
+  --bg:#F7F7F9;--sf:#FFFFFF;--tx:#1A1A2E;--ts:#6B6B80;--tt:#9999AA;
   --bd:rgba(0,0,0,0.09);--bds:rgba(0,0,0,0.15);
   --r1:8px;--r2:12px;--r3:16px;
-  --sh:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --teal50:#E1F5EE;--teal4:#1D9E75;--teal6:#0F6E56;--teal8:#085041;
+  --grn50:#EAF3DE;--grn1:#C0DD97;--grn6:#3B6D11;--grn8:#27500A;
+  --amb50:#FAEEDA;--amb1:#FAC775;--amb6:#854F0B;--amb8:#633806;
+  --cor50:#FAECE7;--cor2:#F0997B;--cor6:#993C1D;--cor8:#712B13;
 }
 @media(prefers-color-scheme:dark){
-  :root{
-    --bg:#0F0F1A;--surface:#1A1A2A;--text:#F0F0FA;--ts:#9090A8;--tt:#5A5A70;
+  :root{--bg:#0F0F1A;--sf:#1A1A2A;--tx:#F0F0FA;--ts:#9090A8;--tt:#5A5A70;
     --bd:rgba(255,255,255,0.08);--bds:rgba(255,255,255,0.14);
-    --sh:0 1px 3px rgba(0,0,0,0.3);
-    --teal-50:#0A2018;--green-50:#142010;--green-100:#1E3018;
-    --amber-50:#241A08;--amber-100:#3A2808;--coral-50:#2A1008;
-    --ac-light:#1E1B3A;
-  }
+    --teal50:#0A2018;--grn50:#142010;--grn1:#1E3018;--amb50:#241A08;--amb1:#3A2808;--cor50:#2A1008;--acl:#1E1B3A;}
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
-body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto;}
-.hdr{display:flex;align-items:center;gap:10px;padding:52px 20px 12px;background:var(--surface);border-bottom:0.5px solid var(--bd);flex-shrink:0;}
-.hdr-icon{width:34px;height:34px;border-radius:10px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:17px;}
-.hdr h1{font-size:17px;font-weight:600;color:var(--text);flex:1;}
-.hdr-date{font-size:12px;color:var(--ts);margin-top:1px;}
-.cog-btn{border:none;background:transparent;cursor:pointer;font-size:22px;padding:6px;color:var(--ts);line-height:1;-webkit-appearance:none;}
+.hdr{display:flex;align-items:center;gap:10px;padding:52px 20px 12px;background:var(--sf);border-bottom:.5px solid var(--bd);flex-shrink:0;}
+.hdr-ic{width:34px;height:34px;border-radius:10px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.hdr h1{font-size:17px;font-weight:600;flex:1;}
+.hdr-date{font-size:12px;color:var(--ts);}
+.cogbtn{border:none;background:transparent;cursor:pointer;font-size:22px;padding:6px;color:var(--ts);}
 .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 24px;}
-.tabs{display:flex;background:var(--surface);border-top:0.5px solid var(--bd);padding:8px 0 max(8px,env(safe-area-inset-bottom));flex-shrink:0;}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:10px;font-weight:500;}
+.tabs{display:flex;background:var(--sf);border-top:.5px solid var(--bd);padding:8px 0 max(8px,env(safe-area-inset-bottom));flex-shrink:0;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:9px;font-weight:500;}
 .tab.on{color:var(--ac);}
-.tab-ic{font-size:20px;line-height:1;}
+.tab-ic{font-size:19px;line-height:1;}
 .sec{display:none;}.sec.on{display:block;}
-.card{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r3);padding:16px;margin-bottom:12px;box-shadow:var(--sh);}
+.card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r3);padding:16px;margin-bottom:12px;}
 .lbl{font-size:11px;font-weight:600;color:var(--ts);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
-.streak-block{display:flex;align-items:flex-start;gap:16px;}
-.streak-left{flex-shrink:0;text-align:center;}
-.streak-num{font-size:52px;font-weight:600;color:var(--text);line-height:1;}
-.streak-days{font-size:12px;color:var(--ts);margin-top:2px;}
-.ph-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:10px;}
-.ph-green{background:var(--green-100);color:var(--green-800);}
-.ph-purple{background:var(--ac-light);color:var(--ac-dark);}
-.ph-amber{background:var(--amber-100);color:var(--amber-800);}
-.q-side{flex:1;border-left:2px solid var(--ac4);padding-left:14px;}
-.q-text{font-size:13px;color:var(--ac-dark);line-height:1.6;font-style:italic;min-height:60px;}
+/* Streak card */
+.streak-block{display:flex;align-items:flex-start;gap:14px;}
+.streak-left{flex-shrink:0;text-align:center;min-width:120px;}
+.aura-wrap{position:relative;width:120px;height:120px;margin:0 auto 4px;}
+.aura-svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.aura-bg{fill:none;stroke:var(--bd);stroke-width:7;}
+.aura-bg2{fill:none;stroke:var(--bd);stroke-width:4;}
+.aura-ring{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),stroke .8s;}
+.aura-ring2{fill:none;stroke-width:4;stroke-linecap:round;opacity:0;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1),stroke .8s,opacity .8s;}
+.aura-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.aura-inner .snum{font-size:32px;font-weight:700;color:var(--tx);line-height:1;}
+.aura-inner .sday{font-size:10px;color:var(--ts);}
+.flame-wrap{display:flex;align-items:center;justify-content:center;margin:4px auto 6px;transition:all .5s;}
+.ph-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-top:4px;}
+.bd0{background:#E8E8EE;color:#666;}
+.bd7{background:linear-gradient(135deg,#C0DD97,#7EC85A);color:#1A4A08;border:1.5px solid #7EC85A;}
+.bd14{background:linear-gradient(135deg,#AFA9EC,#7F77DD);color:#1A0A5A;border:1.5px solid #7F77DD;}
+.bd21{background:linear-gradient(135deg,#FFD700,#FFA500);color:#4A2800;border:1.5px solid #FFA500;}
+.bd30{background:linear-gradient(135deg,#F0997B,#E05A10);color:#2A0A00;border:1.5px solid #E05A10;}
+.bd40{background:linear-gradient(135deg,#00E0C0,#0A9E88);color:#002A24;border:1.5px solid #0A9E88;}
+.bd60{background:linear-gradient(135deg,#EE88FF,#9933CC);color:#1A0030;border:1.5px solid #9933CC;}
+.bd90{background:linear-gradient(135deg,#FFD700,#FF8C00,#FF4500);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 8px rgba(255,180,0,.4);}
+.bd120{background:linear-gradient(135deg,#00FFFF,#0066FF);color:#000830;border:2px solid #00CCFF;box-shadow:0 0 8px rgba(0,200,255,.4);}
+.bd180{background:linear-gradient(135deg,#FF00FF,#8800FF);color:#FFE0FF;border:2px solid #CC00FF;box-shadow:0 0 10px rgba(180,0,255,.4);}
+.bd270{background:linear-gradient(135deg,#FFD700,#FF4400,#FF0000);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 14px rgba(255,180,0,.5);}
+.bd365{background:linear-gradient(135deg,#FFFFFF,#E0F0FF,#C0D8FF);color:#000820;border:2.5px solid #FFF;box-shadow:0 0 18px rgba(200,220,255,.7);animation:lgnd 2s ease-in-out infinite;}
+@keyframes lgnd{0%,100%{box-shadow:0 0 18px rgba(200,220,255,.7);}50%{box-shadow:0 0 28px rgba(200,220,255,1);}}
+/* Quote */
+.q-side{flex:1;border-left:2px solid var(--ac4);padding-left:12px;}
+.q-text{font-size:12px;color:var(--acd);line-height:1.6;font-style:italic;min-height:56px;}
 @media(prefers-color-scheme:dark){.q-text{color:var(--ac2);}}
-.q-nav{display:flex;align-items:center;gap:6px;margin-top:10px;}
+.q-nav{display:flex;align-items:center;gap:4px;margin-top:8px;}
 .qbtn{border:none;background:transparent;cursor:pointer;color:var(--ts);font-size:18px;padding:2px 4px;}
-.qdots{display:flex;gap:4px;flex:1;}
+.qdots{display:flex;gap:3px;flex:1;}
 .qdot{width:5px;height:5px;border-radius:50%;background:var(--bds);cursor:pointer;}
 .qdot.on{background:var(--ac4);}
+/* Metrics */
 .m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
-.metric{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r2);padding:12px 10px;text-align:center;box-shadow:var(--sh);}
-.m-val{font-size:22px;font-weight:600;color:var(--text);}
+.metric{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r2);padding:12px 8px;text-align:center;}
+.m-val{font-size:20px;font-weight:700;color:var(--tx);}
 .m-lbl{font-size:10px;color:var(--ts);margin-top:2px;font-weight:500;}
-.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:4px;}
-.mood-btn{border:0.5px solid var(--bds);background:var(--bg);border-radius:var(--r1);padding:8px 2px;cursor:pointer;text-align:center;font-size:10px;color:var(--ts);font-family:'Inter',sans-serif;font-weight:500;-webkit-appearance:none;}
-.mood-btn.on{border-color:var(--ac4);background:var(--ac-light);color:var(--ac-dark);}
-.mood-ic{font-size:18px;display:block;margin-bottom:3px;}
-.sl-row{margin-bottom:14px;}
+/* Check-in */
+.mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:4px;}
+.mbtn{border:.5px solid var(--bds);background:var(--bg);border-radius:var(--r1);padding:7px 2px;cursor:pointer;text-align:center;font-size:10px;color:var(--ts);font-family:'Inter',sans-serif;font-weight:500;-webkit-appearance:none;}
+.mbtn.on{border-color:var(--ac4);background:var(--acl);color:var(--acd);}
+.mic{font-size:17px;display:block;margin-bottom:2px;}
+.sl-row{margin-bottom:12px;}
 .sl-row:last-child{margin-bottom:0;}
-.sl-lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--ts);margin-bottom:6px;}
-.sl-lbl span{font-weight:600;color:var(--text);}
+.sl-lbl{display:flex;justify-content:space-between;font-size:13px;color:var(--ts);margin-bottom:5px;}
+.sl-lbl span{font-weight:600;color:var(--tx);}
 input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--bds);border-radius:2px;outline:none;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ac);cursor:pointer;box-shadow:0 0 0 3px var(--ac-light);}
-textarea,input[type=text],input[type=date]{width:100%;border:0.5px solid var(--bds);border-radius:var(--r1);padding:12px;font-family:'Inter',sans-serif;font-size:14px;background:var(--bg);color:var(--text);line-height:1.6;outline:none;-webkit-appearance:none;appearance:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ac);cursor:pointer;box-shadow:0 0 0 3px var(--acl);}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--ac);border:none;cursor:pointer;}
+textarea,input[type=text],input[type=date]{width:100%;border:.5px solid var(--bds);border-radius:var(--r1);padding:11px;font-family:'Inter',sans-serif;font-size:14px;background:var(--bg);color:var(--tx);line-height:1.6;outline:none;-webkit-appearance:none;}
 textarea{resize:none;}
 textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--ac4);}
-.btn{width:100%;padding:14px;background:var(--ac);color:white;border:none;border-radius:var(--r2);font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:10px;-webkit-appearance:none;}
+.btn{width:100%;padding:13px;background:var(--ac);color:white;border:none;border-radius:var(--r2);font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;-webkit-appearance:none;}
 .btn:active{opacity:.85;}
-.btn-g{flex:1;padding:12px;background:var(--surface);border:0.5px solid var(--bds);border-radius:var(--r2);font-size:13px;font-weight:500;cursor:pointer;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
+.btn-g{flex:1;padding:11px;background:var(--sf);border:.5px solid var(--bds);border-radius:var(--r2);font-size:12px;font-weight:500;cursor:pointer;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
 .btn-g:active{background:var(--bg);}
 .btn-d{border-color:#E24B4A;color:#A32D2D;}
 .btn-row{display:flex;gap:8px;}
-.entry{border-left:2px solid var(--ac2);padding:10px 14px;margin-bottom:10px;}
-.e-date{font-size:11px;color:var(--tt);margin-bottom:4px;font-weight:500;}
-.e-mood{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text);}
-.e-note{font-size:13px;color:var(--ts);line-height:1.5;margin-top:4px;}
-.ins-card{background:var(--ac-light);border:0.5px solid var(--ac2);border-radius:var(--r2);padding:14px;margin-bottom:10px;}
-.ins-title{font-size:12px;font-weight:600;color:var(--ac-dark);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
-.ins-text{font-size:13px;color:var(--ac);line-height:1.5;}
-.bars{margin-top:4px;}
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px;}
-.bar-lbl{width:72px;color:var(--ts);flex-shrink:0;font-weight:500;}
-.bar-track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:0.5px solid var(--bd);}
-.bar-fill{height:100%;border-radius:3px;background:var(--ac4);}
-.bar-val{width:20px;text-align:right;color:var(--ts);font-weight:600;}
+/* Triggers */
 .trig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
-.trig-btn{border:0.5px solid var(--bds);background:var(--bg);border-radius:var(--r1);padding:9px 4px;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
-.trig-btn.on{border-color:#D85A30;background:var(--coral-50);color:var(--coral-800);}
+.trig-btn{border:.5px solid var(--bds);background:var(--bg);border-radius:var(--r1);padding:9px 4px;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
+.trig-btn.on{border-color:#D85A30;background:var(--cor50);color:var(--cor8);}
+/* History */
+.entry{border-left:2px solid var(--ac2);padding:10px 14px;margin-bottom:10px;}
+.e-date{font-size:11px;color:var(--tt);margin-bottom:3px;font-weight:500;}
+.e-mood{font-size:13px;font-weight:600;margin-bottom:3px;}
+.e-note{font-size:12px;color:var(--ts);line-height:1.5;margin-top:3px;}
+.wk-card{background:var(--bg);border-radius:var(--r1);padding:12px 14px;margin-bottom:8px;border:.5px solid var(--bd);}
+/* Insights */
+.ic{background:var(--acl);border:.5px solid var(--ac2);border-radius:var(--r2);padding:14px;margin-bottom:10px;}
+.ic-t{font-size:11px;font-weight:700;color:var(--acd);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
+.ic-b{font-size:13px;color:var(--ac);line-height:1.5;}
+@media(prefers-color-scheme:dark){.ic-t{color:var(--ac2);}.ic-b{color:var(--ac2);}}
+.bars{margin-top:4px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px;}
+.bar-lbl{width:70px;color:var(--ts);flex-shrink:0;font-weight:500;}
+.bar-track{flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;border:.5px solid var(--bd);}
+.bar-fill{height:100%;border-radius:3px;background:var(--ac4);}
+.bar-val{width:18px;text-align:right;color:var(--ts);font-weight:600;}
+/* Phases */
 .ph-block{border-radius:var(--r2);padding:14px;margin-bottom:10px;}
-.ph1{background:var(--teal-50);border:0.5px solid var(--teal-400);}
-.ph2{background:var(--ac-light);border:0.5px solid var(--ac2);}
-.ph3{background:var(--amber-50);border:0.5px solid var(--amber-100);}
-.ph4{background:var(--green-50);border:0.5px solid var(--green-100);}
-.ph1 .ph-title{color:var(--teal-800);}.ph2 .ph-title{color:var(--ac-dark);}
-.ph3 .ph-title{color:var(--amber-800);}.ph4 .ph-title{color:var(--green-800);}
-.ph1 .ph-text{color:var(--teal-600);}.ph2 .ph-text{color:var(--ac);}
-.ph3 .ph-text{color:var(--amber-600);}.ph4 .ph-text{color:var(--green-600);}
-.ph-title{font-size:13px;font-weight:600;margin-bottom:6px;}
+.ph1{background:var(--teal50);border:.5px solid var(--teal4);}
+.ph2{background:var(--acl);border:.5px solid var(--ac2);}
+.ph3{background:var(--amb50);border:.5px solid var(--amb1);}
+.ph4{background:var(--grn50);border:.5px solid var(--grn1);}
+.ph5{background:linear-gradient(135deg,#0A0520,#1A0A3A);border:.5px solid #7B4FFF;}
+.ph6{background:linear-gradient(135deg,#0A0A0A,#1A0808);border:.5px solid #FFD700;}
+.ph-title{font-size:13px;font-weight:700;margin-bottom:5px;}
 .ph-text{font-size:13px;line-height:1.6;}
-.sep{border:none;border-top:0.5px solid var(--bd);margin:14px 0;}
-.week-card{background:var(--bg);border-radius:var(--r1);padding:12px 14px;margin-bottom:8px;border:0.5px solid var(--bd);}
-.w-banner{background:var(--amber-50);border:0.5px solid var(--amber-100);border-radius:var(--r2);padding:14px;margin-bottom:12px;}
-.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;white-space:nowrap;}
-.toast.on{opacity:1;}
+.ph1 .ph-title{color:var(--teal8);}.ph1 .ph-text{color:var(--teal6);}
+.ph2 .ph-title{color:var(--acd);}.ph2 .ph-text{color:var(--ac);}
+.ph3 .ph-title{color:var(--amb8);}.ph3 .ph-text{color:var(--amb6);}
+.ph4 .ph-title{color:var(--grn8);}.ph4 .ph-text{color:var(--grn6);}
+.ph5 .ph-title{color:#C8A8FF;}.ph5 .ph-text{color:#9977EE;}
+.ph6 .ph-title{color:#FFD700;}.ph6 .ph-text{color:#CC9900;}
+/* Transmutation */
+.tr-nav.on{border-color:var(--ac)!important;color:var(--ac)!important;}
+.guide-step{display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;font-size:13px;color:var(--ts);line-height:1.5;}
+.step-num{background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.tip-box{background:var(--amb50);border-left:3px solid var(--amb1);padding:9px 11px;border-radius:0 7px 7px 0;font-size:12px;color:var(--amb8);line-height:1.5;margin-top:9px;}
+.pose-header{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:7px;}
+.pose-why{font-size:12px;color:var(--ts);background:var(--bg);border-radius:7px;padding:9px;margin-bottom:11px;line-height:1.6;font-style:italic;}
+.pose-dur{font-size:11px;font-weight:600;color:var(--ac);margin-top:9px;padding:5px 9px;background:var(--acl);border-radius:6px;display:inline-block;}
+.med-step{margin-bottom:14px;padding-bottom:14px;border-bottom:.5px solid var(--bd);}
+.med-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.med-step-title{font-size:11px;font-weight:700;color:var(--ac);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+.med-step p{font-size:13px;color:var(--ts);line-height:1.7;}
+/* Stories */
+.story-card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r3);padding:18px;min-height:280px;transition:opacity .25s;}
+.story-card.fade{opacity:0;}
+.story-flair{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--grn1);color:var(--grn8);margin-bottom:9px;}
+.story-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:6px;line-height:1.4;}
+.story-meta{font-size:11px;color:var(--tt);margin-bottom:12px;}
+.story-body{font-size:13px;color:var(--ts);line-height:1.8;}
+.story-votes{font-size:11px;color:var(--cor6);font-weight:600;margin-top:10px;}
+/* Weekly */
+.w-banner{background:var(--amb50);border:.5px solid var(--amb1);border-radius:var(--r2);padding:13px;margin-bottom:11px;}
+.sep{border:none;border-top:.5px solid var(--bd);margin:13px 0;}
 /* Settings */
-.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;}
-.settings-panel{position:absolute;top:0;right:0;width:88%;max-width:360px;height:100%;background:var(--surface);overflow-y:auto;padding:60px 20px 40px;box-shadow:-4px 0 24px rgba(0,0,0,0.25);}
-.lang-btn,.theme-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border:0.5px solid var(--bds);border-radius:var(--r1);background:var(--bg);font-size:13px;font-weight:500;color:var(--text);cursor:pointer;font-family:'Inter',sans-serif;width:100%;text-align:left;-webkit-appearance:none;margin-bottom:0;}
-.lang-btn.on,.theme-btn.on{border-color:var(--ac);background:var(--ac-light);color:var(--ac-dark);}
-.theme-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,0.3);}
-.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.theme-list{display:flex;flex-direction:column;gap:8px;}
-@media(prefers-color-scheme:dark){
-  .ph1 .ph-title{color:#9FE1CB;}.ph2 .ph-title{color:var(--ac2);}
-  .ph3 .ph-title{color:var(--amber-100);}.ph4 .ph-title{color:var(--green-100);}
-  .ph1 .ph-text{color:#5DCAA5;}.ph2 .ph-text{color:var(--ac2);}
-  .ph3 .ph-text{color:var(--amber-100);}.ph4 .ph-text{color:var(--green-100);}
-  .btn-d{color:#F09595;border-color:#E24B4A;}
-  .ins-text{color:var(--ac2);}
-}
-
-  /* Aura meter */
-  .aura-wrap{position:relative;width:120px;height:120px;margin:0 auto 4px;}
-  .aura-svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
-  .aura-bg{fill:none;stroke:var(--bd);stroke-width:7;}
-  .aura-ring{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),stroke 0.8s;}
-  .aura-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-  .aura-inner .streak-num{font-size:34px;font-weight:600;color:var(--text);line-height:1;}
-  .aura-inner .streak-days{font-size:10px;color:var(--ts);}
-
-  /* Flame */
-  .flame-wrap{width:44px;height:56px;margin:4px auto 6px;display:flex;align-items:center;justify-content:center;}
-  #flame-svg{width:100%;height:100%;overflow:visible;}
-
-  /* Milestone badges */
-  .ph-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px;letter-spacing:0.02em;}
-  .badge-d0{background:#E8E8EE;color:#666;}
-  .badge-d7{background:linear-gradient(135deg,#C0DD97,#7EC85A);color:#1A4A08;border:1.5px solid #7EC85A;}
-  .badge-d14{background:linear-gradient(135deg,#AFA9EC,#7F77DD);color:#1A0A5A;border:1.5px solid #7F77DD;}
-  .badge-d21{background:linear-gradient(135deg,#FFD700,#FFA500);color:#4A2800;border:1.5px solid #FFA500;}
-  .badge-d30{background:linear-gradient(135deg,#F0997B,#E05A10);color:#2A0A00;border:1.5px solid #E05A10;}
-  .badge-d40{background:linear-gradient(135deg,#00E0C0,#0A9E88);color:#002A24;border:1.5px solid #0A9E88;}
-  .badge-d60{background:linear-gradient(135deg,#EE88FF,#9933CC);color:#1A0030;border:1.5px solid #9933CC;}
-  .badge-d90{background:linear-gradient(135deg,#FFD700,#FF8C00,#FF4500);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 10px rgba(255,180,0,0.4);}
-
-  /* Milestone modal */
-  .milestone-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:400;align-items:center;justify-content:center;}
-  .milestone-overlay.on{display:flex;}
-  .milestone-modal{background:var(--surface);border-radius:24px;padding:32px 24px;max-width:320px;width:90%;text-align:center;animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1);}
-  @keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
-  .milestone-flame{font-size:52px;margin-bottom:8px;display:block;}
-  .milestone-day{font-size:13px;font-weight:600;color:var(--ts);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
-  .milestone-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.2;}
-  .milestone-msg{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:20px;}
-  .milestone-close{background:var(--ac);color:white;border:none;border-radius:12px;padding:12px 32px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
-
-  .aura-ring2{fill:none;stroke-width:4;stroke-linecap:round;stroke-dasharray:263.9;stroke-dashoffset:263.9;opacity:0;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1),stroke 0.8s,opacity 0.8s;}
-  .badge-d120{background:linear-gradient(135deg,#00FFFF,#0066FF);color:#000830;border:2px solid #00CCFF;box-shadow:0 0 8px rgba(0,200,255,0.4);}
-  .badge-d180{background:linear-gradient(135deg,#FF00FF,#8800FF);color:#FFE0FF;border:2px solid #CC00FF;box-shadow:0 0 10px rgba(180,0,255,0.4);}
-  .badge-d270{background:linear-gradient(135deg,#FFD700,#FF4400,#FF0000);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 14px rgba(255,180,0,0.5);}
-  .badge-d365{background:linear-gradient(135deg,#FFFFFF,#E0F0FF,#C0D8FF);color:#000820;border:2.5px solid #FFFFFF;box-shadow:0 0 18px rgba(200,220,255,0.7);animation:legendPulse 2s ease-in-out infinite;}
-  @keyframes legendPulse{0%,100%{box-shadow:0 0 18px rgba(200,220,255,0.7);}50%{box-shadow:0 0 28px rgba(200,220,255,1);}}
-
-  /* Transmutation guide */
-  .tr-sec{display:none;}.tr-sec.on{display:block;}
-  .tr-nav.on{border-color:var(--ac);color:var(--ac);}
-  .guide-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px;color:var(--ts);line-height:1.5;}
-  .step-num{background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
-  .tip-box{background:var(--amber-50);border-left:3px solid var(--amber-100);padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;color:var(--amber-800);line-height:1.5;margin-top:10px;}
-  .pose-header{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
-  .pose-why{font-size:12px;color:var(--ts);background:var(--bg);border-radius:8px;padding:10px;margin-bottom:12px;line-height:1.6;font-style:italic;}
-  .pose-duration{font-size:11px;font-weight:600;color:var(--ac);margin-top:10px;padding:6px 10px;background:var(--ac-light);border-radius:6px;display:inline-block;}
-  .med-step{margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid var(--bd);}
-  .med-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-  .med-step-title{font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;}
-  .med-step p{font-size:13px;color:var(--ts);line-height:1.7;}
-  /* Stories */
-  .story-card{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r3);padding:20px;min-height:300px;box-shadow:var(--sh);transition:opacity 0.3s;}
-  .story-card.fading{opacity:0;}
-  .story-flair{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--green-100);color:var(--green-800);margin-bottom:10px;}
-  .story-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4;}
-  .story-meta{font-size:11px;color:var(--tt);margin-bottom:14px;}
-  .story-body{font-size:13px;color:var(--ts);line-height:1.8;}
-  .story-loading{display:flex;align-items:center;justify-content:center;height:200px;color:var(--tt);font-size:13px;}
-  .story-upvotes{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--coral-600);font-weight:600;margin-top:12px;}
-  /* Expanded phases */
-  .ph5{background:linear-gradient(135deg,#0A0520,#1A0A3A);border:0.5px solid #7B4FFF;}
-  .ph5 .ph-title{color:#C8A8FF;}.ph5 .ph-text{color:#9977EE;}
-  .ph6{background:linear-gradient(135deg,#0A0A0A,#1A0808);border:0.5px solid #FFD700;}
-  .ph6 .ph-title{color:#FFD700;}.ph6 .ph-text{color:#CC9900;}
+.s-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;}
+.s-panel{position:absolute;top:0;right:0;width:88%;max-width:340px;height:100%;background:var(--sf);overflow-y:auto;padding:56px 18px 36px;box-shadow:-4px 0 24px rgba(0,0,0,.25);}
+.lang-btn,.theme-btn{display:flex;align-items:center;gap:7px;padding:9px 11px;border:.5px solid var(--bds);border-radius:var(--r1);background:var(--bg);font-size:13px;font-weight:500;color:var(--tx);cursor:pointer;font-family:'Inter',sans-serif;width:100%;-webkit-appearance:none;}
+.lang-btn.on,.theme-btn.on{border-color:var(--ac);background:var(--acl);color:var(--acd);}
+.theme-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,.3);}
+.lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.theme-list,.s-sect{display:flex;flex-direction:column;gap:6px;}
+/* Milestone modal */
+.ms-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;align-items:center;justify-content:center;}
+.ms-overlay.on{display:flex;}
+.ms-modal{background:var(--sf);border-radius:22px;padding:28px 22px;max-width:300px;width:90%;text-align:center;animation:pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+.ms-flame{font-size:48px;margin-bottom:6px;display:block;}
+.ms-day{font-size:12px;font-weight:600;color:var(--ts);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;}
+.ms-title{font-size:20px;font-weight:700;color:var(--tx);margin-bottom:10px;line-height:1.2;}
+.ms-msg{font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:18px;}
+.ms-close{background:var(--ac);color:white;border:none;border-radius:11px;padding:11px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--tx);color:var(--sf);padding:9px 18px;border-radius:18px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;white-space:nowrap;}
+.toast.on{opacity:1;}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <div class="hdr">
-    <div class="hdr-icon">🔥</div>
-    <div style="flex:1;">
-      <h1>SR Tracker</h1>
-      <div class="hdr-date" id="today-date"></div>
-    </div>
-    <button class="cog-btn" id="cog-btn" aria-label="Settings">⚙️</button>
+<div class="hdr">
+  <div class="hdr-ic">🔥</div>
+  <div style="flex:1">
+    <h1>SR Tracker</h1>
+    <div class="hdr-date" id="hdr-date"></div>
   </div>
-
-  <div class="scroll" id="main-scroll">
-
-    <div id="s-home" class="sec on">
-      <div class="card">
-        <div class="streak-block">
-          <div class="streak-left">
-            <!-- AURA METER -->
-            <div class="aura-wrap" id="aura-wrap">
-              <svg class="aura-svg" id="aura-svg" viewBox="0 0 120 120" width="120" height="120">
-                <circle class="aura-bg" cx="60" cy="60" r="52"/>
-                <circle class="aura-ring" id="aura-ring" cx="60" cy="60" r="52"
-                  stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
-                <circle class="aura-bg" cx="60" cy="60" r="42" style="stroke-width:4;"/>
-                <circle class="aura-ring2" id="aura-ring2" cx="60" cy="60" r="42"
-                  stroke-dasharray="263.9" stroke-dashoffset="263.9" style="stroke-width:4;"/>
-              </svg>
-              <div class="aura-inner">
-                <div class="streak-num" id="streak-num">0</div>
-                <div class="streak-days">days</div>
-              </div>
-            </div>
-            <!-- FLAME -->
-            <div class="flame-wrap" id="flame-wrap">
-              <svg id="flame-svg" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg"></svg>
-            </div>
-            <!-- MILESTONE BADGE -->
-            <div class="ph-badge ph-green" id="ph-badge">Foundation</div>
-          </div>
-          <div class="q-side">
-            <div class="q-text" id="q-text">Remember how it felt to be high up the journey — that clarity, that power is still inside you.</div>
-            <div class="q-nav">
-              <button class="qbtn" id="q-prev" aria-label="Previous">‹</button>
-              <div class="qdots" id="qdots"></div>
-              <button class="qbtn" id="q-next" aria-label="Next">›</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="m-grid">
-        <div class="metric"><div class="m-val" id="m-best">0</div><div class="m-lbl">Best streak</div></div>
-        <div class="metric"><div class="m-val" id="m-entries">0</div><div class="m-lbl">Check-ins</div></div>
-        <div class="metric"><div class="m-val" id="m-energy">–</div><div class="m-lbl">Avg energy</div></div>
-      </div>
-
-      <div class="card">
-        <div class="lbl">Latest check-in</div>
-        <div id="latest-entry" style="font-size:13px;color:var(--ts);">No entries yet. Do your first check-in.</div>
-      </div>
-
-      <div id="weekly-prompt" style="display:none;">
-        <div class="w-banner">
-          <p style="font-size:13px;font-weight:600;color:var(--amber-800);margin-bottom:3px;">Weekly review due</p>
-          <p style="font-size:12px;color:var(--amber-600);">7+ days since your last review.</p>
-        </div>
-        <button class="btn" style="margin-top:0;margin-bottom:12px;" id="start-review-btn">Start weekly review</button>
-      </div>
-
-      <div id="start-date-block" style="display:none;margin-bottom:12px;">
-        <div class="card" style="margin-bottom:0;">
-          <div class="lbl">Streak start date</div>
-          <input type="date" id="start-date-input" style="margin-bottom:8px;">
-          <button class="btn" style="margin-top:0;" id="set-date-btn">Set start date</button>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn-g" id="pick-date-btn">📅 Set start date</button>
-        <button class="btn-g btn-d" id="reset-btn">↺ Reset</button>
-      </div>
-    </div>
-
-    <div id="s-checkin" class="sec">
-      <div id="daily-form">
-        <div class="card">
-          <div class="lbl">How are you feeling right now?</div>
-          <div class="mood-grid" id="mood-grid">
-            <button class="mood-btn" data-mood="Powerful"><span class="mood-ic">⚡</span>Powerful</button>
-            <button class="mood-btn" data-mood="Calm"><span class="mood-ic">🌊</span>Calm</button>
-            <button class="mood-btn" data-mood="Focused"><span class="mood-ic">🎯</span>Focused</button>
-            <button class="mood-btn" data-mood="Restless"><span class="mood-ic">🌀</span>Restless</button>
-            <button class="mood-btn" data-mood="Irritable"><span class="mood-ic">😤</span>Irritable</button>
-            <button class="mood-btn" data-mood="Anxious"><span class="mood-ic">😰</span>Anxious</button>
-            <button class="mood-btn" data-mood="Confident"><span class="mood-ic">💪</span>Confident</button>
-            <button class="mood-btn" data-mood="Foggy"><span class="mood-ic">🌫️</span>Foggy</button>
-            <button class="mood-btn" data-mood="Creative"><span class="mood-ic">✨</span>Creative</button>
-            <button class="mood-btn" data-mood="Low"><span class="mood-ic">🌑</span>Low</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="sl-row"><div class="sl-lbl">Energy <span id="ev">5</span>/10</div><input type="range" min="1" max="10" value="5" id="s-energy"></div>
-          <div class="sl-row"><div class="sl-lbl">Mental clarity <span id="cv">5</span>/10</div><input type="range" min="1" max="10" value="5" id="s-clarity"></div>
-          <div class="sl-row"><div class="sl-lbl">Urge intensity <span id="uv">3</span>/10</div><input type="range" min="1" max="10" value="3" id="s-urge"></div>
-          <div class="sl-row"><div class="sl-lbl">Social confidence <span id="sv">5</span>/10</div><input type="range" min="1" max="10" value="5" id="s-social"></div>
-        </div>
-        <div class="card">
-          <div class="lbl">Urge triggers today?</div>
-          <div class="trig-grid" id="trig-grid">
-            <button class="trig-btn">Social media</button>
-            <button class="trig-btn">Loneliness</button>
-            <button class="trig-btn">Stress</button>
-            <button class="trig-btn">Boredom</button>
-            <button class="trig-btn">Fantasy</button>
-            <button class="trig-btn">Alcohol</button>
-            <button class="trig-btn">Tiredness</button>
-            <button class="trig-btn">Procrastination</button>
-            <button class="trig-btn">Other</button>
-          </div>
-          <input type="text" id="custom-trigger" placeholder="Custom trigger (optional)">
-        </div>
-        <div class="card">
-          <div class="lbl">Journal note</div>
-          <textarea id="journal-text" rows="4" placeholder="How's the day been? Wins, challenges, insights..."></textarea>
-          <button class="btn" id="save-entry-btn">Save check-in</button>
-        </div>
-      </div>
-
-      <div id="weekly-form" style="display:none;">
-        <div class="w-banner">
-          <p style="font-size:13px;font-weight:600;color:var(--amber-800);margin-bottom:2px;">Weekly review</p>
-          <p style="font-size:12px;color:var(--amber-600);">Take 5 minutes to reflect honestly.</p>
-        </div>
-        <div class="card">
-          <div style="margin-bottom:14px;"><div class="lbl">What went well this week?</div><textarea id="rq1" rows="3" placeholder="Wins, moments of discipline..."></textarea></div>
-          <hr class="sep">
-          <div style="margin-bottom:14px;"><div class="lbl">What was hardest?</div><textarea id="rq2" rows="3" placeholder="Challenges, temptations..."></textarea></div>
-          <hr class="sep">
-          <div style="margin-bottom:14px;"><div class="lbl">What did you notice about yourself?</div><textarea id="rq3" rows="3" placeholder="Patterns, insights..."></textarea></div>
-          <hr class="sep">
-          <div><div class="lbl">Intention for next week</div><textarea id="rq4" rows="2" placeholder="One focus or commitment..."></textarea></div>
-        </div>
-        <button class="btn" id="save-review-btn">Save weekly review</button>
-        <button class="btn-g" style="width:100%;margin-top:8px;" id="back-to-daily-btn">Back to daily check-in</button>
-      </div>
-    </div>
-
-    <div id="s-history" class="sec">
-      <div class="btn-row" style="margin-bottom:12px;">
-        <button class="btn-g on" id="hf-all" style="border-color:var(--ac);color:var(--ac);">All</button>
-        <button class="btn-g" id="hf-daily">Daily</button>
-        <button class="btn-g" id="hf-weekly">Weekly</button>
-      </div>
-      <div id="history-list" style="font-size:13px;color:var(--ts);">No entries yet.</div>
-      <button class="btn-g" style="width:100%;margin-top:12px;" id="export-btn">⬇ Export as CSV</button>
-    </div>
-
-    <div id="s-insights" class="sec">
-      <div id="insights-content"><p style="font-size:13px;color:var(--ts);">Log at least 3 check-ins to see insights.</p></div>
-    </div>
-
-    <div id="s-phases" class="sec">
-      <div id="phase-current" class="ph-block ph1" style="margin-bottom:16px;">
-        <div class="ph-title" id="pc-title">Your current phase</div>
-        <div class="ph-text" id="pc-text">Set your start date to see phase guidance.</div>
-      </div>
-      <div class="lbl" style="margin-bottom:8px;">All phases</div>
-      <div class="ph-block ph1"><div class="ph-title">Days 1–7 · Foundation phase</div><div class="ph-text">Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding. The foundation is being laid.</div></div>
-      <div class="ph-block ph2"><div class="ph-title">Days 8–21 · Rewiring phase</div><div class="ph-text">Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.</div></div>
-      <div class="ph-block ph3"><div class="ph-title">Days 22–40 · Peak energy phase</div><div class="ph-text">Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.</div></div>
-      <div class="ph-block ph4"><div class="ph-title">Day 41–89 · Mastery phase</div><div class="ph-text">The practice becomes identity. Urges stabilise. Energy is sustained. Focus shifts inward — deeper meditation, purpose, long-term clarity. You may notice your voice deepens, your eye contact holds longer, and others respond to you differently.</div></div>
-      <div class="ph-block ph5"><div class="ph-title">Day 90–119 · Crystallisation phase</div><div class="ph-text">The rewiring is largely complete. Old urge pathways have atrophied from disuse. What once felt like white-knuckling is now simply your default state. Creativity peaks — many men report their most inspired work, art, music, or business ideas emerging here. The transmutation is real and measurable.</div></div>
-      <div class="ph-block ph5"><div class="ph-title">Day 120–179 · Diamond Mind phase</div><div class="ph-text">Emotional regulation reaches a new level. Situations that previously triggered reactivity now feel manageable. You process stress faster, think more clearly under pressure, and people around you feel your stillness. This is the energy of a man who is no longer fighting himself.</div></div>
-      <div class="ph-block ph5"><div class="ph-title">Day 180–269 · Transcendence phase</div><div class="ph-text">For many men this is where spiritual experience begins to open. A sense of connection, purpose beyond the self, and heightened intuition. Dreams become more vivid. Synchronicities increase. Whether you call this spiritual or neurological, something genuinely shifts at this depth of practice.</div></div>
-      <div class="ph-block ph6"><div class="ph-title">Day 270–364 · Solar phase</div><div class="ph-text">Nine months. Presence becomes a felt quality — others experience something when they are near you that they cannot fully explain. Leadership comes naturally. Physical vitality is at a level most men in modern society never experience. You understand now why ancient cultures treated this energy as sacred.</div></div>
-      <div class="ph-block ph6"><div class="ph-title">Day 365+ · The Eternal flame</div><div class="ph-text">One year and beyond. This is no longer a practice. It is a philosophy, a way of being, and a permanent upgrade to who you are. The man who reached day one is a distant memory. You carry a quiet, unshakeable power that no external circumstance can take. Guard it. Grow it. Give from it.</div></div>
-    </div>
-
-
-    <!-- TRANSMUTATION GUIDE -->
-    <div id="s-transmute" class="sec">
-      <div class="card" style="background:linear-gradient(135deg,#1A0A3A,#2A0A0A);border-color:#7B4FFF;">
-        <div style="font-size:13px;color:#C8A8FF;line-height:1.6;">Sexual transmutation is the art of redirecting your most primal energy upward — into creativity, discipline, presence, and power. Choose a practice below.</div>
-      </div>
-
-      <!-- Sub nav -->
-      <div class="btn-row" style="margin-bottom:12px;">
-        <button class="btn-g tr-nav on" data-tr="pranayama" style="border-color:var(--ac);color:var(--ac);">🌬️ Pranayama</button>
-        <button class="btn-g tr-nav" data-tr="meditation">🧘 Meditation</button>
-        <button class="btn-g tr-nav" data-tr="poses">🐎 Poses</button>
-      </div>
-
-      <!-- PRANAYAMA -->
-      <div id="tr-pranayama" class="tr-sec">
-        <div class="card">
-          <div class="lbl">What is Pranayama?</div>
-          <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:12px;">Pranayama is ancient yogic breathwork that directly controls your life force energy (prana). When sexual energy arises, controlled breathing redirects it up the spine rather than letting it discharge downward. This is one of the most powerful transmutation tools available.</p>
-        </div>
-
-        <div class="card">
-          <div class="lbl" style="margin-bottom:10px;">🔥 Breath of Fire (Kapalabhati)</div>
-          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px;">Best used when urges arise suddenly. Burns sexual energy rapidly and raises vibration.</p>
-          <div class="guide-step"><span class="step-num">1</span><span>Sit upright, spine straight. Place hands on knees, palms up.</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Take a deep inhale through your nose to prepare.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Begin rapid, forceful exhales through the nose — about 1 per second. The inhale happens passively.</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Do 30 rapid breaths. Feel the heat rise up your spine.</span></div>
-          <div class="guide-step"><span class="step-num">5</span><span>After 30, take a full deep inhale, hold for 10 seconds, then release slowly.</span></div>
-          <div class="guide-step"><span class="step-num">6</span><span>Repeat 3 rounds. Notice the urge dissolving into energy.</span></div>
-          <div class="tip-box">💡 Do this the moment you feel an urge. The energy transmutes in real time.</div>
-        </div>
-
-        <div class="card">
-          <div class="lbl" style="margin-bottom:10px;">🌊 Nadi Shodhana (Alternate Nostril)</div>
-          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px;">Balances left and right hemispheres of the brain. Calms overactive sexual thought. Best used as a daily morning practice.</p>
-          <div class="guide-step"><span class="step-num">1</span><span>Sit comfortably. Use your right hand — rest index and middle finger on your forehead.</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Close your right nostril with your thumb. Inhale slowly through the left for 4 counts.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Close both nostrils. Hold for 4 counts.</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Release right nostril, exhale slowly for 8 counts.</span></div>
-          <div class="guide-step"><span class="step-num">5</span><span>Inhale through right nostril for 4 counts. Hold. Exhale through left for 8 counts.</span></div>
-          <div class="guide-step"><span class="step-num">6</span><span>That's one cycle. Do 10 cycles daily for profound mental clarity.</span></div>
-          <div class="tip-box">💡 Practice this every morning to keep energy channelled upward throughout the day.</div>
-        </div>
-
-        <div class="card">
-          <div class="lbl" style="margin-bottom:10px;">⬆️ Mula Bandha Lock</div>
-          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px;">The root lock. Physically redirects sexual energy up the spine. This is the secret weapon of SR practitioners.</p>
-          <div class="guide-step"><span class="step-num">1</span><span>Sit or stand. Contract the perineum muscles (the same muscles you'd use to stop urination).</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Hold the contraction firmly. Breathe normally.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Visualise energy rising up from the base of your spine toward your crown.</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Hold for 10–30 seconds, release, repeat 10 times.</span></div>
-          <div class="tip-box">💡 Combine with Breath of Fire for maximum effect during peak urge moments.</div>
-        </div>
-      </div>
-
-      <!-- MEDITATION -->
-      <div id="tr-meditation" class="tr-sec" style="display:none;">
-        <div class="card">
-          <div class="lbl">Guided Transmutation Meditation</div>
-          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:12px;">This guided meditation uses visualisation and breath to move sexual energy up through your chakra system and convert it into creative and spiritual power. Do this in a quiet space, eyes closed, 10–20 minutes.</p>
-        </div>
-
-        <div class="card" style="background:linear-gradient(135deg,#0A0520,#1A0A3A);border-color:#6644FF;">
-          <div style="text-align:center;margin-bottom:16px;">
-            <div style="font-size:40px;margin-bottom:8px;">🧘</div>
-            <div style="font-size:14px;font-weight:600;color:#C8A8FF;">Sexual Transmutation Meditation</div>
-            <div style="font-size:12px;color:#8866CC;margin-top:4px;">~15 minutes · Find a quiet space</div>
-          </div>
-          <div id="med-player" style="background:rgba(255,255,255,0.05);border-radius:12px;padding:16px;">
-            <div style="font-size:12px;color:#8866CC;margin-bottom:12px;text-align:center;">Follow the guided script below — or play it text-to-speech</div>
-            <button class="btn" id="med-start-btn" style="background:#6644FF;margin-top:0;">▶ Begin Guided Session</button>
-          </div>
-        </div>
-
-        <div class="card" id="med-script-card">
-          <div class="lbl">Meditation Script</div>
-          <div class="med-step">
-            <div class="med-step-title">Phase 1 — Grounding (2 min)</div>
-            <p>Close your eyes. Sit with your spine straight. Take three deep breaths — inhale for 4 counts, hold for 4, exhale for 8. Feel your body settle into the earth. You are safe. You are still. Nothing needs to happen right now.</p>
-          </div>
-          <div class="med-step">
-            <div class="med-step-title">Phase 2 — Acknowledge the Energy (2 min)</div>
-            <p>Bring your awareness to your sacral centre — just below your navel. Notice any warmth, tingling, or sexual tension without judgement. This is raw life force. It is not your enemy. It is power waiting to be directed.</p>
-          </div>
-          <div class="med-step">
-            <div class="med-step-title">Phase 3 — The Upward Draw (5 min)</div>
-            <p>On each inhale, visualise a golden light rising from the base of your spine. With each breath it climbs higher — through your sacral centre, your solar plexus, your heart, your throat, your third eye. On the exhale, let it radiate outward from your crown in all directions as pure white light.</p>
-          </div>
-          <div class="med-step">
-            <div class="med-step-title">Phase 4 — Transmutation (4 min)</div>
-            <p>Now set an intention. What will you create with this energy? A goal, a project, a version of yourself. Hold that image at your third eye — between your eyebrows. Pour the rising energy directly into that image. Feel it charge and become real.</p>
-          </div>
-          <div class="med-step">
-            <div class="med-step-title">Phase 5 — Integration (2 min)</div>
-            <p>Let the visualisation fade. Rest in stillness. Feel the quiet power in your body. This energy is now yours — stored, not wasted. Take three deep breaths. Slowly open your eyes.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- POSES -->
-      <div id="tr-poses" class="tr-sec" style="display:none;">
-        <div class="card">
-          <div class="lbl">Why Poses Help</div>
-          <p style="font-size:13px;color:var(--ts);line-height:1.6;">Specific physical postures build the muscular and energetic foundation that supports sexual transmutation. They strengthen the pelvic floor, increase testosterone, improve posture (a key driver of presence), and circulate stagnant energy.</p>
-        </div>
-
-        <div class="card">
-          <div class="pose-header">🐎 Horse Stance (Zhan Zhuang)</div>
-          <div class="pose-why">Why it works: Builds immense lower body strength, grounds excess sexual energy into the earth, and develops the iron will that SR requires. Used by Shaolin monks and martial artists for thousands of years specifically for energy cultivation.</div>
-          <div class="guide-step"><span class="step-num">1</span><span>Stand with feet shoulder-width apart, toes pointing slightly outward.</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Bend your knees and lower as if sitting on an invisible horse — thighs roughly parallel to the floor.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Keep your spine straight, chest open, chin slightly tucked.</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Arms can be extended forward or held in a circle in front of your chest.</span></div>
-          <div class="guide-step"><span class="step-num">5</span><span>Hold for 1–5 minutes. Breathe slowly and deeply. Do not let the mind wander.</span></div>
-          <div class="pose-duration">Start: 1 min · Target: 5 min · Advanced: 10+ min</div>
-          <div class="tip-box">💡 The burning sensation in your legs IS the energy being cultivated. Breathe through it. This is how warriors are built.</div>
-        </div>
-
-        <div class="card">
-          <div class="pose-header">🧘 Ashwini Mudra (Horse Gesture)</div>
-          <div class="pose-why">Why it works: Directly contracts and strengthens the perineum and anal sphincter. This activates Mula Bandha, the root lock that physically prevents sexual energy from draining downward. Ancient yogic secret for SR.</div>
-          <div class="guide-step"><span class="step-num">1</span><span>Sit in a comfortable cross-legged position or lie on your back.</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Inhale deeply. On the inhale, contract the anal sphincter firmly for 2 seconds.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Release on the exhale. This is one repetition.</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Do 20–50 repetitions. Build to 100 per day over time.</span></div>
-          <div class="pose-duration">Daily: 20–100 reps · Can be done anywhere, anytime</div>
-          <div class="tip-box">💡 This is the physical equivalent of kegel exercises but targets energy retention at the source. Non-negotiable for serious practitioners.</div>
-        </div>
-
-        <div class="card">
-          <div class="pose-header">🌉 Setu Bandha (Bridge Pose)</div>
-          <div class="pose-why">Why it works: Opens the chest and throat chakras, stimulates the thyroid and parathyroid glands which regulate energy metabolism, and directly engages the pelvic floor while opening the energy channel from base to crown.</div>
-          <div class="guide-step"><span class="step-num">1</span><span>Lie on your back, knees bent, feet flat on the floor hip-width apart.</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Press your feet into the floor and lift your hips toward the ceiling.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Squeeze your glutes and engage your pelvic floor (Mula Bandha).</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Hold for 30–60 seconds, breathing slowly. Lower and repeat 5 times.</span></div>
-          <div class="pose-duration">Hold: 30–60 sec · Sets: 5 · Daily</div>
-          <div class="tip-box">💡 Visualise energy flowing from your root up through your spine to your crown while holding this pose.</div>
-        </div>
-
-        <div class="card">
-          <div class="pose-header">🏔️ Mountain Pose with Crown Pull (Tadasana)</div>
-          <div class="pose-why">Why it works: Corrects posture, which is one of the most powerful signals of masculine energy. Slouching literally compresses the energy centres. Standing tall opens them. This pose trains the nervous system to hold your power rather than collapse it.</div>
-          <div class="guide-step"><span class="step-num">1</span><span>Stand with feet together, weight evenly distributed.</span></div>
-          <div class="guide-step"><span class="step-num">2</span><span>Engage your thighs, tuck the tailbone slightly, lift your chest.</span></div>
-          <div class="guide-step"><span class="step-num">3</span><span>Imagine a golden thread pulling the crown of your head toward the sky.</span></div>
-          <div class="guide-step"><span class="step-num">4</span><span>Breathe deeply for 2 minutes. Feel the full column of energy from feet to crown.</span></div>
-          <div class="pose-duration">Hold: 2–5 minutes · Use as a reset throughout the day</div>
-          <div class="tip-box">💡 Do this first thing every morning before checking your phone. Set the energetic tone for the entire day.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STORIES -->
-    <div id="s-stories" class="sec">
-      <div class="card" style="background:linear-gradient(135deg,#0A1A0A,#0A2A1A);border-color:#2EA86A;margin-bottom:12px;">
-        <div style="font-size:13px;color:#7DCAA0;line-height:1.6;">Real experiences from the r/Semenretention community. Swipe or tap arrows to read more stories.</div>
-      </div>
-      <div id="story-card" class="story-card">
-        <div class="story-loading">Loading stories...</div>
-      </div>
-      <div class="btn-row" style="margin-top:12px;">
-        <button class="btn-g" id="story-prev">← Previous</button>
-        <div style="flex:1;text-align:center;font-size:12px;color:var(--tt);padding-top:12px;" id="story-counter">1 / 20</div>
-        <button class="btn-g" id="story-next">Next →</button>
-      </div>
-      <button class="btn-g" style="width:100%;margin-top:8px;" id="story-shuffle">🔀 Shuffle stories</button>
-    </div>
-
-  </div>
-
-  <nav class="tabs">
-    <button class="tab on" data-tab="home" id="tab-home"><span class="tab-ic">🏠</span>Today</button>
-    <button class="tab" data-tab="checkin" id="tab-checkin"><span class="tab-ic">✏️</span>Check-in</button>
-    <button class="tab" data-tab="transmute" id="tab-transmute"><span class="tab-ic">⚡</span>Transmute</button>
-    <button class="tab" data-tab="stories" id="tab-stories"><span class="tab-ic">📖</span>Stories</button>
-    <button class="tab" data-tab="phases" id="tab-phases"><span class="tab-ic">🗺️</span>Phases</button>
-  </nav>
-
+  <button class="cogbtn" id="cog">⚙️</button>
 </div>
 
-<!-- SETTINGS OVERLAY -->
-<div class="settings-overlay" id="settings-overlay">
-  <div class="settings-panel">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-      <span style="font-size:17px;font-weight:600;color:var(--text);">Settings</span>
-      <button id="close-settings-btn" style="border:none;background:var(--bg);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--ts);">✕</button>
-    </div>
+<div class="scroll" id="scroll">
 
-    <div style="margin-bottom:24px;">
+  <!-- HOME -->
+  <div id="s-home" class="sec on">
+    <div class="card">
+      <div class="streak-block">
+        <div class="streak-left">
+          <div class="aura-wrap">
+            <svg class="aura-svg" viewBox="0 0 120 120" width="120" height="120">
+              <circle class="aura-bg" cx="60" cy="60" r="52"/>
+              <circle class="aura-ring" id="ar1" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+              <circle class="aura-bg2" cx="60" cy="60" r="42"/>
+              <circle class="aura-ring2" id="ar2" cx="60" cy="60" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+            </svg>
+            <div class="aura-inner">
+              <div class="snum" id="snum">0</div>
+              <div class="sday">days</div>
+            </div>
+          </div>
+          <div class="flame-wrap" id="fw"><svg id="fsv" viewBox="0 0 60 80" width="44" height="56"></svg></div>
+          <div class="ph-badge bd0" id="pbadge">Day 0 · Begin</div>
+        </div>
+        <div class="q-side">
+          <div class="q-text" id="qtext"></div>
+          <div class="q-nav">
+            <button class="qbtn" id="qprev">‹</button>
+            <div class="qdots" id="qdots"></div>
+            <button class="qbtn" id="qnext">›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="m-grid">
+      <div class="metric"><div class="m-val" id="m-best">0</div><div class="m-lbl">Best streak</div></div>
+      <div class="metric"><div class="m-val" id="m-entries">0</div><div class="m-lbl">Check-ins</div></div>
+      <div class="metric"><div class="m-val" id="m-energy">–</div><div class="m-lbl">Avg energy</div></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Latest check-in</div>
+      <div id="latest" style="font-size:13px;color:var(--ts);">No entries yet. Do your first check-in.</div>
+    </div>
+    <div id="wprompt" style="display:none;">
+      <div class="w-banner">
+        <p style="font-size:13px;font-weight:600;color:var(--amb8);margin-bottom:3px;">Weekly review due</p>
+        <p style="font-size:12px;color:var(--amb6);">7+ days since your last review.</p>
+      </div>
+      <button class="btn" id="start-rev-btn" style="margin-bottom:12px;">Start weekly review</button>
+    </div>
+    <div id="date-block" style="display:none;margin-bottom:12px;">
+      <div class="card" style="margin-bottom:0">
+        <div class="lbl">Streak start date</div>
+        <input type="date" id="date-input" style="margin-bottom:8px">
+        <button class="btn" id="set-date-btn" style="margin-top:0">Set start date</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-g" id="pick-date-btn">📅 Set start date</button>
+      <button class="btn-g btn-d" id="reset-btn">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- CHECK-IN -->
+  <div id="s-checkin" class="sec">
+    <div id="daily-form">
+      <div class="card">
+        <div class="lbl">How are you feeling right now?</div>
+        <div class="mood-grid" id="mood-grid">
+          <button class="mbtn" data-mood="Powerful"><span class="mic">⚡</span>Powerful</button>
+          <button class="mbtn" data-mood="Calm"><span class="mic">🌊</span>Calm</button>
+          <button class="mbtn" data-mood="Focused"><span class="mic">🎯</span>Focused</button>
+          <button class="mbtn" data-mood="Restless"><span class="mic">🌀</span>Restless</button>
+          <button class="mbtn" data-mood="Irritable"><span class="mic">😤</span>Irritable</button>
+          <button class="mbtn" data-mood="Anxious"><span class="mic">😰</span>Anxious</button>
+          <button class="mbtn" data-mood="Confident"><span class="mic">💪</span>Confident</button>
+          <button class="mbtn" data-mood="Foggy"><span class="mic">🌫️</span>Foggy</button>
+          <button class="mbtn" data-mood="Creative"><span class="mic">✨</span>Creative</button>
+          <button class="mbtn" data-mood="Low"><span class="mic">🌑</span>Low</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sl-row"><div class="sl-lbl">Energy <span id="ev">5</span>/10</div><input type="range" min="1" max="10" value="5" id="se"></div>
+        <div class="sl-row"><div class="sl-lbl">Mental clarity <span id="cv">5</span>/10</div><input type="range" min="1" max="10" value="5" id="sc"></div>
+        <div class="sl-row"><div class="sl-lbl">Urge intensity <span id="uv">3</span>/10</div><input type="range" min="1" max="10" value="3" id="su"></div>
+        <div class="sl-row"><div class="sl-lbl">Social confidence <span id="sv">5</span>/10</div><input type="range" min="1" max="10" value="5" id="ss"></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Urge triggers today?</div>
+        <div class="trig-grid" id="trig-grid">
+          <button class="trig-btn">Social media</button>
+          <button class="trig-btn">Loneliness</button>
+          <button class="trig-btn">Stress</button>
+          <button class="trig-btn">Boredom</button>
+          <button class="trig-btn">Fantasy</button>
+          <button class="trig-btn">Alcohol</button>
+          <button class="trig-btn">Tiredness</button>
+          <button class="trig-btn">Procrastination</button>
+          <button class="trig-btn">Other</button>
+        </div>
+        <input type="text" id="ctrig" placeholder="Custom trigger (optional)">
+      </div>
+      <div class="card">
+        <div class="lbl">Journal note</div>
+        <textarea id="jnote" rows="4" placeholder="How's the day been? Wins, challenges, insights..."></textarea>
+        <button class="btn" id="save-btn">Save check-in</button>
+      </div>
+    </div>
+    <div id="weekly-form" style="display:none">
+      <div class="w-banner"><p style="font-size:13px;font-weight:600;color:var(--amb8);margin-bottom:2px">Weekly review</p><p style="font-size:12px;color:var(--amb6)">Take 5 minutes to reflect honestly.</p></div>
+      <div class="card">
+        <div style="margin-bottom:13px"><div class="lbl">What went well?</div><textarea id="rq1" rows="3" placeholder="Wins, moments of discipline..."></textarea></div>
+        <hr class="sep">
+        <div style="margin-bottom:13px"><div class="lbl">What was hardest?</div><textarea id="rq2" rows="3" placeholder="Challenges, temptations..."></textarea></div>
+        <hr class="sep">
+        <div style="margin-bottom:13px"><div class="lbl">What did you notice about yourself?</div><textarea id="rq3" rows="3" placeholder="Patterns, insights..."></textarea></div>
+        <hr class="sep">
+        <div><div class="lbl">Intention for next week</div><textarea id="rq4" rows="2" placeholder="One focus or commitment..."></textarea></div>
+      </div>
+      <button class="btn" id="save-rev-btn">Save weekly review</button>
+      <button class="btn-g" style="width:100%;margin-top:8px" id="back-daily-btn">Back to daily check-in</button>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="s-history" class="sec">
+    <div class="btn-row" style="margin-bottom:11px">
+      <button class="btn-g" id="hf-all" style="border-color:var(--ac);color:var(--ac)">All</button>
+      <button class="btn-g" id="hf-daily">Daily</button>
+      <button class="btn-g" id="hf-weekly">Weekly</button>
+    </div>
+    <div id="hist-list" style="font-size:13px;color:var(--ts)">No entries yet.</div>
+    <button class="btn-g" style="width:100%;margin-top:11px" id="export-btn">⬇ Export CSV</button>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div id="s-insights" class="sec">
+    <div id="ins-content"><p style="font-size:13px;color:var(--ts)">Log at least 3 check-ins to see insights.</p></div>
+  </div>
+
+  <!-- PHASES -->
+  <div id="s-phases" class="sec">
+    <div id="ph-current" class="ph-block ph1" style="margin-bottom:14px">
+      <div class="ph-title" id="pc-title">Your current phase</div>
+      <div class="ph-text" id="pc-text">Set your start date to see phase guidance.</div>
+    </div>
+    <div class="lbl" style="margin-bottom:8px">All phases</div>
+    <div class="ph-block ph1"><div class="ph-title">Days 1–7 · Foundation</div><div class="ph-text">Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding. The foundation is being laid.</div></div>
+    <div class="ph-block ph2"><div class="ph-title">Days 8–21 · Rewiring</div><div class="ph-text">Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.</div></div>
+    <div class="ph-block ph3"><div class="ph-title">Days 22–40 · Peak energy</div><div class="ph-text">Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.</div></div>
+    <div class="ph-block ph4"><div class="ph-title">Days 41–89 · Mastery</div><div class="ph-text">The practice becomes identity. Urges stabilise. Energy is sustained. Your voice deepens, eye contact holds longer, others respond to you differently.</div></div>
+    <div class="ph-block ph5"><div class="ph-title">Days 90–119 · Crystallisation</div><div class="ph-text">The rewiring is largely complete. Old urge pathways atrophy from disuse. Creativity peaks — many men report their most inspired work here. The transmutation is real and measurable.</div></div>
+    <div class="ph-block ph5"><div class="ph-title">Days 120–179 · Diamond Mind</div><div class="ph-text">Emotional regulation reaches a new level. You process stress faster, think more clearly under pressure. People feel your stillness. This is the energy of a man who is no longer fighting himself.</div></div>
+    <div class="ph-block ph5"><div class="ph-title">Days 180–269 · Transcendence</div><div class="ph-text">For many men, spiritual experience begins to open here. Heightened intuition, vivid dreams, synchronicities. A sense of connection and purpose beyond the self. Something genuinely shifts at this depth.</div></div>
+    <div class="ph-block ph6"><div class="ph-title">Days 270–364 · Solar</div><div class="ph-text">Nine months. Presence becomes a felt quality — others sense something when near you they cannot explain. Leadership comes naturally. Physical vitality operates at a level most men never experience.</div></div>
+    <div class="ph-block ph6"><div class="ph-title">Day 365+ · The Eternal Flame</div><div class="ph-text">One year and beyond. This is no longer a practice. It is a philosophy, a way of being, and a permanent upgrade. You carry a quiet, unshakeable power that no external circumstance can take. Guard it. Grow it. Give from it.</div></div>
+  </div>
+
+  <!-- TRANSMUTATION -->
+  <div id="s-transmute" class="sec">
+    <div class="card" style="background:linear-gradient(135deg,#1A0A3A,#2A0A0A);border-color:#7B4FFF;margin-bottom:12px">
+      <p style="font-size:13px;color:#C8A8FF;line-height:1.6">Sexual transmutation is the art of redirecting your most primal energy upward — into creativity, discipline, presence, and power. Choose a practice below.</p>
+    </div>
+    <div class="btn-row" style="margin-bottom:12px">
+      <button class="btn-g tr-nav" data-tr="pranayama">🌬️ Pranayama</button>
+      <button class="btn-g tr-nav" data-tr="meditation">🧘 Meditation</button>
+      <button class="btn-g tr-nav" data-tr="poses">🐎 Poses</button>
+    </div>
+    <div id="tr-pranayama" style="display:none">
+      <div class="card"><div class="lbl">What is Pranayama?</div><p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:0">Pranayama is ancient yogic breathwork that directly controls your life force energy (prana). When sexual energy arises, controlled breathing redirects it up the spine rather than letting it discharge downward.</p></div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:9px">🔥 Breath of Fire (Kapalabhati)</div>
+        <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px">Best used when urges arise suddenly. Burns sexual energy rapidly and raises vibration.</p>
+        <div class="guide-step"><span class="step-num">1</span><span>Sit upright, spine straight. Place hands on knees, palms up.</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Take a deep inhale through your nose to prepare.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Begin rapid, forceful exhales through the nose — about 1 per second. The inhale happens passively.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Do 30 rapid breaths. Feel the heat rise up your spine.</span></div>
+        <div class="guide-step"><span class="step-num">5</span><span>After 30, take a full deep inhale, hold for 10 seconds, then release slowly.</span></div>
+        <div class="guide-step"><span class="step-num">6</span><span>Repeat 3 rounds. Notice the urge dissolving into energy.</span></div>
+        <div class="tip-box">💡 Do this the moment you feel an urge. The energy transmutes in real time.</div>
+      </div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:9px">🌊 Nadi Shodhana (Alternate Nostril)</div>
+        <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px">Balances left and right hemispheres. Calms overactive sexual thought. Best as a daily morning practice.</p>
+        <div class="guide-step"><span class="step-num">1</span><span>Sit comfortably. Use your right hand — rest index and middle finger on your forehead.</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Close your right nostril with your thumb. Inhale slowly through the left for 4 counts.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Close both nostrils. Hold for 4 counts.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Release right nostril, exhale slowly for 8 counts.</span></div>
+        <div class="guide-step"><span class="step-num">5</span><span>Inhale through right nostril for 4 counts. Hold. Exhale through left for 8 counts.</span></div>
+        <div class="guide-step"><span class="step-num">6</span><span>That's one cycle. Do 10 cycles daily for profound mental clarity.</span></div>
+        <div class="tip-box">💡 Practice every morning to keep energy channelled upward throughout the day.</div>
+      </div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:9px">⬆️ Mula Bandha (Root Lock)</div>
+        <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px">Physically redirects sexual energy up the spine. The secret weapon of SR practitioners.</p>
+        <div class="guide-step"><span class="step-num">1</span><span>Sit or stand. Contract the perineum muscles (same as stopping urination mid-flow).</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Hold the contraction firmly. Breathe normally.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Visualise energy rising up from the base of your spine toward your crown.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Hold 10–30 seconds, release, repeat 10 times.</span></div>
+        <div class="tip-box">💡 Combine with Breath of Fire for maximum effect during peak urge moments.</div>
+      </div>
+    </div>
+    <div id="tr-meditation" style="display:none">
+      <div class="card"><div class="lbl">Guided Transmutation Meditation</div><p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:0">This guided meditation uses visualisation and breath to move sexual energy up through your chakra system and convert it into creative and spiritual power. Do this in a quiet space, eyes closed, 10–20 minutes.</p></div>
+      <div class="card" style="background:linear-gradient(135deg,#0A0520,#1A0A3A);border-color:#6644FF">
+        <div style="text-align:center;margin-bottom:14px"><div style="font-size:38px;margin-bottom:7px">🧘</div><div style="font-size:14px;font-weight:600;color:#C8A8FF">Sexual Transmutation Meditation</div><div style="font-size:12px;color:#8866CC;margin-top:3px">~15 minutes · Find a quiet space</div></div>
+        <button class="btn" id="med-btn" style="background:#6644FF;margin-top:0">▶ Begin Guided Session</button>
+      </div>
+      <div class="card">
+        <div class="lbl">Meditation Script</div>
+        <div class="med-step"><div class="med-step-title">Phase 1 — Grounding (2 min)</div><p>Close your eyes. Sit with your spine straight. Take three deep breaths — inhale for 4, hold for 4, exhale for 8. Feel your body settle. You are safe. You are still.</p></div>
+        <div class="med-step"><div class="med-step-title">Phase 2 — Acknowledge the Energy (2 min)</div><p>Bring awareness to your sacral centre — just below your navel. Notice any warmth or tension without judgement. This is raw life force. It is power waiting to be directed.</p></div>
+        <div class="med-step"><div class="med-step-title">Phase 3 — The Upward Draw (5 min)</div><p>On each inhale, visualise a golden light rising from the base of your spine. With each breath it climbs higher — heart, throat, third eye. On exhale, let it radiate from your crown as pure white light.</p></div>
+        <div class="med-step"><div class="med-step-title">Phase 4 — Transmutation (4 min)</div><p>Set an intention. What will you create with this energy? Hold that image at your third eye. Pour the rising energy directly into it. Feel it charge with life.</p></div>
+        <div class="med-step"><div class="med-step-title">Phase 5 — Integration (2 min)</div><p>Let the visualisation fade. Rest in stillness. Feel the quiet power in your body. This energy is now yours — stored, not wasted. Three deep breaths. Open your eyes.</p></div>
+      </div>
+    </div>
+    <div id="tr-poses" style="display:none">
+      <div class="card"><div class="lbl">Why Poses Help</div><p style="font-size:13px;color:var(--ts);line-height:1.6">Specific postures build the energetic foundation that supports sexual transmutation. They strengthen the pelvic floor, increase testosterone, improve posture, and circulate stagnant energy.</p></div>
+      <div class="card">
+        <div class="pose-header">🐎 Horse Stance (Zhan Zhuang)</div>
+        <div class="pose-why">Builds immense lower body strength, grounds excess sexual energy, and develops the iron will that SR requires. Used by Shaolin monks for thousands of years specifically for energy cultivation.</div>
+        <div class="guide-step"><span class="step-num">1</span><span>Stand with feet shoulder-width apart, toes pointing slightly outward.</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Bend your knees and lower as if sitting on an invisible horse — thighs roughly parallel to the floor.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Keep your spine straight, chest open, chin slightly tucked.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Arms extended forward or held in a circle at chest height.</span></div>
+        <div class="guide-step"><span class="step-num">5</span><span>Hold for 1–5 minutes. Breathe slowly and deeply. Do not let the mind wander.</span></div>
+        <div class="pose-dur">Start: 1 min · Target: 5 min · Advanced: 10+ min</div>
+        <div class="tip-box">💡 The burning sensation in your legs IS the energy being cultivated. Breathe through it.</div>
+      </div>
+      <div class="card">
+        <div class="pose-header">🧘 Ashwini Mudra (Horse Gesture)</div>
+        <div class="pose-why">Directly contracts and strengthens the perineum. Activates Mula Bandha — the root lock that physically prevents sexual energy from draining downward. Ancient yogic secret for SR.</div>
+        <div class="guide-step"><span class="step-num">1</span><span>Sit cross-legged or lie on your back.</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Inhale deeply. Contract the anal sphincter firmly for 2 seconds.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Release on the exhale. This is one repetition.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Do 20–50 repetitions. Build to 100 per day over time.</span></div>
+        <div class="pose-dur">Daily: 20–100 reps · Can be done anywhere, anytime</div>
+        <div class="tip-box">💡 Non-negotiable for serious practitioners. This is the physical key to energy retention at the source.</div>
+      </div>
+      <div class="card">
+        <div class="pose-header">🌉 Bridge Pose (Setu Bandha)</div>
+        <div class="pose-why">Opens the chest and throat chakras, stimulates the thyroid, and directly engages the pelvic floor while opening the energy channel from base to crown.</div>
+        <div class="guide-step"><span class="step-num">1</span><span>Lie on your back, knees bent, feet flat on the floor hip-width apart.</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Press your feet into the floor and lift your hips toward the ceiling.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Squeeze your glutes and engage your pelvic floor.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Hold 30–60 seconds, breathing slowly. Lower and repeat 5 times.</span></div>
+        <div class="pose-dur">Hold: 30–60 sec · Sets: 5 · Daily</div>
+        <div class="tip-box">💡 Visualise energy flowing from root to crown while holding this pose.</div>
+      </div>
+      <div class="card">
+        <div class="pose-header">🏔️ Mountain Pose (Tadasana)</div>
+        <div class="pose-why">Corrects posture — one of the most powerful signals of masculine energy. Slouching compresses energy centres. Standing tall opens them. This trains your nervous system to hold your power.</div>
+        <div class="guide-step"><span class="step-num">1</span><span>Stand with feet together, weight evenly distributed.</span></div>
+        <div class="guide-step"><span class="step-num">2</span><span>Engage your thighs, tuck the tailbone slightly, lift your chest.</span></div>
+        <div class="guide-step"><span class="step-num">3</span><span>Imagine a golden thread pulling the crown of your head toward the sky.</span></div>
+        <div class="guide-step"><span class="step-num">4</span><span>Breathe deeply for 2 minutes. Feel the full column of energy from feet to crown.</span></div>
+        <div class="pose-dur">Hold: 2–5 minutes · Use as a reset throughout the day</div>
+        <div class="tip-box">💡 Do this first thing every morning before checking your phone. Set the energetic tone for the day.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORIES -->
+  <div id="s-stories" class="sec">
+    <div class="card" style="background:linear-gradient(135deg,#0A1A0A,#0A2A1A);border-color:#2EA86A;margin-bottom:12px">
+      <p style="font-size:13px;color:#7DCAA0;line-height:1.6">Real experiences from the r/Semenretention community. Swipe or tap arrows to browse.</p>
+    </div>
+    <div class="story-card" id="story-card"><div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--tt);font-size:13px">Loading stories...</div></div>
+    <div class="btn-row" style="margin-top:11px">
+      <button class="btn-g" id="sprev">← Prev</button>
+      <div style="flex:1;text-align:center;font-size:12px;color:var(--tt);padding-top:11px" id="sctr">1 / 20</div>
+      <button class="btn-g" id="snext">Next →</button>
+    </div>
+    <button class="btn-g" style="width:100%;margin-top:8px" id="sshuffle">🔀 Shuffle</button>
+  </div>
+
+</div><!-- end scroll -->
+
+<nav class="tabs">
+  <button class="tab on" data-tab="home"><span class="tab-ic">🏠</span>Today</button>
+  <button class="tab" data-tab="checkin"><span class="tab-ic">✏️</span>Check-in</button>
+  <button class="tab" data-tab="transmute"><span class="tab-ic">⚡</span>Transmute</button>
+  <button class="tab" data-tab="stories"><span class="tab-ic">📖</span>Stories</button>
+  <button class="tab" data-tab="phases"><span class="tab-ic">🗺️</span>Phases</button>
+</nav>
+
+</div><!-- end app -->
+
+<!-- SETTINGS -->
+<div class="s-overlay" id="s-overlay">
+  <div class="s-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+      <span style="font-size:16px;font-weight:600">Settings</span>
+      <button id="close-s" style="border:none;background:var(--bg);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px;color:var(--ts)">✕</button>
+    </div>
+    <div style="margin-bottom:20px">
       <div class="lbl">Language</div>
       <div class="lang-grid">
         <button class="lang-btn" data-lang="en">🇬🇧 English</button>
@@ -590,43 +505,43 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <button class="lang-btn" data-lang="ar">🇸🇦 العربية</button>
       </div>
     </div>
-
-    <div style="margin-bottom:24px;">
+    <div style="margin-bottom:20px">
       <div class="lbl">Colour theme</div>
       <div class="theme-list">
-        <button class="theme-btn" data-theme="purple"><span class="theme-dot" style="background:#534AB7;"></span>Cosmic purple (default)</button>
-        <button class="theme-btn" data-theme="forest"><span class="theme-dot" style="background:#1A7A4A;"></span>Forest green</button>
-        <button class="theme-btn" data-theme="fire"><span class="theme-dot" style="background:#C84B00;"></span>Fire orange</button>
-        <button class="theme-btn" data-theme="ocean"><span class="theme-dot" style="background:#0A6EBD;"></span>Deep ocean</button>
-        <button class="theme-btn" data-theme="gold"><span class="theme-dot" style="background:#8A6A00;"></span>Sacred gold</button>
+        <button class="theme-btn" data-theme="purple"><span class="theme-dot" style="background:#534AB7"></span>Cosmic purple</button>
+        <button class="theme-btn" data-theme="forest"><span class="theme-dot" style="background:#1A7A4A"></span>Forest green</button>
+        <button class="theme-btn" data-theme="fire"><span class="theme-dot" style="background:#C84B00"></span>Fire orange</button>
+        <button class="theme-btn" data-theme="ocean"><span class="theme-dot" style="background:#0A6EBD"></span>Deep ocean</button>
+        <button class="theme-btn" data-theme="gold"><span class="theme-dot" style="background:#8A6A00"></span>Sacred gold</button>
       </div>
     </div>
-
-    <div style="margin-bottom:24px;">
+    <div style="margin-bottom:20px">
       <div class="lbl">Bug report</div>
-      <p style="font-size:13px;color:var(--ts);margin-bottom:10px;">Found an issue? Describe it below and send it to the developer.</p>
-      <textarea id="bug-text" rows="4" placeholder="Describe the bug or error..." style="margin-bottom:8px;"></textarea>
-      <button class="btn" style="margin-top:0;" id="send-bug-btn">Send bug report</button>
+      <p style="font-size:13px;color:var(--ts);margin-bottom:9px">Found an issue? Describe it and send to the developer.</p>
+      <textarea id="bug-txt" rows="4" placeholder="Describe the bug or error..." style="margin-bottom:8px"></textarea>
+      <button class="btn" id="send-bug" style="margin-top:0">Send bug report</button>
     </div>
-
-    <p style="font-size:11px;color:var(--tt);text-align:center;">SR Tracker · v1.0</p>
+    <p style="font-size:11px;color:var(--tt);text-align:center">SR Tracker · v2.0</p>
   </div>
 </div>
-
 
 <!-- MILESTONE MODAL -->
-<div class="milestone-overlay" id="milestone-overlay">
-  <div class="milestone-modal">
-    <span class="milestone-flame" id="ms-flame">🔥</span>
-    <div class="milestone-day" id="ms-day">Day 7</div>
-    <div class="milestone-title" id="ms-title">One Week Strong</div>
-    <div class="milestone-msg" id="ms-msg">Your body has begun to recalibrate.</div>
-    <button class="milestone-close" id="ms-close">Keep going 🔥</button>
+<div class="ms-overlay" id="ms-overlay">
+  <div class="ms-modal">
+    <span class="ms-flame" id="ms-flame">🔥</span>
+    <div class="ms-day" id="ms-day">Day 7</div>
+    <div class="ms-title" id="ms-title">One Week Strong</div>
+    <div class="ms-msg" id="ms-msg"></div>
+    <button class="ms-close" id="ms-close">Keep going 🔥</button>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+'use strict';
+
+// ===================== DATA =====================
 const QUOTES = [
   "Remember how it felt to be high up the journey — that clarity, that power is still inside you.",
   "Every day you hold is a day you chose yourself over the pull. That's not small. That's everything.",
@@ -645,597 +560,602 @@ const QUOTES = [
   "Stay on the path. The path is working, even when you can't feel it yet."
 ];
 
-const THEMES = {
-  purple:{ac:'#534AB7',light:'#EEEDFE',dark:'#3C3489',a2:'#AFA9EC',a4:'#7F77DD'},
-  forest:{ac:'#1A7A4A',light:'#E1F5EE',dark:'#0A4A2A',a2:'#7DCAA0',a4:'#2EA86A'},
-  fire:  {ac:'#C84B00',light:'#FFF0E6',dark:'#8A2E00',a2:'#F0997B',a4:'#E05A10'},
-  ocean: {ac:'#0A6EBD',light:'#E6F3FF',dark:'#064A80',a2:'#7ABFEF',a4:'#1A8FD8'},
-  gold:  {ac:'#8A6A00',light:'#FFF8E6',dark:'#5A4200',a2:'#D4AA44',a4:'#B88A10'},
-};
-
-let S = JSON.parse(localStorage.getItem('sr_app')||'null') || {startDate:null,best:0,entries:[],reviews:[],mood:null};
-if(S.streak!==undefined && !S.startDate && S.streak>0){
-  const d=new Date(); d.setDate(d.getDate()-S.streak);
-  S.startDate=d.toISOString().split('T')[0]; delete S.streak;
-}
-function save(){localStorage.setItem('sr_app',JSON.stringify(S));}
-
-let curTheme = localStorage.getItem('sr_theme')||'purple';
-let curLang  = localStorage.getItem('sr_lang')||'en';
-let qIdx=0, qTimer=null;
-
-// ---- THEME ----
-function applyTheme(name){
-  const th=THEMES[name]||THEMES.purple;
-  const r=document.documentElement.style;
-  r.setProperty('--ac',th.ac);
-  r.setProperty('--ac-light',th.light);
-  r.setProperty('--ac-dark',th.dark);
-  r.setProperty('--ac2',th.a2);
-  r.setProperty('--ac4',th.a4);
-  document.getElementById('theme-color-meta').content=th.ac;
-  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===name));
-}
-
-// ---- QUOTES ----
-function renderDots(){
-  document.getElementById('qdots').innerHTML=QUOTES.map((_,i)=>`<div class="qdot${i===qIdx?' on':''}" data-qi="${i}"></div>`).join('');
-}
-function goQ(i){
-  qIdx=i;
-  document.getElementById('q-text').textContent=QUOTES[i];
-  renderDots();
-  clearInterval(qTimer);
-  qTimer=setInterval(()=>goQ((qIdx+1)%QUOTES.length),8000);
-}
-
-// ---- STREAK ----
-function calcStreak(){
-  if(!S.startDate)return 0;
-  const start=new Date(S.startDate),now=new Date();
-  start.setHours(0,0,0,0); now.setHours(0,0,0,0);
-  return Math.max(0,Math.floor((now-start)/86400000));
-}
-
-function getPhase(d){
-  if(d<=7)  return{name:'Foundation phase',cls:'ph1',badge:'ph-green'};
-  if(d<=21) return{name:'Rewiring phase',cls:'ph2',badge:'ph-purple'};
-  if(d<=40) return{name:'Peak energy phase',cls:'ph3',badge:'ph-amber'};
-  return{name:'Mastery phase',cls:'ph4',badge:'ph-green'};
-}
-function getPhaseText(d){
-  if(d<=7)  return'Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding. The foundation is being laid.';
-  if(d<=21) return'Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.';
-  if(d<=40) return'Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.';
-  return'The practice becomes identity. Urges stabilise. Energy is sustained. Focus shifts inward — deeper meditation, purpose, long-term clarity.';
-}
-
-function toast(msg){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('on');
-  setTimeout(()=>el.classList.remove('on'),2200);
-}
-
-
-// ---- MILESTONES ----
 const MILESTONES = {
-  7:   {flame:'🌱', title:'One Week Strong',         icon:'🟢', msg:'Your dopamine receptors are beginning to reset. The flatline you may feel is a sign of healing — not failure. Your nervous system is recalibrating for the better.'},
-  14:  {flame:'⚡', title:'Two Weeks of Power',      icon:'💜', msg:'Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material.'},
-  21:  {flame:'🔥', title:'21 Days — Rewired',       icon:'🥇', msg:'Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice.'},
-  30:  {flame:'💥', title:'30 Day Warrior',          icon:'🔥', msg:'One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them.'},
-  40:  {flame:'🌟', title:'Peak Energy Unlocked',    icon:'🌊', msg:'You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding together.'},
-  60:  {flame:'👑', title:'60 Days — The Elite',     icon:'👑', msg:'Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own.'},
-  90:  {flame:'🏆', title:'90 Days — Legend',        icon:'🏆', msg:'Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery.'},
-  120: {flame:'💎', title:'120 Days — Diamond Mind', icon:'💎', msg:'Four months of unbroken discipline. Your mind has been permanently restructured. The neural pathways of addiction are starved. What you have built cannot be taken — only surrendered. Don't.'},
-  180: {flame:'🌌', title:'180 Days — Transcendent', icon:'🌌', msg:'Six months. Half a year of channelled energy. You are not practising SR anymore — you are SR. The energy you carry is palpable to everyone around you. You have become a different class of man.'},
-  270: {flame:'🌞', title:'270 Days — Solar',        icon:'🌞', msg:'Nine months. The same time it takes to create a human life — you have used it to recreate yourself. Your willpower, clarity, and presence are operating at a level most will never know exists.'},
-  365: {flame:'✨', title:'365 Days — One Full Year',icon:'✨', msg:'One year. 365 days of chosen power. This is not discipline anymore — this is who you are. You have walked a path that almost no man on earth has completed. The world is different when seen from here.'},
+  7:   {flame:'🌱',title:'One Week Strong',       msg:"Your dopamine receptors are beginning to reset. The flatline you may feel is healing — not failure. Your nervous system is recalibrating for the better."},
+  14:  {flame:'⚡',title:'Two Weeks of Power',    msg:"Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material."},
+  21:  {flame:'🔥',title:'21 Days — Rewired',     msg:"Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice."},
+  30:  {flame:'💥',title:'30 Day Warrior',        msg:"One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them."},
+  40:  {flame:'🌟',title:'Peak Energy Unlocked',  msg:"You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding."},
+  60:  {flame:'👑',title:'60 Days — The Elite',   msg:"Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own."},
+  90:  {flame:'🏆',title:'90 Days — Legend',      msg:"Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery."},
+  120: {flame:'💎',title:'120 Days — Diamond Mind',msg:"Four months of unbroken discipline. Your mind has been permanently restructured. The neural pathways of addiction are starved. What you have built cannot be taken — only surrendered. Don't."},
+  180: {flame:'🌌',title:'180 Days — Transcendent',msg:"Six months. Half a year of channelled energy. You are not practising SR anymore — you are SR. The energy you carry is palpable to everyone around you. You have become a different class of man."},
+  270: {flame:'🌞',title:'270 Days — Solar',      msg:"Nine months. The same time it takes to create a human life — you have used it to recreate yourself. Your willpower, clarity, and presence operate at a level most will never know exists."},
+  365: {flame:'✨',title:'365 Days — One Full Year',msg:"One year. 365 days of chosen power. This is not discipline anymore — this is who you are. You have walked a path that almost no man on earth has completed. The world is different when seen from here."}
 };
 
-// Badge data per milestone
-const BADGE_INFO = [
-  {day:0,   cls:'badge-d0',   label:'Day 0 · Begin',              icon:''},
-  {day:7,   cls:'badge-d7',   label:'Week 1 · Foundation',        icon:'🟢'},
-  {day:14,  cls:'badge-d14',  label:'Week 2 · Rewiring',          icon:'⚡'},
-  {day:21,  cls:'badge-d21',  label:'Week 3 · Momentum',          icon:'🔥'},
-  {day:30,  cls:'badge-d30',  label:'Month 1 · Warrior',          icon:'💥'},
-  {day:40,  cls:'badge-d40',  label:'Day 40 · Peak',              icon:'🌊'},
-  {day:60,  cls:'badge-d60',  label:'Month 2 · Elite',            icon:'👑'},
-  {day:90,  cls:'badge-d90',  label:'90 Days · Legend',           icon:'🏆'},
-  {day:120, cls:'badge-d120', label:'120 Days · Diamond Mind',    icon:'💎'},
-  {day:180, cls:'badge-d180', label:'180 Days · Transcendent',    icon:'🌌'},
-  {day:270, cls:'badge-d270', label:'270 Days · Solar',           icon:'🌞'},
-  {day:365, cls:'badge-d365', label:'365 Days · One Year',        icon:'✨'},
+const BADGES = [
+  {day:0,  cls:'bd0',  label:'Day 0 · Begin',           icon:''},
+  {day:7,  cls:'bd7',  label:'Week 1 · Foundation',      icon:'🟢'},
+  {day:14, cls:'bd14', label:'Week 2 · Rewiring',        icon:'⚡'},
+  {day:21, cls:'bd21', label:'Week 3 · Momentum',        icon:'🔥'},
+  {day:30, cls:'bd30', label:'Month 1 · Warrior',        icon:'💥'},
+  {day:40, cls:'bd40', label:'Day 40 · Peak',            icon:'🌊'},
+  {day:60, cls:'bd60', label:'Month 2 · Elite',          icon:'👑'},
+  {day:90, cls:'bd90', label:'90 Days · Legend',         icon:'🏆'},
+  {day:120,cls:'bd120',label:'120 Days · Diamond Mind',  icon:'💎'},
+  {day:180,cls:'bd180',label:'180 Days · Transcendent',  icon:'🌌'},
+  {day:270,cls:'bd270',label:'270 Days · Solar',         icon:'🌞'},
+  {day:365,cls:'bd365',label:'365 Days · One Year',      icon:'✨'}
 ];
 
-function getBadgeForStreak(d) {
-  let badge = BADGE_INFO[0];
-  for(const b of BADGE_INFO) { if(d >= b.day) badge = b; }
-  return badge;
+const THEMES = {
+  purple:{ac:'#534AB7',acl:'#EEEDFE',acd:'#3C3489',ac2:'#AFA9EC',ac4:'#7F77DD'},
+  forest:{ac:'#1A7A4A',acl:'#E1F5EE',acd:'#0A4A2A',ac2:'#7DCAA0',ac4:'#2EA86A'},
+  fire:  {ac:'#C84B00',acl:'#FFF0E6',acd:'#8A2E00',ac2:'#F0997B',ac4:'#E05A10'},
+  ocean: {ac:'#0A6EBD',acl:'#E6F3FF',acd:'#064A80',ac2:'#7ABFEF',ac4:'#1A8FD8'},
+  gold:  {ac:'#8A6A00',acl:'#FFF8E6',acd:'#5A4200',ac2:'#D4AA44',ac4:'#B88A10'}
+};
+
+const STORIES = [
+  {title:"From zero confidence to leading my team — 90 days changed everything",flair:"90 Days",up:2847,days:90,body:"I'm a software engineer, mid-30s. Before SR I couldn't hold eye contact in meetings. I'd defer to everyone, apologise constantly, and felt invisible. At day 90 my manager pulled me aside and asked if I'd been working with a coach. Nothing changed externally except what I chose to do with my energy. I now run our department standups and actually look forward to them."},
+  {title:"The brain fog lifted around day 21 and I cried",flair:"21 Days",up:1923,days:21,body:"I didn't realise how much cognitive capacity I was wasting until it came back. Day 21 I sat down to work and just... thought clearly. Like someone cleaned a window I'd been staring through for years. I got more done in 3 hours than I had in the previous week. The crying wasn't sadness — it was grief for time I'd lost, and relief that I'd found the way back."},
+  {title:"Women started approaching me. I had to look this up to make sure I wasn't imagining it.",flair:"45 Days",up:3412,days:45,body:"I'm not exaggerating when I say this never happened before. At day 45 a woman at the gym asked ME for my number. Then a week later a colleague I'd worked with for 2 years asked if I'd changed something. I hadn't changed clothes, haircut, nothing. Just energy. It sounds mystical but it's just biology — you carry yourself differently when you're not depleted."},
+  {title:"My gym performance went through the roof — finally hitting PRs I'd chased for years",flair:"60 Days",up:2156,days:60,body:"I've been training for 8 years. Hit the same plateau for 3 of them. At day 60 of SR I broke my deadlift PR by 20kg in a single session. My recovery between sets is faster. I sleep deeper. Morning testosterone is noticeably higher. Don't tell me this is placebo."},
+  {title:"I started a business at day 30. It's now generating £4k/month at day 120.",flair:"120 Days",up:4201,days:120,body:"The idea had been in my head for years. SR gave me the energy, focus, and decisiveness to actually build it. I used to doom-scroll for 3 hours a night. Now I build. The compounding is real — energy begets energy. What you don't waste, you create with."},
+  {title:"The anxiety that had plagued me for a decade is almost completely gone",flair:"75 Days",up:1876,days:75,body:"Social anxiety, general anxiety, health anxiety — I had it all. Medicated for 6 years. At day 75 of SR combined with cold showers and meditation I attended a party alone, spoke to strangers, and felt nothing negative. Just presence. My psychiatrist noted the change at my last appointment."},
+  {title:"I relapsed at day 87. Here is what I learned and what I'm doing differently.",flair:"Recovery",up:3089,days:87,body:"I won't sugarcoat it — the chaser effect was brutal. Three days of brain fog, zero motivation, low mood. But here's what kept me going: I remembered exactly how day 60 felt. That clarity, that power — I'd had it. I knew it was real. I'm now at day 140 and I consider the relapse one of the best things that happened because it removed all doubt about whether SR was actually working."},
+  {title:"My creative output has multiplied 10x — wrote my first album in 6 weeks",flair:"90 Days",up:2567,days:90,body:"I'm a musician. I'd had writer's block for 2 years. At day 45 something unlocked. Melodies came to me in the shower, in the gym, in the middle of conversations. By day 90 I had a full album written. Transmutation is real. Sexual energy IS creative energy. The ancients knew this."},
+  {title:"My relationship with my father completely healed at day 100",flair:"100 Days",up:1654,days:100,body:"I don't fully understand why but at around day 80 I stopped being triggered by him. The resentment I'd carried for 15 years just softened. I called him out of nowhere one Sunday. We talked for two hours. He cried. I cried. My therapist said this kind of emotional opening can happen when we stop compulsive behaviours that numb us."},
+  {title:"Lost 12kg without changing my diet. Body composition transformed completely.",flair:"180 Days",up:2932,days:180,body:"At 180 days I look like a different person. I did change nothing about my diet intentionally. What changed was my relationship with impulse. I started saying no to junk food the same way I said no to PMO. The discipline transferred. And the hormonal shift meant my body held muscle and dropped fat simultaneously."},
+  {title:"I finally feel like a man. That sounds dramatic but I don't know how else to say it.",flair:"60 Days",up:5621,days:60,body:"I grew up without a father figure and spent my 20s feeling like I'd missed some instruction manual for being a man. SR at day 60 gave me a groundedness I never had. I make decisions without second-guessing. I speak without filler words. I don't know if this is testosterone, dopamine resetting, or something spiritual. I just know it's real."},
+  {title:"I cured my PIED by day 35",flair:"35 Days",up:4312,days:35,body:"I'm 28 years old and had issues for 3 years. By day 35 of no PMO, no edging, nothing — full recovery. The science is there. The neurological pathways heal when you stop the input. If this is your situation: it works. Stay the course."},
+  {title:"Day 200 — things nobody tells you about long streaks",flair:"200 Days",up:3788,days:200,body:"It gets quieter. Not the external world — your inner world. The voice that used to shout for immediate gratification becomes a whisper, then almost nothing. You gain enormous amounts of time. The mental space once occupied by urges is now just free. I use it to read, to think, to build. Day 200 doesn't feel like a streak anymore. It feels like a life."},
+  {title:"My productivity apps became useless at day 50 because I just... started doing things",flair:"50 Days",up:2198,days:50,body:"I had Notion setups, Todoist premium, Obsidian vaults, the works. None of it worked because the problem wasn't my system. The problem was my dopamine. At day 50 I deleted half my productivity apps. Turns out when your reward circuitry isn't hijacked you don't need elaborate systems to do basic things. You just do them."},
+  {title:"The spiritual dimension opened at day 120 and I wasn't prepared",flair:"120 Days",up:2876,days:120,body:"I'm not a religious person. I came to SR for the testosterone benefits. At day 120 I had an experience during meditation that I have no secular language for. A sense of connection to everything. Profound peace. It lasted about 20 minutes. The ancients called this energy sacred for a reason."},
+  {title:"I stopped needing external validation and it changed every relationship I have",flair:"90 Days",up:3145,days:90,body:"Before SR I was constantly seeking approval from my boss, my friends, strangers on social media. At day 90 I noticed I just didn't need it anymore. Not because I became arrogant but because I felt full rather than empty. My relationships became more honest because I stopped performing."},
+  {title:"Cold showers + SR = the stack nobody talks about enough",flair:"60 Days",up:2234,days:60,body:"Started both on the same day. By day 60 I can't separate which is doing what but I don't need to. The combination is borderline supernatural. Every morning I emerge from the cold shower feeling like I've earned the day before it starts. Do both. Stack the hard things."},
+  {title:"My voice dropped noticeably. Three people asked if I was sick.",flair:"30 Days",up:1987,days:30,body:"At day 30 my girlfriend asked why my voice sounded different. Two colleagues also mentioned it. Voice deepening is a documented effect of elevated testosterone. I hadn't noticed until they pointed it out. Looking back at voice notes I record for work — the difference is audible. The body changes first. The mind follows."},
+  {title:"I finally started the thing I'd been putting off for 3 years",flair:"45 Days",up:1654,days:45,body:"The business, the creative project, the fitness goal — pick yours. Mine was a YouTube channel I'd been 'about to start' since 2021. At day 45 I just... filmed the first video. Posted it. And the next day filmed another. The activation energy that SR gives you is real. You stop waiting to feel ready."},
+  {title:"365 days. Here is my honest, unembellished account.",flair:"1 Year",up:8912,days:365,body:"I won't pretend every day was profound. Some days were ordinary. Some days were hard. Around day 200 it stopped being a practice and started being a non-issue — like not smoking when you've quit for years. What I can say honestly at 365: I am more focused, more disciplined, more socially at ease, more creative, and more content than at any point in my adult life. I simply know the man I am now would not trade back."}
+];
+
+// ===================== STATE =====================
+let S = JSON.parse(localStorage.getItem('sr_v3') || 'null') || {startDate:null,best:0,entries:[],reviews:[],mood:null};
+if(S.streak !== undefined && !S.startDate && S.streak > 0) {
+  const d = new Date(); d.setDate(d.getDate() - S.streak);
+  S.startDate = d.toISOString().split('T')[0]; delete S.streak;
+}
+function save() { try { localStorage.setItem('sr_v3', JSON.stringify(S)); } catch(e){} }
+
+let curTheme = localStorage.getItem('sr_theme') || 'purple';
+let qIdx = 0, qTimer = null;
+let storyIdx = 0, stories = [...STORIES];
+let medPlaying = false;
+
+// ===================== UTILS =====================
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), 2200);
 }
 
-// Aura ring — fills based on progress within current 90-day cycle
-function updateAura(streak) {
-  const ring = document.getElementById('aura-ring');
-  if(!ring) return;
-  const max = 90;
-  const pct = Math.min(streak / max, 1);
-  const circ = 326.7;
-  ring.style.strokeDashoffset = circ - (circ * pct);
-  // Colour evolves: green → purple → gold → orange → white
-  let colour;
-  if(streak < 7)   colour = '#5DCAA5';
-  else if(streak < 21) colour = '#7F77DD';
-  else if(streak < 40) colour = '#FFD700';
-  else if(streak < 60) colour = '#FF6B00';
-  else colour = '#FFFFFF';
-  ring.style.stroke = colour;
+function calcStreak() {
+  if(!S.startDate) return 0;
+  const a = new Date(S.startDate), b = new Date();
+  a.setHours(0,0,0,0); b.setHours(0,0,0,0);
+  return Math.max(0, Math.floor((b - a) / 86400000));
+}
 
-  // Second ring — activates at 90+ days, tracks next 90-day cycle
-  const ring2 = document.getElementById('aura-ring2');
-  if(ring2) {
-    if(streak >= 90) {
-      const pct2 = Math.min((streak - 90) / 90, 1);
-      const circ2 = 263.9;
-      ring2.style.strokeDashoffset = circ2 - (circ2 * pct2);
-      ring2.style.opacity = '1';
-      // Second ring colour: cosmic tones
-      let colour2;
-      if(streak < 120) colour2 = '#00FFCC';
-      else if(streak < 180) colour2 = '#CC44FF';
-      else if(streak < 270) colour2 = '#FF44AA';
-      else colour2 = '#FFD700';
-      ring2.style.stroke = colour2;
-    } else {
-      ring2.style.opacity = '0';
-      ring2.style.strokeDashoffset = '263.9';
-    }
+function shuffle(arr) {
+  for(let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-
-  // Outer glow on aura wrap
-  const wrap = document.getElementById('aura-wrap');
-  if(wrap) wrap.style.filter = streak > 0 ? `drop-shadow(0 0 ${6 + Math.min(streak/2,14)}px ${colour}55)` : 'none';
+  return arr;
 }
 
-// Flame — evolves SVG based on streak size
-function updateFlame(streak) {
-  const svg = document.getElementById('flame-svg');
-  if(!svg) return;
-  // Scale: 0-6 = spark, 7-20 = small flame, 21-39 = med flame, 40-59 = big flame, 60-89 = roaring, 90+ = inferno
+// ===================== THEME =====================
+function applyTheme(name) {
+  const t = THEMES[name] || THEMES.purple;
+  const r = document.documentElement.style;
+  r.setProperty('--ac', t.ac); r.setProperty('--acl', t.acl);
+  r.setProperty('--acd', t.acd); r.setProperty('--ac2', t.ac2); r.setProperty('--ac4', t.ac4);
+  document.getElementById('tc').content = t.ac;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('on', b.dataset.theme === name));
+}
+
+// ===================== QUOTES =====================
+function renderDots() {
+  document.getElementById('qdots').innerHTML = QUOTES.map((_,i) =>
+    `<div class="qdot${i===qIdx?' on':''}" data-qi="${i}"></div>`).join('');
+}
+function goQ(i) {
+  qIdx = i; document.getElementById('qtext').textContent = QUOTES[i]; renderDots();
+  clearInterval(qTimer); qTimer = setInterval(() => goQ((qIdx+1) % QUOTES.length), 8000);
+}
+
+// ===================== AURA =====================
+function updateAura(n) {
+  const r1 = document.getElementById('ar1');
+  if(!r1) return;
+  const pct = Math.min(n / 90, 1);
+  r1.style.strokeDashoffset = 326.7 - 326.7 * pct;
+  let c = n < 7 ? '#5DCAA5' : n < 21 ? '#7F77DD' : n < 40 ? '#FFD700' : n < 60 ? '#FF6B00' : '#FFFFFF';
+  r1.style.stroke = c;
+  const r2 = document.getElementById('ar2');
+  if(r2) {
+    if(n >= 90) {
+      const p2 = Math.min((n - 90) / 90, 1);
+      r2.style.strokeDashoffset = 263.9 - 263.9 * p2;
+      r2.style.opacity = '1';
+      r2.style.stroke = n < 120 ? '#00FFCC' : n < 180 ? '#CC44FF' : n < 270 ? '#FF44AA' : '#FFD700';
+    } else { r2.style.opacity = '0'; r2.style.strokeDashoffset = '263.9'; }
+  }
+  const w = document.getElementById('aura-wrap') || document.querySelector('.aura-wrap');
+  if(w) w.style.filter = n > 0 ? `drop-shadow(0 0 ${Math.min(6+n/2,20)}px ${c}55)` : 'none';
+}
+
+// ===================== FLAME =====================
+function updateFlame(n) {
+  const svg = document.getElementById('fsv');
+  const fw = document.getElementById('fw');
+  if(!svg || !fw) return;
+  const scale = 1 + Math.min(n / 90, 1) * 0.8;
+  const w = Math.round(44 * scale), h = Math.round(56 * scale);
+  fw.style.width = w+'px'; fw.style.height = h+'px';
+  svg.setAttribute('width', w); svg.setAttribute('height', h);
   let html = '';
-  if(streak === 0) {
-    // Just a spark
-    html = `<circle cx="30" cy="60" r="5" fill="#FFD700" opacity="0.7"/>
-            <circle cx="30" cy="52" r="2.5" fill="#FFF8D0" opacity="0.5"/>`;
-  } else if(streak < 7) {
-    // Tiny flicker
-    html = `<defs><linearGradient id="fg1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="100%" stop-color="#FFD700"/></linearGradient></defs>
-            <polygon points="30,18 24,45 27,58 33,58 36,45" fill="url(#fg1)" opacity="0.9"/>
-            <polygon points="30,28 27,46 29,56 31,56 33,46" fill="#FFF0A0"/>`;
-  } else if(streak < 21) {
-    // Growing flame
-    html = `<defs><linearGradient id="fg2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="50%" stop-color="#FF9900"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
-            <polygon points="30,8 20,36 18,52 22,62 38,62 42,52 40,36" fill="#FF4400" opacity="0.4"/>
-            <polygon points="30,8 22,36 20,55 27,64 33,64 40,55 38,36" fill="url(#fg2)" opacity="0.9"/>
-            <polygon points="30,14 25,38 24,56 29,63 31,63 36,56 35,38" fill="#FFD060"/>
-            <polygon points="30,20 27,40 27,57 30,62 33,57 33,40" fill="#FFF8C0"/>
-            <circle cx="30" cy="5" r="3" fill="#FFF8D0" opacity="0.8"/>`;
-  } else if(streak < 40) {
-    // Strong flame with side tongues
-    html = `<defs><linearGradient id="fg3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF2200"/><stop offset="40%" stop-color="#FF8800"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
-            <polygon points="30,4 14,32 12,50 16,64 44,64 48,50 46,32" fill="#FF3300" opacity="0.25"/>
-            <polygon points="30,4 16,34 14,52 20,66 40,66 46,52 44,34" fill="#FF5500" opacity="0.5"/>
-            <polygon points="30,4 19,34 17,54 24,66 36,66 43,54 41,34" fill="url(#fg3)"/>
-            <polygon points="30,10 23,36 22,55 28,65 32,65 38,55 37,36" fill="#FFD060"/>
-            <polygon points="30,18 26,38 26,56 30,64 34,56 34,38" fill="#FFF8C0"/>
-            <polygon points="30,4 26,22 28,36 30,42 32,36 34,22" fill="white" opacity="0.7"/>
-            <circle cx="22" cy="28" r="2.5" fill="#FFB800" opacity="0.7"/>
-            <circle cx="38" cy="24" r="2" fill="#FFB800" opacity="0.7"/>
-            <circle cx="30" cy="2" r="3" fill="white" opacity="0.9"/>`;
-  } else if(streak < 60) {
-    // Roaring fire
-    html = `<defs>
-              <linearGradient id="fg4" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF1100"/><stop offset="35%" stop-color="#FF7700"/><stop offset="70%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient>
-            </defs>
-            <polygon points="30,2 10,28 8,48 12,66 48,66 52,48 50,28" fill="#FF2200" opacity="0.2"/>
-            <polygon points="30,2 12,30 10,50 16,68 44,68 50,50 48,30" fill="#FF4400" opacity="0.45"/>
-            <polygon points="30,2 15,30 13,52 20,68 40,68 47,52 45,30" fill="#FF6600" opacity="0.7"/>
-            <polygon points="30,2 17,32 15,54 22,68 38,68 45,54 43,32" fill="url(#fg4)"/>
-            <polygon points="30,8 22,34 20,55 27,67 33,67 40,55 38,34" fill="#FFD060"/>
-            <polygon points="30,16 25,36 24,56 29,66 31,66 36,56 35,36" fill="#FFF8D0"/>
-            <polygon points="30,2 27,20 29,38 30,48 31,38 33,20" fill="white" opacity="0.85"/>
-            <circle cx="18" cy="22" r="3" fill="#FF9900" opacity="0.8"/>
-            <circle cx="42" cy="18" r="2.5" fill="#FF9900" opacity="0.8"/>
-            <circle cx="12" cy="38" r="2" fill="#FFD700" opacity="0.7"/>
-            <circle cx="48" cy="35" r="2" fill="#FFD700" opacity="0.7"/>
-            <circle cx="30" cy="0" r="3.5" fill="white"/>`;
+  if(n === 0) {
+    html = `<circle cx="30" cy="62" r="5" fill="#FFD700" opacity=".7"/><circle cx="30" cy="54" r="2.5" fill="#FFF8D0" opacity=".5"/>`;
+  } else if(n < 7) {
+    html = `<defs><linearGradient id="g1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="100%" stop-color="#FFD700"/></linearGradient></defs>
+    <polygon points="30,20 24,47 27,60 33,60 36,47" fill="url(#g1)"/>
+    <polygon points="30,30 27,48 29,58 31,58 33,48" fill="#FFF0A0"/>`;
+  } else if(n < 21) {
+    html = `<defs><linearGradient id="g2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="50%" stop-color="#FF9900"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
+    <polygon points="30,10 20,38 18,54 22,64 38,64 42,54 40,38" fill="#FF4400" opacity=".35"/>
+    <polygon points="30,10 22,38 20,57 27,66 33,66 40,57 38,38" fill="url(#g2)"/>
+    <polygon points="30,16 25,40 24,58 29,65 31,65 36,58 35,40" fill="#FFD060"/>
+    <polygon points="30,22 27,42 27,59 30,64 33,59 33,42" fill="#FFF8C0"/>
+    <circle cx="30" cy="7" r="3" fill="#FFF8D0" opacity=".8"/>`;
+  } else if(n < 40) {
+    html = `<defs><linearGradient id="g3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF2200"/><stop offset="40%" stop-color="#FF8800"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
+    <polygon points="30,6 14,34 12,52 16,66 44,66 48,52 46,34" fill="#FF3300" opacity=".2"/>
+    <polygon points="30,6 16,36 14,54 20,68 40,68 46,54 44,36" fill="url(#g3)"/>
+    <polygon points="30,12 23,38 22,57 28,67 32,67 38,57 37,38" fill="#FFD060"/>
+    <polygon points="30,20 26,40 26,58 30,66 34,58 34,40" fill="#FFF8C0"/>
+    <polygon points="30,6 27,22 29,38 30,44 31,38 33,22" fill="white" opacity=".7"/>
+    <circle cx="18" cy="26" r="2.5" fill="#FFB800" opacity=".7"/>
+    <circle cx="42" cy="22" r="2" fill="#FFB800" opacity=".7"/>
+    <circle cx="30" cy="4" r="3" fill="white" opacity=".9"/>`;
+  } else if(n < 60) {
+    html = `<defs><linearGradient id="g4" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF1100"/><stop offset="35%" stop-color="#FF7700"/><stop offset="70%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient></defs>
+    <polygon points="30,4 10,30 8,50 12,68 48,68 52,50 50,30" fill="#FF2200" opacity=".15"/>
+    <polygon points="30,4 12,32 10,52 16,70 44,70 50,52 48,32" fill="#FF5500" opacity=".5"/>
+    <polygon points="30,4 15,32 13,54 20,70 40,70 47,54 45,32" fill="url(#g4)"/>
+    <polygon points="30,10 22,36 20,57 27,69 33,69 40,57 38,36" fill="#FFD060"/>
+    <polygon points="30,18 25,38 24,58 29,68 31,68 36,58 35,38" fill="#FFF8D0"/>
+    <polygon points="30,4 27,20 29,38 30,48 31,38 33,20" fill="white" opacity=".85"/>
+    <circle cx="14" cy="20" r="3" fill="#FF9900" opacity=".8"/>
+    <circle cx="46" cy="16" r="2.5" fill="#FF9900" opacity=".8"/>
+    <circle cx="30" cy="2" r="3.5" fill="white"/>`;
   } else {
-    // INFERNO — 60+ days
-    html = `<defs>
-              <linearGradient id="fg5" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF0000"/><stop offset="25%" stop-color="#FF5500"/><stop offset="55%" stop-color="#FFD700"/><stop offset="80%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#E0F0FF"/></linearGradient>
-              <radialGradient id="glow5" cx="50%" cy="80%" r="50%"><stop offset="0%" stop-color="#FF6600" stop-opacity="0.3"/><stop offset="100%" stop-color="transparent"/></radialGradient>
-            </defs>
-            <ellipse cx="30" cy="65" rx="26" ry="8" fill="url(#glow5)"/>
-            <polygon points="30,0 6,24 4,46 8,68 52,68 56,46 54,24" fill="#FF1100" opacity="0.15"/>
-            <polygon points="30,0 8,26 6,48 12,70 48,70 54,48 52,26" fill="#FF3300" opacity="0.35"/>
-            <polygon points="30,0 10,28 8,50 15,70 45,70 52,50 50,28" fill="#FF5500" opacity="0.6"/>
-            <polygon points="30,0 13,28 11,52 18,70 42,70 49,52 47,28" fill="url(#fg5)"/>
-            <polygon points="30,6 20,30 18,52 25,69 35,69 42,52 40,30" fill="#FFE060"/>
-            <polygon points="30,14 23,34 22,54 28,68 32,68 38,54 37,34" fill="#FFF8D0"/>
-            <polygon points="30,0 27,18 29,36 30,46 31,36 33,18" fill="white" opacity="0.95"/>
-            <circle cx="14" cy="18" r="3.5" fill="#FF8800" opacity="0.85"/>
-            <circle cx="46" cy="14" r="3" fill="#FF8800" opacity="0.85"/>
-            <circle cx="8" cy="36" r="2.5" fill="#FFD700"/>
-            <circle cx="52" cy="32" r="2.5" fill="#FFD700"/>
-            <circle cx="18" cy="8" r="2" fill="#FFEE88" opacity="0.9"/>
-            <circle cx="42" cy="6" r="2" fill="#FFEE88" opacity="0.9"/>
-            <circle cx="30" cy="-2" r="4" fill="white"/>
-            <circle cx="24" cy="-4" r="2" fill="#E0F0FF" opacity="0.8"/>
-            <circle cx="36" cy="-4" r="2" fill="#E0F0FF" opacity="0.8"/>`;
+    html = `<defs><linearGradient id="g5" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF0000"/><stop offset="25%" stop-color="#FF5500"/><stop offset="55%" stop-color="#FFD700"/><stop offset="80%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#E0F0FF"/></linearGradient></defs>
+    <polygon points="30,2 6,26 4,48 8,70 52,70 56,48 54,26" fill="#FF1100" opacity=".12"/>
+    <polygon points="30,2 8,28 6,50 12,72 48,72 54,50 52,28" fill="#FF3300" opacity=".3"/>
+    <polygon points="30,2 10,30 8,52 15,72 45,72 52,52 50,30" fill="url(#g5)"/>
+    <polygon points="30,8 20,32 18,54 25,71 35,71 42,54 40,32" fill="#FFE060"/>
+    <polygon points="30,16 23,36 22,56 28,70 32,70 38,56 37,36" fill="#FFF8D0"/>
+    <polygon points="30,2 27,20 29,38 30,48 31,38 33,20" fill="white" opacity=".95"/>
+    <circle cx="12" cy="20" r="3.5" fill="#FF8800" opacity=".85"/>
+    <circle cx="48" cy="16" r="3" fill="#FF8800" opacity=".85"/>
+    <circle cx="8" cy="38" r="2.5" fill="#FFD700"/>
+    <circle cx="52" cy="34" r="2.5" fill="#FFD700"/>
+    <circle cx="30" cy="0" r="4" fill="white"/>
+    <circle cx="22" cy="-3" r="2" fill="#E0F0FF" opacity=".8"/>
+    <circle cx="38" cy="-3" r="2" fill="#E0F0FF" opacity=".8"/>`;
   }
   svg.innerHTML = html;
-
-  // Scale flame bigger as streak grows
-  const scale = 1 + Math.min(streak / 90, 1) * 0.7;
-  const wrap = document.getElementById('flame-wrap');
-  if(wrap) {
-    const w = Math.round(44 * scale);
-    const h = Math.round(56 * scale);
-    wrap.style.width = w + 'px';
-    wrap.style.height = h + 'px';
-    svg.style.width = w + 'px';
-    svg.style.height = h + 'px';
-  }
 }
 
-// Check and show milestone popup
-function checkMilestone(streak) {
-  if(!MILESTONES[streak]) return;
-  const key = 'ms_shown_' + streak;
-  if(localStorage.getItem(key)) return; // already shown
+// ===================== BADGE =====================
+function getBadge(n) {
+  let b = BADGES[0];
+  for(const x of BADGES) { if(n >= x.day) b = x; }
+  return b;
+}
+
+// ===================== MILESTONE =====================
+function checkMilestone(n) {
+  if(!MILESTONES[n]) return;
+  const key = 'ms_' + n;
+  if(localStorage.getItem(key)) return;
   localStorage.setItem(key, '1');
-  const ms = MILESTONES[streak];
+  const ms = MILESTONES[n];
   document.getElementById('ms-flame').textContent = ms.flame;
-  document.getElementById('ms-day').textContent = 'Day ' + streak + ' Milestone';
+  document.getElementById('ms-day').textContent = 'Day ' + n + ' Milestone';
   document.getElementById('ms-title').textContent = ms.title;
   document.getElementById('ms-msg').textContent = ms.msg;
-  setTimeout(() => document.getElementById('milestone-overlay').classList.add('on'), 400);
+  setTimeout(() => document.getElementById('ms-overlay').classList.add('on'), 400);
 }
 
-// ---- HOME ----
-function updateHome(){
-  const streak=calcStreak();
-  if(streak>S.best){S.best=streak;save();}
-  document.getElementById('streak-num').textContent=streak;
-  document.getElementById('m-best').textContent=S.best;
-  document.getElementById('m-entries').textContent=S.entries.length;
-  // Aura ring
-  updateAura(streak);
-  // Flame
-  updateFlame(streak);
-  // Milestone badge
-  const bdg = getBadgeForStreak(streak);
-  const badgeEl = document.getElementById('ph-badge');
-  badgeEl.textContent = (bdg.icon ? bdg.icon + ' ' : '') + bdg.label;
-  badgeEl.className = 'ph-badge ' + bdg.cls;
-  // Milestone popup
-  checkMilestone(streak);
-  // Phase (for phases tab)
-  const ph=getPhase(streak);
-  const daily=S.entries.filter(e=>e.type==='daily');
-  if(daily.length){
-    const avgE=Math.round(daily.reduce((a,e)=>a+e.energy,0)/daily.length);
-    document.getElementById('m-energy').textContent=avgE;
-    const last=S.entries[S.entries.length-1];
-    document.getElementById('latest-entry').innerHTML=
-      '<strong>'+(last.mood||'–')+'</strong>'+(last.energy?' · energy '+last.energy+'/10 · clarity '+last.clarity+'/10':'')+
-      (last.note?'<br><span style="color:var(--tt);font-size:12px">'+last.note+'</span>':'');
+// ===================== HOME =====================
+function updateHome() {
+  const n = calcStreak();
+  if(n > S.best) { S.best = n; save(); }
+  document.getElementById('snum').textContent = n;
+  document.getElementById('m-best').textContent = S.best;
+  document.getElementById('m-entries').textContent = S.entries.length;
+  updateAura(n); updateFlame(n);
+  const b = getBadge(n);
+  const pbEl = document.getElementById('pbadge');
+  pbEl.textContent = (b.icon ? b.icon + ' ' : '') + b.label;
+  pbEl.className = 'ph-badge ' + b.cls;
+  checkMilestone(n);
+  const daily = S.entries.filter(e => e.type === 'daily');
+  if(daily.length) {
+    const avgE = Math.round(daily.reduce((a,e) => a + e.energy, 0) / daily.length);
+    document.getElementById('m-energy').textContent = avgE;
+    const last = S.entries[S.entries.length - 1];
+    document.getElementById('latest').innerHTML =
+      '<strong>' + (last.mood||'–') + '</strong>' +
+      (last.energy ? ' · energy ' + last.energy + '/10 · clarity ' + last.clarity + '/10' : '') +
+      (last.note ? '<br><span style="color:var(--tt);font-size:12px">' + last.note + '</span>' : '');
   } else {
-    document.getElementById('latest-entry').textContent=S.startDate
-      ?'Running since '+new Date(S.startDate).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'. Do your first check-in.'
-      :'Set your start date below to begin tracking.';
+    document.getElementById('latest').textContent = S.startDate
+      ? 'Running since ' + new Date(S.startDate).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) + '. Do your first check-in.'
+      : 'Set your start date below to begin tracking.';
   }
-  const lastRD=S.reviews.length?S.reviews[S.reviews.length-1].day:0;
-  document.getElementById('weekly-prompt').style.display=(streak>0&&streak-lastRD>=7)?'block':'none';
+  const lastRD = S.reviews.length ? S.reviews[S.reviews.length-1].day : 0;
+  document.getElementById('wprompt').style.display = (n > 0 && n - lastRD >= 7) ? 'block' : 'none';
 }
 
-// ---- TABS ----
-function goTab(id){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-  document.getElementById('s-'+id).classList.add('on');
-  document.getElementById('tab-'+id).classList.add('on');
-  document.getElementById('main-scroll').scrollTop=0;
-  if(id==='history')renderHistory('all');
-  if(id==='insights')renderInsights();
-  if(id==='phases')renderPhaseGuide();
-  if(id==='stories'){shuffleArray(shuffledStories);storyIdx=0;renderStory(0);}
+// ===================== TABS =====================
+function goTab(id) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('s-' + id).classList.add('on');
+  document.querySelector('.tab[data-tab="' + id + '"]').classList.add('on');
+  document.getElementById('scroll').scrollTop = 0;
+  if(id === 'history') renderHistory('all');
+  if(id === 'insights') renderInsights();
+  if(id === 'phases') renderPhase();
+  if(id === 'stories') { shuffle(stories); storyIdx = 0; renderStory(); }
+  if(id === 'transmute') switchTr('pranayama');
 }
 
-// ---- CHECK-IN ----
-function saveEntry(){
-  const energy=parseInt(document.getElementById('s-energy').value);
-  const clarity=parseInt(document.getElementById('s-clarity').value);
-  const urge=parseInt(document.getElementById('s-urge').value);
-  const social=parseInt(document.getElementById('s-social').value);
-  const note=document.getElementById('journal-text').value.trim();
-  const mood=S.mood||'Unset';
-  const triggers=[...document.querySelectorAll('.trig-btn.on')].map(b=>b.textContent.trim());
-  const custom=document.getElementById('custom-trigger').value.trim();
-  if(custom)triggers.push(custom);
+// ===================== CHECK-IN =====================
+function saveEntry() {
+  const energy = parseInt(document.getElementById('se').value);
+  const clarity = parseInt(document.getElementById('sc').value);
+  const urge = parseInt(document.getElementById('su').value);
+  const social = parseInt(document.getElementById('ss').value);
+  const note = document.getElementById('jnote').value.trim();
+  const mood = S.mood || 'Unset';
+  const triggers = [...document.querySelectorAll('.trig-btn.on')].map(b => b.textContent.trim());
+  const custom = document.getElementById('ctrig').value.trim();
+  if(custom) triggers.push(custom);
   S.entries.push({type:'daily',date:new Date().toISOString(),day:calcStreak(),mood,energy,clarity,urge,social,triggers,note});
   save(); updateHome();
-  document.getElementById('journal-text').value='';
-  document.getElementById('custom-trigger').value='';
-  document.querySelectorAll('.mood-btn.on,.trig-btn.on').forEach(b=>b.classList.remove('on'));
-  S.mood=null;
+  document.getElementById('jnote').value = '';
+  document.getElementById('ctrig').value = '';
+  document.querySelectorAll('.mbtn.on, .trig-btn.on').forEach(b => b.classList.remove('on'));
+  S.mood = null;
   toast('Check-in saved ✓');
   goTab('home');
 }
 
-function showReview(){document.getElementById('daily-form').style.display='none';document.getElementById('weekly-form').style.display='block';}
-function hideReview(){document.getElementById('daily-form').style.display='block';document.getElementById('weekly-form').style.display='none';}
+function showReview() { document.getElementById('daily-form').style.display='none'; document.getElementById('weekly-form').style.display='block'; }
+function hideReview() { document.getElementById('daily-form').style.display=''; document.getElementById('weekly-form').style.display='none'; }
 
-function saveReview(){
-  const r={type:'weekly',date:new Date().toISOString(),day:calcStreak(),
+function saveReview() {
+  const r = {type:'weekly',date:new Date().toISOString(),day:calcStreak(),
     wentWell:document.getElementById('rq1').value.trim(),
     hardest:document.getElementById('rq2').value.trim(),
     noticed:document.getElementById('rq3').value.trim(),
     intention:document.getElementById('rq4').value.trim()};
-  S.reviews.push(r);S.entries.push(r);save();hideReview();updateHome();
-  ['rq1','rq2','rq3','rq4'].forEach(id=>document.getElementById(id).value='');
-  toast('Weekly review saved ✓');
-  goTab('home');
+  S.reviews.push(r); S.entries.push(r); save(); hideReview(); updateHome();
+  ['rq1','rq2','rq3','rq4'].forEach(id => document.getElementById(id).value = '');
+  toast('Weekly review saved ✓'); goTab('home');
 }
 
-// ---- HISTORY ----
-let hFilter='all';
-function renderHistory(f){
-  hFilter=f;
-  ['all','daily','weekly'].forEach(x=>{
-    const el=document.getElementById('hf-'+x);
-    if(el){el.style.borderColor=x===f?'var(--ac)':'';el.style.color=x===f?'var(--ac)':'';}
+// ===================== HISTORY =====================
+function renderHistory(f) {
+  ['all','daily','weekly'].forEach(x => {
+    const el = document.getElementById('hf-'+x);
+    if(el) { el.style.borderColor = x===f?'var(--ac)':''; el.style.color = x===f?'var(--ac)':''; }
   });
-  const el=document.getElementById('history-list');
-  if(!S.entries.length){el.innerHTML='<p>No entries yet.</p>';return;}
-  const list=f==='weekly'?S.entries.filter(e=>e.type==='weekly'):f==='daily'?S.entries.filter(e=>e.type==='daily'):S.entries;
-  if(!list.length){el.innerHTML='<p>No entries of this type yet.</p>';return;}
-  el.innerHTML=[...list].reverse().map(e=>{
-    const dt=new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · day '+e.day;
-    if(e.type==='weekly')return`<div class="week-card"><div class="e-date">${dt} · <span style="color:var(--amber-800);font-weight:600;">Weekly review</span></div>${e.wentWell?'<div class="e-note"><b>Went well:</b> '+e.wentWell+'</div>':''}${e.hardest?'<div class="e-note"><b>Hardest:</b> '+e.hardest+'</div>':''}${e.intention?'<div class="e-note"><b>Intention:</b> '+e.intention+'</div>':''}</div>`;
-    return`<div class="entry"><div class="e-date">${dt}</div><div class="e-mood">${e.mood} · E${e.energy} C${e.clarity} U${e.urge}</div>${e.triggers&&e.triggers.length?'<div class="e-note">Triggers: '+e.triggers.join(', ')+'</div>':''}${e.note?'<div class="e-note">'+e.note+'</div>':''}</div>`;
+  const el = document.getElementById('hist-list');
+  if(!S.entries.length) { el.innerHTML = '<p>No entries yet.</p>'; return; }
+  const list = f==='weekly' ? S.entries.filter(e=>e.type==='weekly') : f==='daily' ? S.entries.filter(e=>e.type==='daily') : S.entries;
+  if(!list.length) { el.innerHTML = '<p>No entries of this type yet.</p>'; return; }
+  el.innerHTML = [...list].reverse().map(e => {
+    const dt = new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · day ' + e.day;
+    if(e.type === 'weekly') return `<div class="wk-card"><div class="e-date">${dt} · <span style="color:var(--amb8);font-weight:600">Weekly review</span></div>${e.wentWell?'<div class="e-note"><b>Went well:</b> '+e.wentWell+'</div>':''}${e.hardest?'<div class="e-note"><b>Hardest:</b> '+e.hardest+'</div>':''}${e.intention?'<div class="e-note"><b>Intention:</b> '+e.intention+'</div>':''}</div>`;
+    return `<div class="entry"><div class="e-date">${dt}</div><div class="e-mood">${e.mood} · E${e.energy} C${e.clarity} U${e.urge}</div>${e.triggers&&e.triggers.length?'<div class="e-note">Triggers: '+e.triggers.join(', ')+'</div>':''}${e.note?'<div class="e-note">'+e.note+'</div>':''}</div>`;
   }).join('');
 }
 
-// ---- INSIGHTS ----
-function renderInsights(){
-  const el=document.getElementById('insights-content');
-  const daily=S.entries.filter(e=>e.type==='daily');
-  if(daily.length<3){el.innerHTML='<p style="font-size:13px;color:var(--ts)">Log at least 3 check-ins to see insights.</p>';return;}
-  const avg=k=>Math.round(daily.reduce((a,e)=>a+e[k],0)/daily.length);
-  const rec=daily.slice(-7);
-  const rAvg=k=>Math.round(rec.reduce((a,e)=>a+e[k],0)/rec.length);
-  const mC={};daily.forEach(e=>mC[e.mood]=(mC[e.mood]||0)+1);
-  const topM=Object.entries(mC).sort((a,b)=>b[1]-a[1])[0];
-  const tC={};daily.forEach(e=>(e.triggers||[]).forEach(t=>tC[t]=(tC[t]||0)+1));
-  const topT=Object.entries(tC).sort((a,b)=>b[1]-a[1]).slice(0,3);
-  const trend=rAvg('energy')>=avg('energy')?'Trending up recently':'Trending down recently';
-  const urgeNote=rAvg('urge')>6?'High urge pressure lately — stay alert.':rAvg('urge')<4?'Urges are low — strong control phase.':'Moderate, steady urge levels.';
-  el.innerHTML=`
-    <div class="ins-card"><div class="ins-title">⚡ Energy</div><div class="ins-text">All-time avg ${avg('energy')}/10 · ${trend} (${rAvg('energy')}/10 last 7)</div></div>
-    <div class="ins-card"><div class="ins-title">🧠 Mental clarity</div><div class="ins-text">All-time avg ${avg('clarity')}/10 · Recent avg ${rAvg('clarity')}/10</div></div>
-    <div class="ins-card"><div class="ins-title">🔥 Urge patterns</div><div class="ins-text">${urgeNote} Avg intensity: ${avg('urge')}/10</div></div>
-    <div class="ins-card"><div class="ins-title">😌 Most common state</div><div class="ins-text">${topM[0]} (${topM[1]} time${topM[1]>1?'s':''})</div></div>
-    ${topT.length?`<div class="ins-card" style="background:var(--coral-50);border-color:var(--coral-200);"><div class="ins-title" style="color:var(--coral-800);">⚠️ Top triggers</div><div class="ins-text" style="color:var(--coral-600);">${topT.map(([t,c])=>t+' (×'+c+')').join(' · ')}</div></div>`:''}
-    <div class="card"><div class="lbl">All-time averages</div><div class="bars">${['energy','clarity','social'].map(k=>`<div class="bar-row"><div class="bar-lbl">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${avg(k)*10}%"></div></div><div class="bar-val">${avg(k)}</div></div>`).join('')}</div></div>
-  `;
+// ===================== INSIGHTS =====================
+function renderInsights() {
+  const el = document.getElementById('ins-content');
+  const daily = S.entries.filter(e => e.type === 'daily');
+  if(daily.length < 3) { el.innerHTML = '<p style="font-size:13px;color:var(--ts)">Log at least 3 check-ins to see insights.</p>'; return; }
+  const avg = k => Math.round(daily.reduce((a,e) => a + e[k], 0) / daily.length);
+  const rec = daily.slice(-7);
+  const rAvg = k => Math.round(rec.reduce((a,e) => a + e[k], 0) / rec.length);
+  const mC = {}; daily.forEach(e => mC[e.mood] = (mC[e.mood]||0) + 1);
+  const topM = Object.entries(mC).sort((a,b) => b[1]-a[1])[0];
+  const tC = {}; daily.forEach(e => (e.triggers||[]).forEach(t => tC[t] = (tC[t]||0) + 1));
+  const topT = Object.entries(tC).sort((a,b) => b[1]-a[1]).slice(0,3);
+  const trend = rAvg('energy') >= avg('energy') ? 'Trending up recently' : 'Trending down recently';
+  const urgeNote = rAvg('urge') > 6 ? 'High urge pressure lately — stay alert.' : rAvg('urge') < 4 ? 'Urges are low — strong control phase.' : 'Moderate, steady urge levels.';
+  el.innerHTML = `
+    <div class="ic"><div class="ic-t">⚡ Energy</div><div class="ic-b">All-time avg ${avg('energy')}/10 · ${trend} (${rAvg('energy')}/10 last 7)</div></div>
+    <div class="ic"><div class="ic-t">🧠 Mental clarity</div><div class="ic-b">All-time avg ${avg('clarity')}/10 · Recent avg ${rAvg('clarity')}/10</div></div>
+    <div class="ic"><div class="ic-t">🔥 Urge patterns</div><div class="ic-b">${urgeNote} Avg: ${avg('urge')}/10</div></div>
+    <div class="ic"><div class="ic-t">😌 Most common state</div><div class="ic-b">${topM[0]} (${topM[1]} time${topM[1]>1?'s':''})</div></div>
+    ${topT.length ? `<div class="ic" style="background:var(--cor50);border-color:var(--cor2)"><div class="ic-t" style="color:var(--cor8)">⚠️ Top triggers</div><div class="ic-b" style="color:var(--cor6)">${topT.map(([t,c])=>t+' (×'+c+')').join(' · ')}</div></div>` : ''}
+    <div class="card"><div class="lbl">All-time averages</div><div class="bars">${['energy','clarity','social'].map(k=>`<div class="bar-row"><div class="bar-lbl">${k}</div><div class="bar-track"><div class="bar-fill" style="width:${avg(k)*10}%"></div></div><div class="bar-val">${avg(k)}</div></div>`).join('')}</div></div>`;
 }
 
-// ---- PHASES ----
-function renderPhaseGuide(){
-  const s=calcStreak();
-  const p=getPhase(s);
-  document.getElementById('phase-current').className='ph-block '+p.cls;
-  document.getElementById('pc-title').textContent='Day '+s+' — '+p.name;
-  document.getElementById('pc-text').textContent=getPhaseText(s);
+// ===================== PHASES =====================
+function renderPhase() {
+  const n = calcStreak();
+  const phases = [
+    {min:0,  max:7,   cls:'ph1', name:'Days 1–7 · Foundation',    text:'Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding.'},
+    {min:8,  max:21,  cls:'ph2', name:'Days 8–21 · Rewiring',     text:'Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure.'},
+    {min:22, max:40,  cls:'ph3', name:'Days 22–40 · Peak energy', text:'Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded.'},
+    {min:41, max:89,  cls:'ph4', name:'Days 41–89 · Mastery',     text:'The practice becomes identity. Urges stabilise. Energy is sustained. Your presence is different now.'},
+    {min:90, max:119, cls:'ph5', name:'Days 90–119 · Crystallisation', text:'The rewiring is largely complete. Creativity peaks. The transmutation is real and measurable.'},
+    {min:120,max:179, cls:'ph5', name:'Days 120–179 · Diamond Mind', text:'Emotional regulation reaches a new level. You process stress faster. People feel your stillness.'},
+    {min:180,max:269, cls:'ph5', name:'Days 180–269 · Transcendence', text:'Spiritual experience may open here. Heightened intuition, vivid dreams. Something genuinely shifts.'},
+    {min:270,max:364, cls:'ph6', name:'Days 270–364 · Solar',     text:'Presence becomes a felt quality. Leadership comes naturally. Physical vitality is at its peak.'},
+    {min:365,max:9999,cls:'ph6', name:'Day 365+ · Eternal Flame', text:'This is no longer a practice. It is a philosophy and a permanent upgrade. Guard it. Grow it. Give from it.'}
+  ];
+  const cur = phases.find(p => n >= p.min && n <= p.max) || phases[0];
+  const el = document.getElementById('ph-current');
+  el.className = 'ph-block ' + cur.cls;
+  document.getElementById('pc-title').textContent = 'Day ' + n + ' — ' + cur.name;
+  document.getElementById('pc-text').textContent = cur.text;
 }
 
-// ---- SETTINGS ----
-function openSettings(){
-  document.getElementById('settings-overlay').style.display='block';
-  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===curTheme));
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===curLang));
-}
-function closeSettings(){
-  document.getElementById('settings-overlay').style.display='none';
-}
-
-function setTheme(name){
-  curTheme=name;
-  localStorage.setItem('sr_theme',name);
-  applyTheme(name);
-  document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('on',b.dataset.theme===name));
-}
-
-function setLang(lang){
-  curLang=lang;
-  localStorage.setItem('sr_lang',lang);
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));
-  toast('Language updated');
+// ===================== STORIES =====================
+function renderStory() {
+  const s = stories[storyIdx];
+  const card = document.getElementById('story-card');
+  card.classList.add('fade');
+  setTimeout(() => {
+    card.innerHTML = `<div class="story-flair">r/Semenretention · ${s.flair}</div>
+      <div class="story-title">${s.title}</div>
+      <div class="story-meta">Day ${s.days} streak · ${s.up.toLocaleString()} upvotes</div>
+      <div class="story-body">${s.body}</div>
+      <div class="story-votes">▲ ${s.up.toLocaleString()} people found this helpful</div>`;
+    document.getElementById('sctr').textContent = (storyIdx+1) + ' / ' + stories.length;
+    card.classList.remove('fade');
+  }, 240);
 }
 
-function sendBugReport(){
-  const msg=document.getElementById('bug-text').value.trim();
-  if(!msg){toast('Please describe the bug first');return;}
-  const sub=encodeURIComponent('SR Tracker Bug Report');
-  const body=encodeURIComponent('Bug:\n\n'+msg+'\n\n---\nDay: '+calcStreak()+'\nTheme: '+curTheme+'\nLang: '+curLang+'\nEntries: '+S.entries.length);
-  window.location.href='mailto:lewiscurtis2@hotmail.co.uk?subject='+sub+'&body='+body;
-  document.getElementById('bug-text').value='';
+// ===================== TRANSMUTATION =====================
+function switchTr(name) {
+  ['pranayama','meditation','poses'].forEach(n => {
+    const el = document.getElementById('tr-'+n);
+    if(el) el.style.display = n === name ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tr-nav').forEach(b => {
+    const on = b.dataset.tr === name;
+    b.style.borderColor = on ? 'var(--ac)' : '';
+    b.style.color = on ? 'var(--ac)' : '';
+  });
+}
+
+// ===================== SETTINGS =====================
+function openSettings() {
+  document.getElementById('s-overlay').style.display = 'block';
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('on', b.dataset.theme === curTheme));
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === (localStorage.getItem('sr_lang')||'en')));
+}
+function closeSettings() { document.getElementById('s-overlay').style.display = 'none'; }
+
+function sendBug() {
+  const msg = document.getElementById('bug-txt').value.trim();
+  if(!msg) { toast('Please describe the bug first'); return; }
+  const sub = encodeURIComponent('SR Tracker Bug Report');
+  const body = encodeURIComponent('Bug:\n\n' + msg + '\n\n---\nDay: ' + calcStreak() + '\nTheme: ' + curTheme + '\nEntries: ' + S.entries.length);
+  window.location.href = 'mailto:lewiscurtis2@hotmail.co.uk?subject=' + sub + '&body=' + body;
+  document.getElementById('bug-txt').value = '';
   toast('Opening email app...');
 }
 
-// ---- EXPORT ----
-function exportCSV(){
-  const daily=S.entries.filter(e=>e.type==='daily');
-  if(!daily.length){toast('No data to export yet.');return;}
-  const rows=[['Date','Day','Mood','Energy','Clarity','Urge','Social','Triggers','Note'],
-    ...daily.map(e=>[new Date(e.date).toLocaleDateString('en-GB'),e.day,e.mood,e.energy,e.clarity,e.urge,e.social,(e.triggers||[]).join('|'),e.note||''])];
-  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  const a=document.createElement('a');a.href=url;a.download='sr-tracker.csv';a.click();
+function exportCSV() {
+  const daily = S.entries.filter(e => e.type === 'daily');
+  if(!daily.length) { toast('No data to export yet.'); return; }
+  const rows = [['Date','Day','Mood','Energy','Clarity','Urge','Social','Triggers','Note'],
+    ...daily.map(e => [new Date(e.date).toLocaleDateString('en-GB'),e.day,e.mood,e.energy,e.clarity,e.urge,e.social,(e.triggers||[]).join('|'),e.note||''])];
+  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const url = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  const a = document.createElement('a'); a.href=url; a.download='sr-tracker.csv'; a.click();
   URL.revokeObjectURL(url);
 }
 
-// ---- WIRE UP ALL EVENTS HERE (no inline onclick) ----
+// ===================== MEDITATION =====================
+function toggleMed() {
+  const btn = document.getElementById('med-btn');
+  if(!('speechSynthesis' in window)) { toast('Text-to-speech not supported — read the script below'); return; }
+  if(medPlaying) {
+    window.speechSynthesis.cancel(); medPlaying = false; btn.textContent = '▶ Begin Guided Session'; return;
+  }
+  const text = `Welcome. Find a comfortable seated position and close your eyes.
+Phase one. Grounding. Take three deep breaths. Inhale for four counts. Hold for four. Exhale for eight. Feel your body settle. You are safe. You are still.
+Phase two. Acknowledge the energy. Bring your awareness to your sacral centre just below your navel. Notice any warmth or tension without judgement. This is raw life force. Power waiting to be directed.
+Phase three. The upward draw. On each inhale visualise a golden light rising from the base of your spine. With each breath it climbs higher through your heart, your throat, your third eye. On the exhale let it radiate from your crown as pure white light.
+Phase four. Transmutation. Set your intention. What will you create with this energy? Hold that vision at your third eye. Pour the rising energy directly into it. Feel it charge with life.
+Phase five. Integration. Let the visualisation fade. Rest in stillness. Feel the quiet power in your body. This energy is now yours. Stored not wasted. Take three deep breaths. Slowly open your eyes.`;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.8; u.pitch = 0.9;
+  u.onend = () => { medPlaying = false; btn.textContent = '▶ Begin Guided Session'; };
+  window.speechSynthesis.speak(u);
+  medPlaying = true; btn.textContent = '⏹ Stop Meditation';
+}
+
+// ===================== INIT =====================
 document.addEventListener('DOMContentLoaded', function() {
+  // Date
+  document.getElementById('hdr-date').textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
 
-  // Stories
-  shuffleArray(shuffledStories);
-  renderStory(0);
-  document.getElementById('story-next').addEventListener('click',function(){
-    storyIdx=(storyIdx+1)%shuffledStories.length;renderStory(storyIdx);
-  });
-  document.getElementById('story-prev').addEventListener('click',function(){
-    storyIdx=(storyIdx-1+shuffledStories.length)%shuffledStories.length;renderStory(storyIdx);
-  });
-  document.getElementById('story-shuffle').addEventListener('click',function(){
-    shuffleArray(shuffledStories);storyIdx=0;renderStory(0);toast('Stories reshuffled 🔀');
-  });
-  // Touch swipe for stories
-  let touchStartX=0;
-  document.getElementById('story-card').addEventListener('touchstart',e=>touchStartX=e.touches[0].clientX);
-  document.getElementById('story-card').addEventListener('touchend',e=>{
-    const diff=touchStartX-e.changedTouches[0].clientX;
-    if(Math.abs(diff)>50){
-      if(diff>0){storyIdx=(storyIdx+1)%shuffledStories.length;}
-      else{storyIdx=(storyIdx-1+shuffledStories.length)%shuffledStories.length;}
-      renderStory(storyIdx);
-    }
-  });
-
-  // Transmutation nav
-  document.querySelectorAll('.tr-nav').forEach(btn=>{
-    btn.addEventListener('click',function(){switchTr(this.dataset.tr);});
-  });
-  // Show first tr section
-  document.getElementById('tr-pranayama').style.display='block';
-
-  // Meditation
-  document.getElementById('med-start-btn').addEventListener('click',startMeditation);
-
-  document.getElementById('ms-close').addEventListener('click',function(){
-    document.getElementById('milestone-overlay').classList.remove('on');
-  });
-  document.getElementById('milestone-overlay').addEventListener('click',function(e){
-    if(e.target===this)this.classList.remove('on');
-  });
-
-  document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(btn=>{
-    btn.addEventListener('click',function(){goTab(this.dataset.tab);});
-  });
-
-  // Cog
-  document.getElementById('cog-btn').addEventListener('click',openSettings);
-  document.getElementById('close-settings-btn').addEventListener('click',closeSettings);
-  document.getElementById('settings-overlay').addEventListener('click',function(e){
-    if(e.target===this)closeSettings();
-  });
-
-  // Theme buttons
-  document.querySelectorAll('.theme-btn').forEach(btn=>{
-    btn.addEventListener('click',function(){setTheme(this.dataset.theme);});
-  });
-
-  // Lang buttons
-  document.querySelectorAll('.lang-btn').forEach(btn=>{
-    btn.addEventListener('click',function(){setLang(this.dataset.lang);});
-  });
-
-  // Bug report
-  document.getElementById('send-bug-btn').addEventListener('click',sendBugReport);
+  // Apply theme
+  applyTheme(curTheme);
 
   // Quotes
-  document.getElementById('q-prev').addEventListener('click',function(){goQ((qIdx-1+QUOTES.length)%QUOTES.length);});
-  document.getElementById('q-next').addEventListener('click',function(){goQ((qIdx+1)%QUOTES.length);});
-  document.getElementById('qdots').addEventListener('click',function(e){
-    if(e.target.dataset.qi!==undefined)goQ(parseInt(e.target.dataset.qi));
-  });
-
-  // Mood
-  document.getElementById('mood-grid').addEventListener('click',function(e){
-    const btn=e.target.closest('.mood-btn');
-    if(!btn)return;
-    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('on'));
-    btn.classList.add('on');
-    S.mood=btn.dataset.mood;
-  });
-
-  // Triggers
-  document.getElementById('trig-grid').addEventListener('click',function(e){
-    const btn=e.target.closest('.trig-btn');
-    if(btn)btn.classList.toggle('on');
-  });
-
-  // Sliders
-  document.getElementById('s-energy').addEventListener('input',function(){document.getElementById('ev').textContent=this.value;});
-  document.getElementById('s-clarity').addEventListener('input',function(){document.getElementById('cv').textContent=this.value;});
-  document.getElementById('s-urge').addEventListener('input',function(){document.getElementById('uv').textContent=this.value;});
-  document.getElementById('s-social').addEventListener('input',function(){document.getElementById('sv').textContent=this.value;});
-
-  // Save entry
-  document.getElementById('save-entry-btn').addEventListener('click',saveEntry);
-
-  // Weekly review
-  document.getElementById('start-review-btn').addEventListener('click',function(){goTab('checkin');setTimeout(showReview,100);});
-  document.getElementById('save-review-btn').addEventListener('click',saveReview);
-  document.getElementById('back-to-daily-btn').addEventListener('click',hideReview);
-
-  // Start date
-  document.getElementById('pick-date-btn').addEventListener('click',function(){
-    const bl=document.getElementById('start-date-block');
-    bl.style.display=bl.style.display==='none'?'block':'none';
-    if(S.startDate)document.getElementById('start-date-input').value=S.startDate;
-  });
-  document.getElementById('set-date-btn').addEventListener('click',function(){
-    const val=document.getElementById('start-date-input').value;
-    if(!val){toast('Please pick a date');return;}
-    if(new Date(val)>new Date()){toast("Start date can't be in the future");return;}
-    S.startDate=val;save();updateHome();
-    document.getElementById('start-date-block').style.display='none';
-    toast('Streak set — day '+calcStreak()+' 🔥');
-  });
-  document.getElementById('reset-btn').addEventListener('click',function(){
-    if(confirm('Reset your streak? This will clear your start date.')){
-      S.startDate=null;save();updateHome();toast('Streak reset. Start again.');
-    }
-  });
-
-  // History filters
-  document.getElementById('hf-all').addEventListener('click',function(){renderHistory('all');});
-  document.getElementById('hf-daily').addEventListener('click',function(){renderHistory('daily');});
-  document.getElementById('hf-weekly').addEventListener('click',function(){renderHistory('weekly');});
-
-  // Export
-  document.getElementById('export-btn').addEventListener('click',exportCSV);
-
-  // Apply saved theme
-  applyTheme(curTheme);
+  goQ(0);
 
   // Init quotes
   renderDots();
-  qTimer=setInterval(()=>goQ((qIdx+1)%QUOTES.length),8000);
 
+  // Stories
+  shuffle(stories);
+  renderStory();
+
+  // Transmutation default
+  switchTr('pranayama');
+
+  // Update home
   updateHome();
+
+  // ---- TABS ----
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', function() { goTab(this.dataset.tab); });
+  });
+
+  // ---- COG ----
+  document.getElementById('cog').addEventListener('click', openSettings);
+  document.getElementById('close-s').addEventListener('click', closeSettings);
+  document.getElementById('s-overlay').addEventListener('click', function(e) { if(e.target === this) closeSettings(); });
+
+  // ---- THEME ----
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      curTheme = this.dataset.theme;
+      localStorage.setItem('sr_theme', curTheme);
+      applyTheme(curTheme);
+    });
+  });
+
+  // ---- LANG ----
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      localStorage.setItem('sr_lang', this.dataset.lang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === this.dataset.lang));
+      toast('Language updated');
+    });
+  });
+
+  // ---- BUG ----
+  document.getElementById('send-bug').addEventListener('click', sendBug);
+
+  // ---- QUOTES ----
+  document.getElementById('qprev').addEventListener('click', () => goQ((qIdx-1+QUOTES.length)%QUOTES.length));
+  document.getElementById('qnext').addEventListener('click', () => goQ((qIdx+1)%QUOTES.length));
+  document.getElementById('qdots').addEventListener('click', function(e) {
+    if(e.target.dataset.qi !== undefined) goQ(parseInt(e.target.dataset.qi));
+  });
+
+  // ---- MOOD ----
+  document.getElementById('mood-grid').addEventListener('click', function(e) {
+    const btn = e.target.closest('.mbtn');
+    if(!btn) return;
+    document.querySelectorAll('.mbtn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); S.mood = btn.dataset.mood;
+  });
+
+  // ---- TRIGGERS ----
+  document.getElementById('trig-grid').addEventListener('click', function(e) {
+    const btn = e.target.closest('.trig-btn');
+    if(btn) btn.classList.toggle('on');
+  });
+
+  // ---- SLIDERS ----
+  document.getElementById('se').addEventListener('input', function() { document.getElementById('ev').textContent = this.value; });
+  document.getElementById('sc').addEventListener('input', function() { document.getElementById('cv').textContent = this.value; });
+  document.getElementById('su').addEventListener('input', function() { document.getElementById('uv').textContent = this.value; });
+  document.getElementById('ss').addEventListener('input', function() { document.getElementById('sv').textContent = this.value; });
+
+  // ---- CHECK-IN ----
+  document.getElementById('save-btn').addEventListener('click', saveEntry);
+  document.getElementById('start-rev-btn').addEventListener('click', function() { goTab('checkin'); setTimeout(showReview, 100); });
+  document.getElementById('save-rev-btn').addEventListener('click', saveReview);
+  document.getElementById('back-daily-btn').addEventListener('click', hideReview);
+
+  // ---- DATE ----
+  document.getElementById('pick-date-btn').addEventListener('click', function() {
+    const bl = document.getElementById('date-block');
+    bl.style.display = bl.style.display === 'none' || bl.style.display === '' ? 'block' : 'none';
+    if(S.startDate) document.getElementById('date-input').value = S.startDate;
+  });
+  document.getElementById('set-date-btn').addEventListener('click', function() {
+    const val = document.getElementById('date-input').value;
+    if(!val) { toast('Please pick a date'); return; }
+    if(new Date(val) > new Date()) { toast("Start date can't be in the future"); return; }
+    S.startDate = val; save(); updateHome();
+    document.getElementById('date-block').style.display = 'none';
+    toast('Streak set — day ' + calcStreak() + ' 🔥');
+  });
+  document.getElementById('reset-btn').addEventListener('click', function() {
+    if(confirm('Reset your streak? This will clear your start date.')) {
+      S.startDate = null; save(); updateHome(); toast('Streak reset. Start again.');
+    }
+  });
+
+  // ---- HISTORY ----
+  document.getElementById('hf-all').addEventListener('click', function() { renderHistory('all'); });
+  document.getElementById('hf-daily').addEventListener('click', function() { renderHistory('daily'); });
+  document.getElementById('hf-weekly').addEventListener('click', function() { renderHistory('weekly'); });
+  document.getElementById('export-btn').addEventListener('click', exportCSV);
+
+  // ---- STORIES ----
+  document.getElementById('snext').addEventListener('click', function() {
+    storyIdx = (storyIdx + 1) % stories.length; renderStory();
+  });
+  document.getElementById('sprev').addEventListener('click', function() {
+    storyIdx = (storyIdx - 1 + stories.length) % stories.length; renderStory();
+  });
+  document.getElementById('sshuffle').addEventListener('click', function() {
+    shuffle(stories); storyIdx = 0; renderStory(); toast('Stories reshuffled 🔀');
+  });
+  // Swipe
+  let tx = 0;
+  const sc = document.getElementById('story-card');
+  sc.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  sc.addEventListener('touchend', e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if(Math.abs(dx) > 50) {
+      storyIdx = dx > 0 ? (storyIdx+1)%stories.length : (storyIdx-1+stories.length)%stories.length;
+      renderStory();
+    }
+  });
+
+  // ---- TRANSMUTATION ----
+  document.querySelectorAll('.tr-nav').forEach(btn => {
+    btn.addEventListener('click', function() { switchTr(this.dataset.tr); });
+  });
+
+  // ---- MEDITATION ----
+  document.getElementById('med-btn').addEventListener('click', toggleMed);
+
+  // ---- MILESTONE ----
+  document.getElementById('ms-close').addEventListener('click', function() {
+    document.getElementById('ms-overlay').classList.remove('on');
+  });
+  document.getElementById('ms-overlay').addEventListener('click', function(e) {
+    if(e.target === this) this.classList.remove('on');
+  });
+
 });
 </script>
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{});});
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(()=>{}); });
 }
 </script>
 </body>
