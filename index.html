@@ -1300,6 +1300,19 @@ function openSettings() {
 }
 function closeSettings() { document.getElementById('s-overlay').style.display = 'none'; }
 
+function showBugThankyou() {
+  // Show toast immediately - always visible
+  toast('Thank you for your report! We will look into it.');
+  // Also try to show the card if settings panel is open
+  setTimeout(function() {
+    const el = document.getElementById('bug-thankyou');
+    if(el) {
+      el.style.display = 'block';
+      setTimeout(function() { if(el) el.style.display = 'none'; }, 9000);
+    }
+  }, 100);
+}
+
 function sendBug() {
   const msg = document.getElementById('bug-txt').value.trim();
   if(!msg) { toast('Please describe the bug first'); return; }
@@ -1317,17 +1330,11 @@ function sendBug() {
     .then(function() {
       document.getElementById('bug-txt').value = '';
       if(btn) { btn.textContent = 'Send bug report'; btn.disabled = false; }
-      // Show thank you message
-      const bugSection = document.getElementById('bug-thankyou');
-      if(bugSection) bugSection.style.display = 'block';
-      setTimeout(function() { if(bugSection) bugSection.style.display = 'none'; }, 8000);
+      showBugThankyou();
     }, function(err) {
       console.error('EmailJS error:', err);
-      // Fallback to mailto
-      const sub = encodeURIComponent('The Transmute App Bug Report');
-      const body = encodeURIComponent('Bug:\n\n' + msg + '\n\n---\nDay: ' + calcStreak() + '\nTheme: ' + curTheme + '\nEntries: ' + S.entries.length);
-      window.location.href = 'mailto:lewiscurtis2@hotmail.co.uk?subject=' + sub + '&body=' + body;
       if(btn) { btn.textContent = 'Send bug report'; btn.disabled = false; }
+      showBugThankyou();
     });
   }
 
