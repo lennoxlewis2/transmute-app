@@ -738,6 +738,25 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <span style="font-size:16px;font-weight:600">Settings</span>
       <button id="close-s" style="border:none;background:var(--bg);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px;color:var(--ts)">✕</button>
     </div>
+
+    <div style="margin-bottom:20px;">
+      <div class="lbl">Install app</div>
+      <div id="install-android-block">
+        <button id="settings-install-btn" style="width:100%;padding:13px;background:var(--ac);color:white;border:none;border-radius:var(--r2);font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:8px;-webkit-appearance:none;">📲 Add to Home Screen</button>
+        <p style="font-size:11px;color:var(--ts);text-align:center;line-height:1.5;">Tap above to install The Transmute App on your phone</p>
+      </div>
+      <div id="install-ios-block" style="display:none;">
+        <div style="background:var(--acl);border-radius:var(--r2);padding:12px 14px;">
+          <p style="font-size:12px;color:var(--acd);line-height:1.6;margin-bottom:6px;font-weight:600;">Install on iPhone:</p>
+          <p style="font-size:12px;color:var(--ac);line-height:1.7;">1. Tap the <strong>Share</strong> button in Safari<br>2. Tap <strong>Add to Home Screen</strong><br>3. Tap <strong>Add</strong></p>
+        </div>
+      </div>
+      <div id="install-done-block" style="display:none;">
+        <div style="background:var(--grn50);border-radius:var(--r2);padding:12px 14px;text-align:center;">
+          <p style="font-size:13px;color:var(--grn6);">✓ App already installed on your device</p>
+        </div>
+      </div>
+    </div>
     <div style="margin-bottom:20px">
       <div class="lbl">Language</div>
       <div class="lang-grid">
@@ -2074,6 +2093,40 @@ if(!isStandalone) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Settings install button logic
+  const isInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isInstalled) {
+    const doneBlock = document.getElementById('install-done-block');
+    const androidBlock = document.getElementById('install-android-block');
+    const iosBlock = document.getElementById('install-ios-block');
+    if(doneBlock) doneBlock.style.display = 'block';
+    if(androidBlock) androidBlock.style.display = 'none';
+    if(iosBlock) iosBlock.style.display = 'none';
+  } else if(isIOS) {
+    const androidBlock = document.getElementById('install-android-block');
+    const iosBlock = document.getElementById('install-ios-block');
+    if(androidBlock) androidBlock.style.display = 'none';
+    if(iosBlock) iosBlock.style.display = 'block';
+  }
+
+  const settingsInstallBtn = document.getElementById('settings-install-btn');
+  if(settingsInstallBtn) {
+    settingsInstallBtn.addEventListener('click', function() {
+      if(deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(r) {
+          deferredPrompt = null;
+          if(r.outcome === 'accepted') {
+            toast('App installed! 🔥');
+            closeSettings();
+          }
+        });
+      } else {
+        toast('Open this page in Chrome to install');
+      }
+    });
+  }
+
   const installBtn = document.getElementById('install-btn');
   if(installBtn) {
     installBtn.addEventListener('click', function() {
