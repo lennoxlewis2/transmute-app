@@ -173,6 +173,41 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .milestone-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.2;}
   .milestone-msg{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:20px;}
   .milestone-close{background:var(--ac);color:white;border:none;border-radius:12px;padding:12px 32px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+
+  .aura-ring2{fill:none;stroke-width:4;stroke-linecap:round;stroke-dasharray:263.9;stroke-dashoffset:263.9;opacity:0;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1),stroke 0.8s,opacity 0.8s;}
+  .badge-d120{background:linear-gradient(135deg,#00FFFF,#0066FF);color:#000830;border:2px solid #00CCFF;box-shadow:0 0 8px rgba(0,200,255,0.4);}
+  .badge-d180{background:linear-gradient(135deg,#FF00FF,#8800FF);color:#FFE0FF;border:2px solid #CC00FF;box-shadow:0 0 10px rgba(180,0,255,0.4);}
+  .badge-d270{background:linear-gradient(135deg,#FFD700,#FF4400,#FF0000);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 14px rgba(255,180,0,0.5);}
+  .badge-d365{background:linear-gradient(135deg,#FFFFFF,#E0F0FF,#C0D8FF);color:#000820;border:2.5px solid #FFFFFF;box-shadow:0 0 18px rgba(200,220,255,0.7);animation:legendPulse 2s ease-in-out infinite;}
+  @keyframes legendPulse{0%,100%{box-shadow:0 0 18px rgba(200,220,255,0.7);}50%{box-shadow:0 0 28px rgba(200,220,255,1);}}
+
+  /* Transmutation guide */
+  .tr-sec{display:none;}.tr-sec.on{display:block;}
+  .tr-nav.on{border-color:var(--ac);color:var(--ac);}
+  .guide-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13px;color:var(--ts);line-height:1.5;}
+  .step-num{background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;}
+  .tip-box{background:var(--amber-50);border-left:3px solid var(--amber-100);padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;color:var(--amber-800);line-height:1.5;margin-top:10px;}
+  .pose-header{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
+  .pose-why{font-size:12px;color:var(--ts);background:var(--bg);border-radius:8px;padding:10px;margin-bottom:12px;line-height:1.6;font-style:italic;}
+  .pose-duration{font-size:11px;font-weight:600;color:var(--ac);margin-top:10px;padding:6px 10px;background:var(--ac-light);border-radius:6px;display:inline-block;}
+  .med-step{margin-bottom:16px;padding-bottom:16px;border-bottom:0.5px solid var(--bd);}
+  .med-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .med-step-title{font-size:12px;font-weight:700;color:var(--ac);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;}
+  .med-step p{font-size:13px;color:var(--ts);line-height:1.7;}
+  /* Stories */
+  .story-card{background:var(--surface);border:0.5px solid var(--bd);border-radius:var(--r3);padding:20px;min-height:300px;box-shadow:var(--sh);transition:opacity 0.3s;}
+  .story-card.fading{opacity:0;}
+  .story-flair{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:var(--green-100);color:var(--green-800);margin-bottom:10px;}
+  .story-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4;}
+  .story-meta{font-size:11px;color:var(--tt);margin-bottom:14px;}
+  .story-body{font-size:13px;color:var(--ts);line-height:1.8;}
+  .story-loading{display:flex;align-items:center;justify-content:center;height:200px;color:var(--tt);font-size:13px;}
+  .story-upvotes{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--coral-600);font-weight:600;margin-top:12px;}
+  /* Expanded phases */
+  .ph5{background:linear-gradient(135deg,#0A0520,#1A0A3A);border:0.5px solid #7B4FFF;}
+  .ph5 .ph-title{color:#C8A8FF;}.ph5 .ph-text{color:#9977EE;}
+  .ph6{background:linear-gradient(135deg,#0A0A0A,#1A0808);border:0.5px solid #FFD700;}
+  .ph6 .ph-title{color:#FFD700;}.ph6 .ph-text{color:#CC9900;}
 </style>
 </head>
 <body>
@@ -199,6 +234,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
                 <circle class="aura-bg" cx="60" cy="60" r="52"/>
                 <circle class="aura-ring" id="aura-ring" cx="60" cy="60" r="52"
                   stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+                <circle class="aura-bg" cx="60" cy="60" r="42" style="stroke-width:4;"/>
+                <circle class="aura-ring2" id="aura-ring2" cx="60" cy="60" r="42"
+                  stroke-dasharray="263.9" stroke-dashoffset="263.9" style="stroke-width:4;"/>
               </svg>
               <div class="aura-inner">
                 <div class="streak-num" id="streak-num">0</div>
@@ -343,7 +381,182 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <div class="ph-block ph1"><div class="ph-title">Days 1–7 · Foundation phase</div><div class="ph-text">Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding. The foundation is being laid.</div></div>
       <div class="ph-block ph2"><div class="ph-title">Days 8–21 · Rewiring phase</div><div class="ph-text">Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.</div></div>
       <div class="ph-block ph3"><div class="ph-title">Days 22–40 · Peak energy phase</div><div class="ph-text">Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.</div></div>
-      <div class="ph-block ph4"><div class="ph-title">Day 41+ · Mastery phase</div><div class="ph-text">The practice becomes identity. Urges stabilise. Energy is sustained. Focus shifts inward — deeper meditation, purpose, long-term clarity.</div></div>
+      <div class="ph-block ph4"><div class="ph-title">Day 41–89 · Mastery phase</div><div class="ph-text">The practice becomes identity. Urges stabilise. Energy is sustained. Focus shifts inward — deeper meditation, purpose, long-term clarity. You may notice your voice deepens, your eye contact holds longer, and others respond to you differently.</div></div>
+      <div class="ph-block ph5"><div class="ph-title">Day 90–119 · Crystallisation phase</div><div class="ph-text">The rewiring is largely complete. Old urge pathways have atrophied from disuse. What once felt like white-knuckling is now simply your default state. Creativity peaks — many men report their most inspired work, art, music, or business ideas emerging here. The transmutation is real and measurable.</div></div>
+      <div class="ph-block ph5"><div class="ph-title">Day 120–179 · Diamond Mind phase</div><div class="ph-text">Emotional regulation reaches a new level. Situations that previously triggered reactivity now feel manageable. You process stress faster, think more clearly under pressure, and people around you feel your stillness. This is the energy of a man who is no longer fighting himself.</div></div>
+      <div class="ph-block ph5"><div class="ph-title">Day 180–269 · Transcendence phase</div><div class="ph-text">For many men this is where spiritual experience begins to open. A sense of connection, purpose beyond the self, and heightened intuition. Dreams become more vivid. Synchronicities increase. Whether you call this spiritual or neurological, something genuinely shifts at this depth of practice.</div></div>
+      <div class="ph-block ph6"><div class="ph-title">Day 270–364 · Solar phase</div><div class="ph-text">Nine months. Presence becomes a felt quality — others experience something when they are near you that they cannot fully explain. Leadership comes naturally. Physical vitality is at a level most men in modern society never experience. You understand now why ancient cultures treated this energy as sacred.</div></div>
+      <div class="ph-block ph6"><div class="ph-title">Day 365+ · The Eternal flame</div><div class="ph-text">One year and beyond. This is no longer a practice. It is a philosophy, a way of being, and a permanent upgrade to who you are. The man who reached day one is a distant memory. You carry a quiet, unshakeable power that no external circumstance can take. Guard it. Grow it. Give from it.</div></div>
+    </div>
+
+
+    <!-- TRANSMUTATION GUIDE -->
+    <div id="s-transmute" class="sec">
+      <div class="card" style="background:linear-gradient(135deg,#1A0A3A,#2A0A0A);border-color:#7B4FFF;">
+        <div style="font-size:13px;color:#C8A8FF;line-height:1.6;">Sexual transmutation is the art of redirecting your most primal energy upward — into creativity, discipline, presence, and power. Choose a practice below.</div>
+      </div>
+
+      <!-- Sub nav -->
+      <div class="btn-row" style="margin-bottom:12px;">
+        <button class="btn-g tr-nav on" data-tr="pranayama" style="border-color:var(--ac);color:var(--ac);">🌬️ Pranayama</button>
+        <button class="btn-g tr-nav" data-tr="meditation">🧘 Meditation</button>
+        <button class="btn-g tr-nav" data-tr="poses">🐎 Poses</button>
+      </div>
+
+      <!-- PRANAYAMA -->
+      <div id="tr-pranayama" class="tr-sec">
+        <div class="card">
+          <div class="lbl">What is Pranayama?</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.7;margin-bottom:12px;">Pranayama is ancient yogic breathwork that directly controls your life force energy (prana). When sexual energy arises, controlled breathing redirects it up the spine rather than letting it discharge downward. This is one of the most powerful transmutation tools available.</p>
+        </div>
+
+        <div class="card">
+          <div class="lbl" style="margin-bottom:10px;">🔥 Breath of Fire (Kapalabhati)</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px;">Best used when urges arise suddenly. Burns sexual energy rapidly and raises vibration.</p>
+          <div class="guide-step"><span class="step-num">1</span><span>Sit upright, spine straight. Place hands on knees, palms up.</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Take a deep inhale through your nose to prepare.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Begin rapid, forceful exhales through the nose — about 1 per second. The inhale happens passively.</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Do 30 rapid breaths. Feel the heat rise up your spine.</span></div>
+          <div class="guide-step"><span class="step-num">5</span><span>After 30, take a full deep inhale, hold for 10 seconds, then release slowly.</span></div>
+          <div class="guide-step"><span class="step-num">6</span><span>Repeat 3 rounds. Notice the urge dissolving into energy.</span></div>
+          <div class="tip-box">💡 Do this the moment you feel an urge. The energy transmutes in real time.</div>
+        </div>
+
+        <div class="card">
+          <div class="lbl" style="margin-bottom:10px;">🌊 Nadi Shodhana (Alternate Nostril)</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px;">Balances left and right hemispheres of the brain. Calms overactive sexual thought. Best used as a daily morning practice.</p>
+          <div class="guide-step"><span class="step-num">1</span><span>Sit comfortably. Use your right hand — rest index and middle finger on your forehead.</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Close your right nostril with your thumb. Inhale slowly through the left for 4 counts.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Close both nostrils. Hold for 4 counts.</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Release right nostril, exhale slowly for 8 counts.</span></div>
+          <div class="guide-step"><span class="step-num">5</span><span>Inhale through right nostril for 4 counts. Hold. Exhale through left for 8 counts.</span></div>
+          <div class="guide-step"><span class="step-num">6</span><span>That's one cycle. Do 10 cycles daily for profound mental clarity.</span></div>
+          <div class="tip-box">💡 Practice this every morning to keep energy channelled upward throughout the day.</div>
+        </div>
+
+        <div class="card">
+          <div class="lbl" style="margin-bottom:10px;">⬆️ Mula Bandha Lock</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:10px;">The root lock. Physically redirects sexual energy up the spine. This is the secret weapon of SR practitioners.</p>
+          <div class="guide-step"><span class="step-num">1</span><span>Sit or stand. Contract the perineum muscles (the same muscles you'd use to stop urination).</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Hold the contraction firmly. Breathe normally.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Visualise energy rising up from the base of your spine toward your crown.</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Hold for 10–30 seconds, release, repeat 10 times.</span></div>
+          <div class="tip-box">💡 Combine with Breath of Fire for maximum effect during peak urge moments.</div>
+        </div>
+      </div>
+
+      <!-- MEDITATION -->
+      <div id="tr-meditation" class="tr-sec" style="display:none;">
+        <div class="card">
+          <div class="lbl">Guided Transmutation Meditation</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:12px;">This guided meditation uses visualisation and breath to move sexual energy up through your chakra system and convert it into creative and spiritual power. Do this in a quiet space, eyes closed, 10–20 minutes.</p>
+        </div>
+
+        <div class="card" style="background:linear-gradient(135deg,#0A0520,#1A0A3A);border-color:#6644FF;">
+          <div style="text-align:center;margin-bottom:16px;">
+            <div style="font-size:40px;margin-bottom:8px;">🧘</div>
+            <div style="font-size:14px;font-weight:600;color:#C8A8FF;">Sexual Transmutation Meditation</div>
+            <div style="font-size:12px;color:#8866CC;margin-top:4px;">~15 minutes · Find a quiet space</div>
+          </div>
+          <div id="med-player" style="background:rgba(255,255,255,0.05);border-radius:12px;padding:16px;">
+            <div style="font-size:12px;color:#8866CC;margin-bottom:12px;text-align:center;">Follow the guided script below — or play it text-to-speech</div>
+            <button class="btn" id="med-start-btn" style="background:#6644FF;margin-top:0;">▶ Begin Guided Session</button>
+          </div>
+        </div>
+
+        <div class="card" id="med-script-card">
+          <div class="lbl">Meditation Script</div>
+          <div class="med-step">
+            <div class="med-step-title">Phase 1 — Grounding (2 min)</div>
+            <p>Close your eyes. Sit with your spine straight. Take three deep breaths — inhale for 4 counts, hold for 4, exhale for 8. Feel your body settle into the earth. You are safe. You are still. Nothing needs to happen right now.</p>
+          </div>
+          <div class="med-step">
+            <div class="med-step-title">Phase 2 — Acknowledge the Energy (2 min)</div>
+            <p>Bring your awareness to your sacral centre — just below your navel. Notice any warmth, tingling, or sexual tension without judgement. This is raw life force. It is not your enemy. It is power waiting to be directed.</p>
+          </div>
+          <div class="med-step">
+            <div class="med-step-title">Phase 3 — The Upward Draw (5 min)</div>
+            <p>On each inhale, visualise a golden light rising from the base of your spine. With each breath it climbs higher — through your sacral centre, your solar plexus, your heart, your throat, your third eye. On the exhale, let it radiate outward from your crown in all directions as pure white light.</p>
+          </div>
+          <div class="med-step">
+            <div class="med-step-title">Phase 4 — Transmutation (4 min)</div>
+            <p>Now set an intention. What will you create with this energy? A goal, a project, a version of yourself. Hold that image at your third eye — between your eyebrows. Pour the rising energy directly into that image. Feel it charge and become real.</p>
+          </div>
+          <div class="med-step">
+            <div class="med-step-title">Phase 5 — Integration (2 min)</div>
+            <p>Let the visualisation fade. Rest in stillness. Feel the quiet power in your body. This energy is now yours — stored, not wasted. Take three deep breaths. Slowly open your eyes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- POSES -->
+      <div id="tr-poses" class="tr-sec" style="display:none;">
+        <div class="card">
+          <div class="lbl">Why Poses Help</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.6;">Specific physical postures build the muscular and energetic foundation that supports sexual transmutation. They strengthen the pelvic floor, increase testosterone, improve posture (a key driver of presence), and circulate stagnant energy.</p>
+        </div>
+
+        <div class="card">
+          <div class="pose-header">🐎 Horse Stance (Zhan Zhuang)</div>
+          <div class="pose-why">Why it works: Builds immense lower body strength, grounds excess sexual energy into the earth, and develops the iron will that SR requires. Used by Shaolin monks and martial artists for thousands of years specifically for energy cultivation.</div>
+          <div class="guide-step"><span class="step-num">1</span><span>Stand with feet shoulder-width apart, toes pointing slightly outward.</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Bend your knees and lower as if sitting on an invisible horse — thighs roughly parallel to the floor.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Keep your spine straight, chest open, chin slightly tucked.</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Arms can be extended forward or held in a circle in front of your chest.</span></div>
+          <div class="guide-step"><span class="step-num">5</span><span>Hold for 1–5 minutes. Breathe slowly and deeply. Do not let the mind wander.</span></div>
+          <div class="pose-duration">Start: 1 min · Target: 5 min · Advanced: 10+ min</div>
+          <div class="tip-box">💡 The burning sensation in your legs IS the energy being cultivated. Breathe through it. This is how warriors are built.</div>
+        </div>
+
+        <div class="card">
+          <div class="pose-header">🧘 Ashwini Mudra (Horse Gesture)</div>
+          <div class="pose-why">Why it works: Directly contracts and strengthens the perineum and anal sphincter. This activates Mula Bandha, the root lock that physically prevents sexual energy from draining downward. Ancient yogic secret for SR.</div>
+          <div class="guide-step"><span class="step-num">1</span><span>Sit in a comfortable cross-legged position or lie on your back.</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Inhale deeply. On the inhale, contract the anal sphincter firmly for 2 seconds.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Release on the exhale. This is one repetition.</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Do 20–50 repetitions. Build to 100 per day over time.</span></div>
+          <div class="pose-duration">Daily: 20–100 reps · Can be done anywhere, anytime</div>
+          <div class="tip-box">💡 This is the physical equivalent of kegel exercises but targets energy retention at the source. Non-negotiable for serious practitioners.</div>
+        </div>
+
+        <div class="card">
+          <div class="pose-header">🌉 Setu Bandha (Bridge Pose)</div>
+          <div class="pose-why">Why it works: Opens the chest and throat chakras, stimulates the thyroid and parathyroid glands which regulate energy metabolism, and directly engages the pelvic floor while opening the energy channel from base to crown.</div>
+          <div class="guide-step"><span class="step-num">1</span><span>Lie on your back, knees bent, feet flat on the floor hip-width apart.</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Press your feet into the floor and lift your hips toward the ceiling.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Squeeze your glutes and engage your pelvic floor (Mula Bandha).</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Hold for 30–60 seconds, breathing slowly. Lower and repeat 5 times.</span></div>
+          <div class="pose-duration">Hold: 30–60 sec · Sets: 5 · Daily</div>
+          <div class="tip-box">💡 Visualise energy flowing from your root up through your spine to your crown while holding this pose.</div>
+        </div>
+
+        <div class="card">
+          <div class="pose-header">🏔️ Mountain Pose with Crown Pull (Tadasana)</div>
+          <div class="pose-why">Why it works: Corrects posture, which is one of the most powerful signals of masculine energy. Slouching literally compresses the energy centres. Standing tall opens them. This pose trains the nervous system to hold your power rather than collapse it.</div>
+          <div class="guide-step"><span class="step-num">1</span><span>Stand with feet together, weight evenly distributed.</span></div>
+          <div class="guide-step"><span class="step-num">2</span><span>Engage your thighs, tuck the tailbone slightly, lift your chest.</span></div>
+          <div class="guide-step"><span class="step-num">3</span><span>Imagine a golden thread pulling the crown of your head toward the sky.</span></div>
+          <div class="guide-step"><span class="step-num">4</span><span>Breathe deeply for 2 minutes. Feel the full column of energy from feet to crown.</span></div>
+          <div class="pose-duration">Hold: 2–5 minutes · Use as a reset throughout the day</div>
+          <div class="tip-box">💡 Do this first thing every morning before checking your phone. Set the energetic tone for the entire day.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORIES -->
+    <div id="s-stories" class="sec">
+      <div class="card" style="background:linear-gradient(135deg,#0A1A0A,#0A2A1A);border-color:#2EA86A;margin-bottom:12px;">
+        <div style="font-size:13px;color:#7DCAA0;line-height:1.6;">Real experiences from the r/Semenretention community. Swipe or tap arrows to read more stories.</div>
+      </div>
+      <div id="story-card" class="story-card">
+        <div class="story-loading">Loading stories...</div>
+      </div>
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn-g" id="story-prev">← Previous</button>
+        <div style="flex:1;text-align:center;font-size:12px;color:var(--tt);padding-top:12px;" id="story-counter">1 / 20</div>
+        <button class="btn-g" id="story-next">Next →</button>
+      </div>
+      <button class="btn-g" style="width:100%;margin-top:8px;" id="story-shuffle">🔀 Shuffle stories</button>
     </div>
 
   </div>
@@ -351,8 +564,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <nav class="tabs">
     <button class="tab on" data-tab="home" id="tab-home"><span class="tab-ic">🏠</span>Today</button>
     <button class="tab" data-tab="checkin" id="tab-checkin"><span class="tab-ic">✏️</span>Check-in</button>
-    <button class="tab" data-tab="history" id="tab-history"><span class="tab-ic">📋</span>History</button>
-    <button class="tab" data-tab="insights" id="tab-insights"><span class="tab-ic">📊</span>Insights</button>
+    <button class="tab" data-tab="transmute" id="tab-transmute"><span class="tab-ic">⚡</span>Transmute</button>
+    <button class="tab" data-tab="stories" id="tab-stories"><span class="tab-ic">📖</span>Stories</button>
     <button class="tab" data-tab="phases" id="tab-phases"><span class="tab-ic">🗺️</span>Phases</button>
   </nav>
 
@@ -506,25 +719,33 @@ function toast(msg){
 
 // ---- MILESTONES ----
 const MILESTONES = {
-  7:  {flame:'🌱', title:'One Week Strong',      badge:'badge-d7',  icon:'🟢', msg:'Your dopamine receptors are beginning to reset. The flatline you may feel is a sign of healing — not failure. Your nervous system is recalibrating for the better.'},
-  14: {flame:'⚡', title:'Two Weeks of Power',   badge:'badge-d14', icon:'💜', msg:'Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material.'},
-  21: {flame:'🔥', title:'21 Days — Rewired',    badge:'badge-d21', icon:'🥇', msg:'Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice.'},
-  30: {flame:'💥', title:'30 Day Warrior',       badge:'badge-d30', icon:'🔥', msg:'One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them.'},
-  40: {flame:'🌟', title:'Peak Energy Unlocked', badge:'badge-d40', icon:'🌊', msg:'You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding together.'},
-  60: {flame:'👑', title:'60 Days — The Elite',  badge:'badge-d60', icon:'👑', msg:'Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own.'},
-  90: {flame:'🏆', title:'90 Days — LEGEND',     badge:'badge-d90', icon:'🏆', msg:'Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery.'},
+  7:   {flame:'🌱', title:'One Week Strong',         icon:'🟢', msg:'Your dopamine receptors are beginning to reset. The flatline you may feel is a sign of healing — not failure. Your nervous system is recalibrating for the better.'},
+  14:  {flame:'⚡', title:'Two Weeks of Power',      icon:'💜', msg:'Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material.'},
+  21:  {flame:'🔥', title:'21 Days — Rewired',       icon:'🥇', msg:'Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice.'},
+  30:  {flame:'💥', title:'30 Day Warrior',          icon:'🔥', msg:'One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them.'},
+  40:  {flame:'🌟', title:'Peak Energy Unlocked',    icon:'🌊', msg:'You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding together.'},
+  60:  {flame:'👑', title:'60 Days — The Elite',     icon:'👑', msg:'Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own.'},
+  90:  {flame:'🏆', title:'90 Days — Legend',        icon:'🏆', msg:'Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery.'},
+  120: {flame:'💎', title:'120 Days — Diamond Mind', icon:'💎', msg:'Four months of unbroken discipline. Your mind has been permanently restructured. The neural pathways of addiction are starved. What you have built cannot be taken — only surrendered. Don't.'},
+  180: {flame:'🌌', title:'180 Days — Transcendent', icon:'🌌', msg:'Six months. Half a year of channelled energy. You are not practising SR anymore — you are SR. The energy you carry is palpable to everyone around you. You have become a different class of man.'},
+  270: {flame:'🌞', title:'270 Days — Solar',        icon:'🌞', msg:'Nine months. The same time it takes to create a human life — you have used it to recreate yourself. Your willpower, clarity, and presence are operating at a level most will never know exists.'},
+  365: {flame:'✨', title:'365 Days — One Full Year',icon:'✨', msg:'One year. 365 days of chosen power. This is not discipline anymore — this is who you are. You have walked a path that almost no man on earth has completed. The world is different when seen from here.'},
 };
 
 // Badge data per milestone
 const BADGE_INFO = [
-  {day:0,  cls:'badge-d0',  label:'Day 0 · Begin',        icon:''},
-  {day:7,  cls:'badge-d7',  label:'Week 1 · Foundation',  icon:'🟢'},
-  {day:14, cls:'badge-d14', label:'Week 2 · Rewiring',    icon:'⚡'},
-  {day:21, cls:'badge-d21', label:'Week 3 · Momentum',    icon:'🔥'},
-  {day:30, cls:'badge-d30', label:'Month 1 · Warrior',    icon:'💥'},
-  {day:40, cls:'badge-d40', label:'Day 40 · Peak',        icon:'🌊'},
-  {day:60, cls:'badge-d60', label:'Month 2 · Elite',      icon:'👑'},
-  {day:90, cls:'badge-d90', label:'90 Days · Legend',     icon:'🏆'},
+  {day:0,   cls:'badge-d0',   label:'Day 0 · Begin',              icon:''},
+  {day:7,   cls:'badge-d7',   label:'Week 1 · Foundation',        icon:'🟢'},
+  {day:14,  cls:'badge-d14',  label:'Week 2 · Rewiring',          icon:'⚡'},
+  {day:21,  cls:'badge-d21',  label:'Week 3 · Momentum',          icon:'🔥'},
+  {day:30,  cls:'badge-d30',  label:'Month 1 · Warrior',          icon:'💥'},
+  {day:40,  cls:'badge-d40',  label:'Day 40 · Peak',              icon:'🌊'},
+  {day:60,  cls:'badge-d60',  label:'Month 2 · Elite',            icon:'👑'},
+  {day:90,  cls:'badge-d90',  label:'90 Days · Legend',           icon:'🏆'},
+  {day:120, cls:'badge-d120', label:'120 Days · Diamond Mind',    icon:'💎'},
+  {day:180, cls:'badge-d180', label:'180 Days · Transcendent',    icon:'🌌'},
+  {day:270, cls:'badge-d270', label:'270 Days · Solar',           icon:'🌞'},
+  {day:365, cls:'badge-d365', label:'365 Days · One Year',        icon:'✨'},
 ];
 
 function getBadgeForStreak(d) {
@@ -543,12 +764,34 @@ function updateAura(streak) {
   ring.style.strokeDashoffset = circ - (circ * pct);
   // Colour evolves: green → purple → gold → orange → white
   let colour;
-  if(streak < 7)  colour = '#5DCAA5';
+  if(streak < 7)   colour = '#5DCAA5';
   else if(streak < 21) colour = '#7F77DD';
   else if(streak < 40) colour = '#FFD700';
   else if(streak < 60) colour = '#FF6B00';
   else colour = '#FFFFFF';
   ring.style.stroke = colour;
+
+  // Second ring — activates at 90+ days, tracks next 90-day cycle
+  const ring2 = document.getElementById('aura-ring2');
+  if(ring2) {
+    if(streak >= 90) {
+      const pct2 = Math.min((streak - 90) / 90, 1);
+      const circ2 = 263.9;
+      ring2.style.strokeDashoffset = circ2 - (circ2 * pct2);
+      ring2.style.opacity = '1';
+      // Second ring colour: cosmic tones
+      let colour2;
+      if(streak < 120) colour2 = '#00FFCC';
+      else if(streak < 180) colour2 = '#CC44FF';
+      else if(streak < 270) colour2 = '#FF44AA';
+      else colour2 = '#FFD700';
+      ring2.style.stroke = colour2;
+    } else {
+      ring2.style.opacity = '0';
+      ring2.style.strokeDashoffset = '263.9';
+    }
+  }
+
   // Outer glow on aura wrap
   const wrap = document.getElementById('aura-wrap');
   if(wrap) wrap.style.filter = streak > 0 ? `drop-shadow(0 0 ${6 + Math.min(streak/2,14)}px ${colour}55)` : 'none';
@@ -706,6 +949,7 @@ function goTab(id){
   if(id==='history')renderHistory('all');
   if(id==='insights')renderInsights();
   if(id==='phases')renderPhaseGuide();
+  if(id==='stories'){shuffleArray(shuffledStories);storyIdx=0;renderStory(0);}
 }
 
 // ---- CHECK-IN ----
@@ -846,6 +1090,40 @@ function exportCSV(){
 
 // ---- WIRE UP ALL EVENTS HERE (no inline onclick) ----
 document.addEventListener('DOMContentLoaded', function() {
+
+  // Stories
+  shuffleArray(shuffledStories);
+  renderStory(0);
+  document.getElementById('story-next').addEventListener('click',function(){
+    storyIdx=(storyIdx+1)%shuffledStories.length;renderStory(storyIdx);
+  });
+  document.getElementById('story-prev').addEventListener('click',function(){
+    storyIdx=(storyIdx-1+shuffledStories.length)%shuffledStories.length;renderStory(storyIdx);
+  });
+  document.getElementById('story-shuffle').addEventListener('click',function(){
+    shuffleArray(shuffledStories);storyIdx=0;renderStory(0);toast('Stories reshuffled 🔀');
+  });
+  // Touch swipe for stories
+  let touchStartX=0;
+  document.getElementById('story-card').addEventListener('touchstart',e=>touchStartX=e.touches[0].clientX);
+  document.getElementById('story-card').addEventListener('touchend',e=>{
+    const diff=touchStartX-e.changedTouches[0].clientX;
+    if(Math.abs(diff)>50){
+      if(diff>0){storyIdx=(storyIdx+1)%shuffledStories.length;}
+      else{storyIdx=(storyIdx-1+shuffledStories.length)%shuffledStories.length;}
+      renderStory(storyIdx);
+    }
+  });
+
+  // Transmutation nav
+  document.querySelectorAll('.tr-nav').forEach(btn=>{
+    btn.addEventListener('click',function(){switchTr(this.dataset.tr);});
+  });
+  // Show first tr section
+  document.getElementById('tr-pranayama').style.display='block';
+
+  // Meditation
+  document.getElementById('med-start-btn').addEventListener('click',startMeditation);
 
   document.getElementById('ms-close').addEventListener('click',function(){
     document.getElementById('milestone-overlay').classList.remove('on');
