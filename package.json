@@ -1,0 +1,17 @@
+{
+  "name": "sr-tracker",
+  "version": "1.0.0",
+  "description": "SR Tracker - Self-improvement tracking application",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'No build required for static HTML'",
+    "test": "echo 'No tests configured'"
+  },
+  "keywords": ["tracker", "self-improvement"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/speed-insights": "^1.1.0"
+  }
+}
