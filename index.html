@@ -251,10 +251,40 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ios-step{font-size:12px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:8px;}
   .ios-step-icon{font-size:16px;flex-shrink:0;}
   .ios-banner-close{width:100%;background:transparent;border:.5px solid rgba(255,255,255,0.2);border-radius:10px;padding:10px;font-size:13px;color:rgba(255,255,255,0.6);cursor:pointer;font-family:'Inter',sans-serif;-webkit-appearance:none;}
+
+  .ws{position:fixed;inset:0;background:#0A0520;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+  .ws.hidden{display:none;}
+  .ws-flame{font-size:64px;margin-bottom:16px;}
+  .ws-title{font-size:28px;font-weight:700;color:white;margin-bottom:8px;}
+  .ws-sub{font-size:15px;color:rgba(255,255,255,0.55);margin-bottom:36px;line-height:1.6;}
+  .ws-btn{width:100%;max-width:300px;padding:18px;background:#534AB7;color:white;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:10px;-webkit-appearance:none;}
+  .ws-skip{background:transparent;border:none;color:rgba(255,255,255,0.35);font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;padding:12px;}
+  .ws-ios{background:rgba(255,255,255,0.08);border-radius:14px;padding:18px;width:100%;max-width:300px;margin-bottom:16px;text-align:left;}
+  .ws-step{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:14px;color:rgba(255,255,255,0.85);}
+  .ws-step:last-child{margin-bottom:0;}
+  .ws-step-ic{font-size:20px;flex-shrink:0;}
 </style>
 </head>
 <body>
 <div class="app">
+
+<div class="ws" id="ws">
+  <div class="ws-flame">🔥</div>
+  <div class="ws-title">The Transmute App</div>
+  <div class="ws-sub">Your semen retention companion.<br>Track. Transmute. Transform.</div>
+  <div id="ws-android" style="width:100%;display:flex;flex-direction:column;align-items:center;">
+    <button class="ws-btn" id="ws-install">📲 Add to Home Screen</button>
+    <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:20px;">Free · No account needed · Works offline</div>
+  </div>
+  <div id="ws-ios" style="display:none;width:100%;flex-direction:column;align-items:center;">
+    <div class="ws-ios">
+      <div class="ws-step"><span class="ws-step-ic">⬆️</span><span>Tap <strong>Share</strong> at the bottom of Safari</span></div>
+      <div class="ws-step"><span class="ws-step-ic">➕</span><span>Tap <strong>Add to Home Screen</strong></span></div>
+      <div class="ws-step"><span class="ws-step-ic">✅</span><span>Tap <strong>Add</strong> — installed!</span></div>
+    </div>
+  </div>
+  <button class="ws-skip" id="ws-skip">Skip — use in browser</button>
+</div>
 
 <div class="hdr">
   <div class="hdr-ic">🔥</div>
@@ -2055,6 +2085,55 @@ document.addEventListener('DOMContentLoaded', function() {
 if('serviceWorker' in navigator) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(()=>{}); });
 }
+
+var _dp = null;
+var _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+var _isStandalone = window.matchMedia('(display-mode: standalone)').matches || !!window.navigator.standalone;
+
+window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); _dp = e; });
+window.addEventListener('appinstalled', function() { _dp = null; _hideWS(); });
+
+function _hideWS() {
+  var el = document.getElementById('ws');
+  if(el) el.classList.add('hidden');
+  localStorage.setItem('ws_seen', '1');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var ws = document.getElementById('ws');
+  if(!ws) return;
+
+  if(_isStandalone || localStorage.getItem('ws_seen')) {
+    ws.classList.add('hidden');
+    return;
+  }
+
+  if(_isIOS) {
+    var isSafari = /safari/i.test(navigator.userAgent) && !/chrome|crios/i.test(navigator.userAgent);
+    var wsa = document.getElementById('ws-android');
+    var wsi = document.getElementById('ws-ios');
+    if(isSafari) {
+      if(wsa) wsa.style.display = 'none';
+      if(wsi) { wsi.style.display = 'flex'; }
+    } else {
+      if(wsa) wsa.style.display = 'none';
+    }
+  }
+
+  var btn = document.getElementById('ws-install');
+  if(btn) btn.addEventListener('click', function() {
+    if(_dp) {
+      _dp.prompt();
+      _dp.userChoice.then(function(r) { _dp = null; if(r.outcome==='accepted') _hideWS(); });
+    } else {
+      btn.textContent = 'Tap menu > Add to Home Screen';
+      btn.style.fontSize = '14px';
+    }
+  });
+
+  var skip = document.getElementById('ws-skip');
+  if(skip) skip.addEventListener('click', _hideWS);
+});
 
 // Install prompt
 let deferredPrompt = null;
