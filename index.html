@@ -12,20 +12,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ac:#534AB7;--acl:#EEEDFE;--acd:#3C3489;--ac2:#AFA9EC;--ac4:#7F77DD;
-  --bg:#F7F7F9;--sf:#FFFFFF;--tx:#1A1A2E;--ts:#6B6B80;--tt:#9999AA;
-  --bd:rgba(0,0,0,0.09);--bds:rgba(0,0,0,0.15);
+  --ac:#534AB7;--acl:#1E1B3A;--acd:#3C3489;--ac2:#AFA9EC;--ac4:#7F77DD;
+  --bg:#0F0F1A;--sf:#1A1A2A;--tx:#F0F0FA;--ts:#9090A8;--tt:#5A5A70;
+  --bd:rgba(255,255,255,0.08);--bds:rgba(255,255,255,0.14);
   --r1:8px;--r2:12px;--r3:16px;
-  --teal50:#E1F5EE;--teal4:#1D9E75;--teal6:#0F6E56;--teal8:#085041;
-  --grn50:#EAF3DE;--grn1:#C0DD97;--grn6:#3B6D11;--grn8:#27500A;
-  --amb50:#FAEEDA;--amb1:#FAC775;--amb6:#854F0B;--amb8:#633806;
-  --cor50:#FAECE7;--cor2:#F0997B;--cor6:#993C1D;--cor8:#712B13;
+  --teal50:#0A2018;--teal4:#1D9E75;--teal6:#0F6E56;--teal8:#085041;
+  --grn50:#142010;--grn1:#1E3018;--grn6:#3B6D11;--grn8:#27500A;
+  --amb50:#241A08;--amb1:#3A2808;--amb6:#854F0B;--amb8:#633806;
+  --cor50:#2A1008;--cor2:#F0997B;--cor6:#993C1D;--cor8:#712B13;
 }
-@media(prefers-color-scheme:dark){
-  :root{--bg:#0F0F1A;--sf:#1A1A2A;--tx:#F0F0FA;--ts:#9090A8;--tt:#5A5A70;
-    --bd:rgba(255,255,255,0.08);--bds:rgba(255,255,255,0.14);
-    --teal50:#0A2018;--grn50:#142010;--grn1:#1E3018;--amb50:#241A08;--amb1:#3A2808;--cor50:#2A1008;--acl:#1E1B3A;}
-}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;}
@@ -72,8 +68,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 @keyframes lgnd{0%,100%{box-shadow:0 0 18px rgba(200,220,255,.7);}50%{box-shadow:0 0 28px rgba(200,220,255,1);}}
 /* Quote */
 .q-side{flex:1;border-left:2px solid var(--ac4);padding-left:12px;}
-.q-text{font-size:12px;color:var(--acd);line-height:1.6;font-style:italic;min-height:56px;}
-@media(prefers-color-scheme:dark){.q-text{color:var(--ac2);}}
+.q-text{font-size:12px;color:var(--ac2);line-height:1.6;font-style:italic;min-height:56px;}
+}
 .q-nav{display:flex;align-items:center;gap:4px;margin-top:8px;}
 .qbtn{border:none;background:transparent;cursor:pointer;color:var(--ts);font-size:18px;padding:2px 4px;}
 .qdots{display:flex;gap:3px;flex:1;}
@@ -103,7 +99,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .btn:active{opacity:.85;}
 .btn-g{flex:1;padding:11px;background:var(--sf);border:.5px solid var(--bds);border-radius:var(--r2);font-size:12px;font-weight:500;cursor:pointer;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
 .btn-g:active{background:var(--bg);}
-.btn-d{border-color:#E24B4A;color:#A32D2D;}
+.btn-d{border-color:#E24B4A;color:#F09595;}
 .btn-row{display:flex;gap:8px;}
 /* Triggers */
 .trig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
@@ -117,9 +113,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .wk-card{background:var(--bg);border-radius:var(--r1);padding:12px 14px;margin-bottom:8px;border:.5px solid var(--bd);}
 /* Insights */
 .ic{background:var(--acl);border:.5px solid var(--ac2);border-radius:var(--r2);padding:14px;margin-bottom:10px;}
-.ic-t{font-size:11px;font-weight:700;color:var(--acd);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
-.ic-b{font-size:13px;color:var(--ac);line-height:1.5;}
-@media(prefers-color-scheme:dark){.ic-t{color:var(--ac2);}.ic-b{color:var(--ac2);}}
+.ic-t{font-size:11px;font-weight:700;color:var(--ac2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
+.ic-b{font-size:13px;color:var(--ac2);line-height:1.5;}
+.ic-b{color:var(--ac2);}}
 .bars{margin-top:4px;}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px;}
 .bar-lbl{width:70px;color:var(--ts);flex-shrink:0;font-weight:500;}
@@ -271,6 +267,12 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .tab.t-lifted .tab-ic{color:white!important;}
   .tab.t-shift-left{transform:translateX(-100%);transition:transform 0.18s cubic-bezier(.34,1.56,.64,1);}
   .tab.t-shift-right{transform:translateX(100%);transition:transform 0.18s cubic-bezier(.34,1.56,.64,1);}
+
+  .qmood-btn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;background:rgba(255,255,255,0.08);border:.5px solid rgba(255,255,255,0.12);border-radius:12px;cursor:pointer;font-family:'Inter',sans-serif;color:rgba(255,255,255,0.75);font-size:10px;font-weight:500;-webkit-appearance:none;transition:all .15s;min-width:54px;}
+  .qmood-btn span:first-child{font-size:18px;}
+  .qmood-btn:active,.qmood-btn.qon{background:var(--ac);border-color:var(--ac4);color:white;transform:scale(1.08);}
+  .quick-checkin-card::-webkit-scrollbar{display:none;}
+  #quick-mood-row::-webkit-scrollbar{display:none;}
 </style>
 </head>
 <body>
@@ -344,6 +346,35 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <div class="lbl">Latest check-in</div>
       <div id="latest" style="font-size:13px;color:var(--ts);">No entries yet. Do your first check-in.</div>
     </div>
+
+    <!-- QUICK CHECK-IN CARD on home screen -->
+    <div class="card" id="quick-checkin-card" style="background:linear-gradient(135deg,#1A0A3A,#0A1020);border-color:var(--ac4);padding:0;overflow:hidden;cursor:pointer;" onclick="openQuickCheckin()">
+      <div style="padding:16px 18px 12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:white;margin-bottom:2px;">How are you feeling right now?</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);">Tap a mood to log today's check-in</div>
+          </div>
+          <div style="font-size:22px;">✏️</div>
+        </div>
+        <!-- Quick mood row -->
+        <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;" id="quick-mood-row">
+          <button class="qmood-btn" data-mood="Powerful" onclick="event.stopPropagation();quickMood(this)"><span>⚡</span><span>Powerful</span></button>
+          <button class="qmood-btn" data-mood="Calm" onclick="event.stopPropagation();quickMood(this)"><span>🌊</span><span>Calm</span></button>
+          <button class="qmood-btn" data-mood="Focused" onclick="event.stopPropagation();quickMood(this)"><span>🎯</span><span>Focused</span></button>
+          <button class="qmood-btn" data-mood="Confident" onclick="event.stopPropagation();quickMood(this)"><span>💪</span><span>Confident</span></button>
+          <button class="qmood-btn" data-mood="Restless" onclick="event.stopPropagation();quickMood(this)"><span>🌀</span><span>Restless</span></button>
+          <button class="qmood-btn" data-mood="Anxious" onclick="event.stopPropagation();quickMood(this)"><span>😰</span><span>Anxious</span></button>
+          <button class="qmood-btn" data-mood="Foggy" onclick="event.stopPropagation();quickMood(this)"><span>🌫️</span><span>Foggy</span></button>
+          <button class="qmood-btn" data-mood="Low" onclick="event.stopPropagation();quickMood(this)"><span>🌑</span><span>Low</span></button>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;color:rgba(255,255,255,0.4);">Or tap to open full check-in</span>
+        <span style="font-size:12px;color:var(--ac4);font-weight:600;">Full check-in →</span>
+      </div>
+    </div>
+
     <div id="wprompt" style="display:none;">
       <div class="w-banner">
         <p style="font-size:13px;font-weight:600;color:var(--amb8);margin-bottom:3px;">Weekly review due</p>
@@ -436,10 +467,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <button class="btn-g" style="width:100%;margin-top:11px" id="export-btn">⬇ Export CSV</button>
   </div>
 
-  <!-- INSIGHTS -->
-  <div id="s-insights" class="sec">
-    <div id="ins-content"><p style="font-size:13px;color:var(--ts)">Log at least 3 check-ins to see insights.</p></div>
-  </div>
+
 
   <!-- PHASES -->
   <div id="s-phases" class="sec">
@@ -760,7 +788,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
 <nav class="tabs">
   <button class="tab on" data-tab="home"><span class="tab-ic">🏠</span>Today</button>
-  <button class="tab" data-tab="checkin"><span class="tab-ic">✏️</span>Check-in</button>
+
   <button class="tab" data-tab="urge"><span class="tab-ic">🌊</span>SOS</button>
   <button class="tab" data-tab="stories"><span class="tab-ic">📖</span>Stories</button>
   <button class="tab" data-tab="transmute"><span class="tab-ic">⚡</span>Transmute</button>
@@ -1133,7 +1161,6 @@ function goTab(id) {
   document.querySelector('.tab[data-tab="' + id + '"]').classList.add('on');
   document.getElementById('scroll').scrollTop = 0;
   if(id === 'history') renderHistory('all');
-  if(id === 'insights') renderInsights();
   if(id === 'phases') renderPhase();
   if(id === 'stories') { shuffle(stories); storyIdx = 0; renderStory(); }
   if(id === 'transmute') switchTr('pranayama');
@@ -1847,6 +1874,25 @@ function uReset() {
   if(bi){bi.style.transform='';bi.style.background='';}
   const bl=document.getElementById('u-bl');
   if(bl) bl.innerHTML='TAP<br>START';
+}
+
+
+// ---- Quick check-in from home ----
+function openQuickCheckin() {
+  goTab('checkin');
+}
+
+function quickMood(btn) {
+  // Set mood and go to full checkin with mood pre-selected
+  S.mood = btn.dataset.mood;
+  document.querySelectorAll('.qmood-btn').forEach(function(b) { b.classList.remove('qon'); });
+  btn.classList.add('qon');
+  // Pre-select the mood in the full checkin form too
+  document.querySelectorAll('.mbtn').forEach(function(b) { b.classList.remove('on'); });
+  var fullBtn = document.querySelector('.mbtn[data-mood="' + btn.dataset.mood + '"]');
+  if(fullBtn) fullBtn.classList.add('on');
+  // Go to checkin after brief highlight
+  setTimeout(function() { goTab('checkin'); }, 300);
 }
 
 // ===================== INIT =====================
