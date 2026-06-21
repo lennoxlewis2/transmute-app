@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#534AB7" id="tc">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="SR Tracker">
-<title>SR Tracker</title>
+<meta name="apple-mobile-web-app-title" content="The Transmute App">
+<title>The Transmute App</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -243,7 +243,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 <div class="hdr">
   <div class="hdr-ic">🔥</div>
   <div style="flex:1">
-    <h1>SR Tracker</h1>
+    <h1>The Transmute App</h1>
     <div class="hdr-date" id="hdr-date"></div>
   </div>
   <button class="cogbtn" id="cog">⚙️</button>
@@ -753,7 +753,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <div class="lbl">Support the app</div>
       <div style="background:linear-gradient(135deg,#1A0A0A,#2A0808);border:.5px solid #FF5E5B;border-radius:12px;padding:14px 16px;">
         <div style="font-size:13px;color:#FFB3B2;line-height:1.7;margin-bottom:12px;">
-          Hey — thank you genuinely for using SR Tracker. 🙏<br><br>
+          Hey — thank you genuinely for using The Transmute App. 🙏<br><br>
           I built this because I wanted a real tool for the journey, not just another generic habit app. If it's helped you stay on track, given you clarity, or even just reminded you why you started — that means everything to me.<br><br>
           The app is free and always will be. But if you'd like to support it and help keep it growing, a coffee goes a long way. 
         </div>
@@ -762,7 +762,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
     </div>
 
-    <p style="font-size:11px;color:var(--tt);text-align:center">SR Tracker · v2.0</p>
+    <p style="font-size:11px;color:var(--tt);text-align:center">The Transmute App · v2.0</p>
   </div>
 </div>
 
@@ -1203,7 +1203,7 @@ function closeSettings() { document.getElementById('s-overlay').style.display = 
 function sendBug() {
   const msg = document.getElementById('bug-txt').value.trim();
   if(!msg) { toast('Please describe the bug first'); return; }
-  const sub = encodeURIComponent('SR Tracker Bug Report');
+  const sub = encodeURIComponent('The Transmute App Bug Report');
   const body = encodeURIComponent('Bug:\n\n' + msg + '\n\n---\nDay: ' + calcStreak() + '\nTheme: ' + curTheme + '\nEntries: ' + S.entries.length);
   window.location.href = 'mailto:lewiscurtis2@hotmail.co.uk?subject=' + sub + '&body=' + body;
   document.getElementById('bug-txt').value = '';

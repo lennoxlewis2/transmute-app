@@ -1,6 +1,6 @@
 {
-  "name": "SR Tracker",
-  "short_name": "SR Tracker",
+  "name": "The Transmute App",
+  "short_name": "The Transmute App",
   "description": "Semen retention personal check-in and mood tracker",
   "start_url": "/",
   "display": "standalone",
