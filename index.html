@@ -1307,7 +1307,7 @@ const TRANSLATIONS = {
     histAll:'Todo', histDaily:'Diario', histWeekly:'Semanal',
     exportCsv:'⬇ Exportar CSV',
     allPhases:'Todas las fases',
-    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditación', poses:'🐎 Posturas',
+    pranayama:'Pranayama', meditation:'Meditación', poses:'Posturas',
     settings:'Ajustes', language:'Idioma', colourTheme:'Tema de color',
     bugReport:'Reporte de error', bugDesc:'¿Encontraste un problema? Descríbelo y envíalo al desarrollador.',
     bugPlaceholder:'Describe el error...', sendBug:'Enviar reporte',
@@ -1361,7 +1361,7 @@ const TRANSLATIONS = {
     histAll:'Tout', histDaily:'Quotidien', histWeekly:'Hebdomadaire',
     exportCsv:'⬇ Exporter CSV',
     allPhases:'Toutes les phases',
-    pranayama:'🌬️ Pranayama', meditation:'🧘 Méditation', poses:'🐎 Postures',
+    pranayama:'Pranayama', meditation:'Méditation', poses:'Postures',
     settings:'Paramètres', language:'Langue', colourTheme:'Thème de couleur',
     bugReport:'Signaler un bug', bugDesc:'Tu as trouvé un problème ? Décris-le et envoie-le au développeur.',
     bugPlaceholder:'Décris le bug ou l\'erreur...', sendBug:'Envoyer le rapport',
@@ -1415,7 +1415,7 @@ const TRANSLATIONS = {
     histAll:'Alle', histDaily:'Täglich', histWeekly:'Wöchentlich',
     exportCsv:'⬇ CSV exportieren',
     allPhases:'Alle Phasen',
-    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditation', poses:'🐎 Haltungen',
+    pranayama:'Pranayama', meditation:'Meditation', poses:'Haltungen',
     settings:'Einstellungen', language:'Sprache', colourTheme:'Farbthema',
     bugReport:'Fehler melden', bugDesc:'Fehler gefunden? Beschreibe ihn und sende ihn an den Entwickler.',
     bugPlaceholder:'Beschreibe den Fehler...', sendBug:'Fehlerbericht senden',
@@ -1469,7 +1469,7 @@ const TRANSLATIONS = {
     histAll:'Tudo', histDaily:'Diário', histWeekly:'Semanal',
     exportCsv:'⬇ Exportar CSV',
     allPhases:'Todas as fases',
-    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditação', poses:'🐎 Posturas',
+    pranayama:'Pranayama', meditation:'Meditação', poses:'Posturas',
     settings:'Configurações', language:'Idioma', colourTheme:'Tema de cor',
     bugReport:'Reportar bug', bugDesc:'Encontrou um problema? Descreve e envia ao desenvolvedor.',
     bugPlaceholder:'Descreve o bug ou erro...', sendBug:'Enviar relatório',
@@ -1523,7 +1523,7 @@ const TRANSLATIONS = {
     histAll:'الكل', histDaily:'يومي', histWeekly:'أسبوعي',
     exportCsv:'⬇ تصدير CSV',
     allPhases:'جميع المراحل',
-    pranayama:'🌬️ برانياما', meditation:'🧘 تأمل', poses:'🐎 أوضاع',
+    pranayama:'برانياما', meditation:'تأمل', poses:'أوضاع',
     settings:'الإعدادات', language:'اللغة', colourTheme:'لون الثيم',
     bugReport:'الإبلاغ عن خطأ', bugDesc:'وجدت مشكلة؟ صفها وأرسلها للمطور.',
     bugPlaceholder:'صف الخطأ أو المشكلة...', sendBug:'إرسال التقرير',
@@ -1573,8 +1573,9 @@ function applyLang() {
     const idx = tabOrder.indexOf(tab.dataset.tab);
     if(idx >= 0) {
       const ic = tab.querySelector('.tab-ic');
-      const icText = ic ? ic.textContent : '';
-      tab.innerHTML = `<span class="tab-ic">${icText}</span>${t(tabKeys[idx])}`;
+      // Preserve the SVG icon markup (textContent is empty for SVG and would wipe it)
+      const iconHtml = ic ? ic.innerHTML : '';
+      tab.innerHTML = `<span class="tab-ic">${iconHtml}</span>${t(tabKeys[idx])}`;
     }
   });
 
@@ -1681,7 +1682,13 @@ function applyLang() {
   // Transmute nav
   const trBtns = document.querySelectorAll('.tr-nav');
   const trKeys = ['pranayama','meditation','poses'];
-  trBtns.forEach((btn,i) => { if(i < trKeys.length) btn.textContent = t(trKeys[i]); });
+  trBtns.forEach((btn,i) => {
+    if(i < trKeys.length) {
+      // Preserve the inline SVG icon; only swap the label text
+      const svg = btn.querySelector('svg');
+      btn.innerHTML = (svg ? svg.outerHTML : '') + t(trKeys[i]);
+    }
+  });
 
   // SOS tab
   set('sos-btn', t('sosBtn'));
@@ -3670,15 +3677,7 @@ window.addEventListener('popstate', function(e) {
   };
 })();
 
-// Hook confetti + haptic into milestones and urge wins
-const _origCheckMilestone = window.checkMilestone;
-window.checkMilestone = function(n) {
-  _origCheckMilestone(n);
-  if(MILESTONES[n] && !localStorage.getItem('ms_' + (n-1) + '_conf_done')) {
-    // only fire if milestone was just newly hit
-  }
-};
-// Patch: fire confetti when milestone modal opens
+// Fire confetti + haptic when the milestone modal opens
 const msOverlay = document.getElementById('ms-overlay');
 if(msOverlay) {
   const obs = new MutationObserver(() => {
@@ -3841,8 +3840,8 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
   window._showPaywall = function() {
     var streakEl = document.getElementById('pw-streak-num');
     if(streakEl) {
-      var s = JSON.parse(localStorage.getItem('sr_state') || '{}');
-      var days = s.startDate ? Math.floor((Date.now() - new Date(s.startDate).getTime()) / 86400000) : 0;
+      // Use the app's own streak calc (correct key sr_v3 + timezone-safe parsing)
+      var days = (typeof calcStreak === 'function') ? calcStreak() : 0;
       streakEl.textContent = days;
       var warn = document.getElementById('pw-streak-warning');
       if(warn) warn.style.display = days > 0 ? '' : 'none';
