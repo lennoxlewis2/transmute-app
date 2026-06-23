@@ -473,6 +473,16 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <div class="metric"><div class="m-val" id="m-entries">0</div><div class="m-lbl">Check-ins</div></div>
       <div class="metric"><div class="m-val" id="m-energy">–</div><div class="m-lbl">Avg energy</div></div>
     </div>
+    <div class="m-grid" style="grid-template-columns:1fr 1fr;margin-bottom:12px;">
+      <div class="metric" style="background:linear-gradient(135deg,rgba(108,92,231,0.15),rgba(72,52,200,0.08));border-color:rgba(108,92,231,0.3);">
+        <div class="m-val" id="m-urges" style="color:var(--ac2);">0</div>
+        <div class="m-lbl">🌊 Urges beaten</div>
+      </div>
+      <div class="metric">
+        <div class="m-val" id="m-urge-streak">0</div>
+        <div class="m-lbl">Best urge streak</div>
+      </div>
+    </div>
     <div class="card">
       <div class="lbl">Latest check-in</div>
       <div id="latest">
@@ -788,6 +798,16 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:16px;">The average urge peaks and passes in <strong style="color:var(--tx)">3–7 minutes.</strong> You don't need to fight it — just ride the wave.</div>
           <button class="urge-sos-btn" id="sos-btn">🌊 I'm feeling an urge — surf it now</button>
           <div style="background:var(--bg);border-radius:10px;padding:12px;font-size:12px;color:var(--ts);line-height:1.6;">Urges are like ocean waves — they build, peak, and always break. Open this the moment one starts.</div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <div style="flex:1;background:linear-gradient(135deg,rgba(108,92,231,0.2),rgba(72,52,200,0.1));border:.5px solid rgba(108,92,231,0.3);border-radius:12px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:800;color:var(--ac2);" id="uh-urges-beat">0</div>
+            <div style="font-size:10px;color:var(--ts);margin-top:2px;">beaten this streak</div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px;text-align:center;">
+            <div style="font-size:20px;font-weight:800;color:var(--tx);" id="uh-best-beat">0</div>
+            <div style="font-size:10px;color:var(--ts);margin-top:2px;">best ever</div>
+          </div>
+        </div>
         </div>
         <div class="card">
           <div class="lbl">How urge surfing works</div>
@@ -1834,6 +1854,10 @@ function updateHome() {
   }
   document.getElementById('m-best').textContent = S.best;
   document.getElementById('m-entries').textContent = S.entries.length;
+  const urgesEl = document.getElementById('m-urges');
+  if(urgesEl) urgesEl.textContent = S.urgesBeat || 0;
+  const bestUrgeEl = document.getElementById('m-urge-streak');
+  if(bestUrgeEl) bestUrgeEl.textContent = S.bestUrgeBeat || 0;
   updateAura(n); updateFlame(n);
   const b = getBadge(n);
   const pbEl = document.getElementById('pbadge');
@@ -1892,7 +1916,15 @@ function goTab(id) {
   if(id === 'phases') renderPhase();
   if(id === 'stories') { shuffle(stories); storyIdx = 0; renderStory(); }
   if(id === 'transmute') switchTr('pranayama');
-  if(id === 'urge') { document.getElementById('urge-home').style.display='block'; document.getElementById('urge-surf').style.display='none'; document.getElementById('urge-win').style.display='none'; }
+  if(id === 'urge') {
+    document.getElementById('urge-home').style.display='block';
+    document.getElementById('urge-surf').style.display='none';
+    document.getElementById('urge-win').style.display='none';
+    const uhb = document.getElementById('uh-urges-beat');
+    if(uhb) uhb.textContent = S.urgesBeat || 0;
+    const uhbb = document.getElementById('uh-best-beat');
+    if(uhbb) uhbb.textContent = S.bestUrgeBeat || 0;
+  }
 }
 
 // ===================== CHECK-IN =====================
@@ -2645,6 +2677,9 @@ function uRenderAffirmDots() {
 
 function uWin() {
   uClose(true);
+  S.urgesBeat = (S.urgesBeat || 0) + 1;
+  S.bestUrgeBeat = Math.max(S.bestUrgeBeat || 0, S.urgesBeat);
+  save(); updateHome();
   document.getElementById('urge-surf').style.display='none';
   document.getElementById('urge-win').style.display='block';
 }
@@ -2847,7 +2882,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.getElementById('reset-btn').addEventListener('click', function() {
     if(confirm(t('confirmReset'))) {
-      S.startDate = null; save(); updateHome(); toast(t('toastStreakReset'));
+      S.startDate = null; S.urgesBeat = 0; save(); updateHome(); toast(t('toastStreakReset'));
     }
   });
 
