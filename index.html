@@ -54,20 +54,21 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .aura-inner .snum{font-size:32px;font-weight:700;color:var(--tx);line-height:1;}
 .aura-inner .sday{font-size:10px;color:var(--ts);}
 .flame-wrap{display:flex;align-items:center;justify-content:center;margin:4px auto 6px;transition:all .5s;}
-.ph-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;margin-top:4px;}
-.bd0{background:#E8E8EE;color:#666;}
-.bd7{background:linear-gradient(135deg,#C0DD97,#7EC85A);color:#1A4A08;border:1.5px solid #7EC85A;}
-.bd14{background:linear-gradient(135deg,#AFA9EC,#7F77DD);color:#1A0A5A;border:1.5px solid #7F77DD;}
-.bd21{background:linear-gradient(135deg,#FFD700,#FFA500);color:#4A2800;border:1.5px solid #FFA500;}
-.bd30{background:linear-gradient(135deg,#F0997B,#E05A10);color:#2A0A00;border:1.5px solid #E05A10;}
-.bd40{background:linear-gradient(135deg,#00E0C0,#0A9E88);color:#002A24;border:1.5px solid #0A9E88;}
-.bd60{background:linear-gradient(135deg,#EE88FF,#9933CC);color:#1A0030;border:1.5px solid #9933CC;}
-.bd90{background:linear-gradient(135deg,#FFD700,#FF8C00,#FF4500);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 8px rgba(255,180,0,.4);}
-.bd120{background:linear-gradient(135deg,#00FFFF,#0066FF);color:#000830;border:2px solid #00CCFF;box-shadow:0 0 8px rgba(0,200,255,.4);}
-.bd180{background:linear-gradient(135deg,#FF00FF,#8800FF);color:#FFE0FF;border:2px solid #CC00FF;box-shadow:0 0 10px rgba(180,0,255,.4);}
-.bd270{background:linear-gradient(135deg,#FFD700,#FF4400,#FF0000);color:#1A0000;border:2px solid #FFD700;box-shadow:0 0 14px rgba(255,180,0,.5);}
-.bd365{background:linear-gradient(135deg,#FFFFFF,#E0F0FF,#C0D8FF);color:#000820;border:2.5px solid #FFF;box-shadow:0 0 18px rgba(200,220,255,.7);animation:lgnd 2s ease-in-out infinite;}
-@keyframes lgnd{0%,100%{box-shadow:0 0 18px rgba(200,220,255,.7);}50%{box-shadow:0 0 28px rgba(200,220,255,1);}}
+.ph-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:700;margin-top:4px;letter-spacing:.03em;}
+.ph-badge svg{flex-shrink:0;}
+.bd0{background:rgba(255,255,255,0.07);color:#888;border:.5px solid rgba(255,255,255,0.1);}
+.bd7{background:linear-gradient(135deg,rgba(94,166,64,0.25),rgba(60,120,30,0.15));color:#9DD870;border:.5px solid rgba(94,166,64,0.4);}
+.bd14{background:linear-gradient(135deg,rgba(108,92,231,0.3),rgba(72,52,200,0.18));color:#C4BCFF;border:.5px solid rgba(108,92,231,0.5);}
+.bd21{background:linear-gradient(135deg,rgba(240,170,50,0.28),rgba(200,120,10,0.18));color:#FFD580;border:.5px solid rgba(220,160,40,0.5);}
+.bd30{background:linear-gradient(135deg,rgba(220,80,40,0.3),rgba(170,40,10,0.18));color:#FFB088;border:.5px solid rgba(220,80,40,0.5);}
+.bd40{background:linear-gradient(135deg,rgba(0,200,180,0.25),rgba(0,140,120,0.15));color:#6FEDD8;border:.5px solid rgba(0,190,170,0.45);}
+.bd60{background:linear-gradient(135deg,rgba(180,80,240,0.3),rgba(120,20,180,0.2));color:#E8B0FF;border:.5px solid rgba(170,70,230,0.55);}
+.bd90{background:linear-gradient(135deg,rgba(255,190,0,0.32),rgba(220,100,0,0.22));color:#FFE080;border:.5px solid rgba(255,180,0,0.6);box-shadow:0 0 10px rgba(255,160,0,0.2);}
+.bd120{background:linear-gradient(135deg,rgba(0,220,255,0.28),rgba(0,100,220,0.2));color:#80E8FF;border:.5px solid rgba(0,200,255,0.55);box-shadow:0 0 10px rgba(0,190,255,0.2);}
+.bd180{background:linear-gradient(135deg,rgba(220,0,255,0.28),rgba(130,0,220,0.2));color:#F0AAFF;border:.5px solid rgba(200,0,255,0.55);box-shadow:0 0 12px rgba(180,0,255,0.22);}
+.bd270{background:linear-gradient(135deg,rgba(255,210,0,0.35),rgba(255,80,0,0.25));color:#FFE060;border:.5px solid rgba(255,190,0,0.65);box-shadow:0 0 14px rgba(255,160,0,0.28);}
+.bd365{background:linear-gradient(135deg,rgba(255,255,255,0.18),rgba(180,220,255,0.14));color:#F0F8FF;border:.5px solid rgba(200,230,255,0.7);box-shadow:0 0 18px rgba(200,220,255,0.4),0 0 36px rgba(200,220,255,0.15);animation:lgnd 2.5s ease-in-out infinite;}
+@keyframes lgnd{0%,100%{box-shadow:0 0 14px rgba(200,220,255,0.35),0 0 28px rgba(200,220,255,0.12);}50%{box-shadow:0 0 24px rgba(200,220,255,0.6),0 0 48px rgba(200,220,255,0.25);}}
 /* Quote */
 .q-side{flex:1;border-left:2px solid var(--ac4);padding-left:12px;}
 .q-text{font-size:12px;color:var(--ac2);line-height:1.6;font-style:italic;min-height:56px;}
@@ -1663,33 +1664,60 @@ const QUOTES = [
   "Stay on the path. The path is working, even when you can't feel it yet."
 ];
 
+const MS_ICONS = {
+  7:   '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M12 2a7 7 0 0 1 7 7c0 4-3.5 8-7 11C8.5 17 5 13 5 9a7 7 0 0 1 7-7z" fill="#9DD870" opacity=".9"/><circle cx="12" cy="9" r="2.5" fill="white" opacity=".8"/></svg>',
+  14:  '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="#C4BCFF"/></svg>',
+  21:  '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M12 2C8 6 6 10 8 14c1 2 2.5 3 4 3s3-1 4-3c2-4 0-8-4-12z" fill="#FFD580"/><path d="M9 17c0 2.5 1.3 4 3 4s3-1.5 3-4" fill="none" stroke="#FFD580" stroke-width="2" stroke-linecap="round"/></svg>',
+  30:  '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.5 6.5H22l-6 4.5 2.5 6.5L12 16l-6.5 4.5 2.5-6.5L2 9.5h7.5z" fill="#FFB088"/></svg>',
+  40:  '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M2 10c2-5 4-5 6 0s4 5 6 0 4-5 6 0" stroke="#6FEDD8" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M2 15c2-4 4-4 6 0s4 4 6 0 4-4 6 0" stroke="#6FEDD8" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".4"/></svg>',
+  60:  '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 11h18M8 16h8" stroke="#E8B0FF" stroke-width="2.5" stroke-linecap="round"/><path d="M12 2v3M12 19v3M5 4.5l1.5 1.5M18 4.5l-1.5 1.5" stroke="#E8B0FF" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg>',
+  90:  '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M6 9H3l3 6h3l-1-3h6l-1 3h3l3-6h-3V4H6z" fill="#FFE080"/><rect x="5" y="19" width="14" height="2.5" rx="1.2" fill="#FFE080" opacity=".7"/></svg>',
+  120: '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><path d="M12 2L9 9H3l5 4-2 6 6-4 6 4-2-6 5-4h-6z" fill="#80E8FF"/></svg>',
+  180: '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="none" stroke="#F0AAFF" stroke-width="2"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z" fill="#F0AAFF" opacity=".35"/><line x1="3" y1="12" x2="21" y2="12" stroke="#F0AAFF" stroke-width="1.8"/></svg>',
+  270: '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" fill="#FFE060"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="#FFE060" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  365: '<svg width="44" height="44" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="none" stroke="rgba(200,230,255,0.6)" stroke-width="1.5"/><path d="M12 3l1.8 5.5H19l-4.6 3.4 1.8 5.5L12 14l-4.2 3.4 1.8-5.5L5 8.5h5.2z" fill="#F0F8FF"/></svg>'
+};
 const MILESTONES = {
-  7:   {flame:'🌱',title:'One Week Strong',       msg:"Your dopamine receptors are beginning to reset. The flatline you may feel is healing — not failure. Your nervous system is recalibrating for the better."},
-  14:  {flame:'⚡',title:'Two Weeks of Power',    msg:"Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material."},
-  21:  {flame:'🔥',title:'21 Days — Rewired',     msg:"Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice."},
-  30:  {flame:'💥',title:'30 Day Warrior',        msg:"One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them."},
-  40:  {flame:'🌟',title:'Peak Energy Unlocked',  msg:"You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding."},
-  60:  {flame:'👑',title:'60 Days — The Elite',   msg:"Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own."},
-  90:  {flame:'🏆',title:'90 Days — Legend',      msg:"Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery."},
-  120: {flame:'💎',title:'120 Days — Diamond Mind',msg:"Four months of unbroken discipline. Your mind has been permanently restructured. The neural pathways of addiction are starved. What you have built cannot be taken — only surrendered. Don't."},
-  180: {flame:'🌌',title:'180 Days — Transcendent',msg:"Six months. Half a year of channelled energy. You are not practising SR anymore — you are SR. The energy you carry is palpable to everyone around you. You have become a different class of man."},
-  270: {flame:'🌞',title:'270 Days — Solar',      msg:"Nine months. The same time it takes to create a human life — you have used it to recreate yourself. Your willpower, clarity, and presence operate at a level most will never know exists."},
-  365: {flame:'✨',title:'365 Days — One Full Year',msg:"One year. 365 days of chosen power. This is not discipline anymore — this is who you are. You have walked a path that almost no man on earth has completed. The world is different when seen from here."}
+  7:   {flame:MS_ICONS[7],  title:'One Week Strong',       msg:"Your dopamine receptors are beginning to reset. The flatline you may feel is healing — not failure. Your nervous system is recalibrating for the better."},
+  14:  {flame:MS_ICONS[14], title:'Two Weeks of Power',    msg:"Neural pathways are actively rewiring. You may feel a surge of restless energy — channel it hard. Exercise, create, build. This is raw material."},
+  21:  {flame:MS_ICONS[21], title:'21 Days — Rewired',     msg:"Three weeks. This is where most men quit and where you chose to stay. Testosterone expression is climbing. Your presence is different now. People notice."},
+  30:  {flame:MS_ICONS[30], title:'30 Day Warrior',        msg:"One month of mastery. You have proven you can override the most powerful biological urge. Confidence, drive, and magnetism are yours now — protect them."},
+  40:  {flame:MS_ICONS[40], title:'Peak Energy Unlocked',  msg:"You are in the rarest zone. Most men never reach this. Your energy is at peak expression. Social confidence, mental clarity, physical power — all compounding."},
+  60:  {flame:MS_ICONS[60], title:'60 Days — The Elite',   msg:"Two months. You are operating in a dimension most men cannot access. The practice is no longer discipline — it is identity. Guard it like the most valuable thing you own."},
+  90:  {flame:MS_ICONS[90], title:'90 Days — Legend',      msg:"Ninety days. You have done what less than 1% of men ever will. This is not a streak — this is a transformation. The man who started this journey no longer exists. Welcome to mastery."},
+  120: {flame:MS_ICONS[120],title:'120 Days — Diamond Mind',msg:"Four months of unbroken discipline. Your mind has been permanently restructured. The neural pathways of addiction are starved. What you have built cannot be taken — only surrendered. Don't."},
+  180: {flame:MS_ICONS[180],title:'180 Days — Transcendent',msg:"Six months. Half a year of channelled energy. You are not practising SR anymore — you are SR. The energy you carry is palpable to everyone around you. You have become a different class of man."},
+  270: {flame:MS_ICONS[270],title:'270 Days — Solar',      msg:"Nine months. The same time it takes to create a human life — you have used it to recreate yourself. Your willpower, clarity, and presence operate at a level most will never know exists."},
+  365: {flame:MS_ICONS[365],title:'365 Days — One Full Year',msg:"One year. 365 days of chosen power. This is not discipline anymore — this is who you are. You have walked a path that almost no man on earth has completed. The world is different when seen from here."}
 };
 
+const BADGE_ICONS = {
+  bd0:  '',
+  bd7:  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 4-3.5 8-7 11C8.5 17 5 13 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5" fill="currentColor" stroke="none"/></svg>',
+  bd14: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/></svg>',
+  bd21: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 6 6 10 8 14c1 2 2.5 3 4 3s3-1 4-3c2-4 0-8-4-12z" fill="currentColor" stroke="none"/><path d="M9 17c0 2.5 1.3 4 3 4s3-1.5 3-4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+  bd30: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.5 6.5H22l-6 4.5 2.5 6.5L12 16l-6.5 4.5 2.5-6.5L2 9.5h7.5z" fill="currentColor" stroke="none"/></svg>',
+  bd40: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 12c2-5 4-5 6 0s4 5 6 0 4-5 6 0" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>',
+  bd60: '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M7 17h10" stroke="currentColor" fill="none" stroke-width="2.2"/><path d="M12 2v3M12 19v3M4.5 4.5l2 2M17.5 4.5l-2 2" stroke-width="1.8"/></svg>',
+  bd90: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l3 6h3l-1-3h6l-1 3h3l3-6h-3V4H6z" fill="currentColor" stroke="none"/><rect x="5" y="19" width="14" height="2.5" rx="1.2" fill="currentColor" stroke="none"/></svg>',
+  bd120:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L9 9H3l5 4-2 6 6-4 6 4-2-6 5-4h-6z" fill="currentColor" stroke="none"/></svg>',
+  bd180:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a15 15 0 0 1 4 9 15 15 0 0 1-4 9 15 15 0 0 1-4-9 15 15 0 0 1 4-9z" fill="currentColor" opacity=".4" stroke="none"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.8"/></svg>',
+  bd270:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2.2"/></svg>',
+  bd365:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3l1.8 5.5H19l-4.6 3.4 1.8 5.5L12 14l-4.2 3.4 1.8-5.5L5 8.5h5.2z" fill="currentColor" stroke="none"/></svg>'
+};
 const BADGES = [
   {day:0,  cls:'bd0',  label:'Day 0 · Begin',           icon:''},
-  {day:7,  cls:'bd7',  label:'Week 1 · Foundation',      icon:'🟢'},
-  {day:14, cls:'bd14', label:'Week 2 · Rewiring',        icon:'⚡'},
-  {day:21, cls:'bd21', label:'Week 3 · Momentum',        icon:'🔥'},
-  {day:30, cls:'bd30', label:'Month 1 · Warrior',        icon:'💥'},
-  {day:40, cls:'bd40', label:'Day 40 · Peak',            icon:'🌊'},
-  {day:60, cls:'bd60', label:'Month 2 · Elite',          icon:'👑'},
-  {day:90, cls:'bd90', label:'90 Days · Legend',         icon:'🏆'},
-  {day:120,cls:'bd120',label:'120 Days · Diamond Mind',  icon:'💎'},
-  {day:180,cls:'bd180',label:'180 Days · Transcendent',  icon:'🌌'},
-  {day:270,cls:'bd270',label:'270 Days · Solar',         icon:'🌞'},
-  {day:365,cls:'bd365',label:'365 Days · One Year',      icon:'✨'}
+  {day:7,  cls:'bd7',  label:'Week 1 · Foundation',      icon:BADGE_ICONS.bd7},
+  {day:14, cls:'bd14', label:'Week 2 · Rewiring',        icon:BADGE_ICONS.bd14},
+  {day:21, cls:'bd21', label:'Week 3 · Momentum',        icon:BADGE_ICONS.bd21},
+  {day:30, cls:'bd30', label:'Month 1 · Warrior',        icon:BADGE_ICONS.bd30},
+  {day:40, cls:'bd40', label:'Day 40 · Peak',            icon:BADGE_ICONS.bd40},
+  {day:60, cls:'bd60', label:'Month 2 · Elite',          icon:BADGE_ICONS.bd60},
+  {day:90, cls:'bd90', label:'90 Days · Legend',         icon:BADGE_ICONS.bd90},
+  {day:120,cls:'bd120',label:'120 Days · Diamond Mind',  icon:BADGE_ICONS.bd120},
+  {day:180,cls:'bd180',label:'180 Days · Transcendent',  icon:BADGE_ICONS.bd180},
+  {day:270,cls:'bd270',label:'270 Days · Solar',         icon:BADGE_ICONS.bd270},
+  {day:365,cls:'bd365',label:'365 Days · One Year',      icon:BADGE_ICONS.bd365}
 ];
 
 const THEMES = {
@@ -1880,7 +1908,7 @@ function checkMilestone(n) {
   if(localStorage.getItem(key)) return;
   localStorage.setItem(key, '1');
   const ms = MILESTONES[n];
-  document.getElementById('ms-flame').textContent = ms.flame;
+  document.getElementById('ms-flame').innerHTML = ms.flame;
   document.getElementById('ms-day').textContent = 'Day ' + n + ' Milestone';
   document.getElementById('ms-title').textContent = ms.title;
   document.getElementById('ms-msg').textContent = ms.msg;
@@ -1918,7 +1946,7 @@ function updateHome() {
   updateAura(n); updateFlame(n);
   const b = getBadge(n);
   const pbEl = document.getElementById('pbadge');
-  pbEl.textContent = (b.icon ? b.icon + ' ' : '') + b.label;
+  pbEl.innerHTML = (b.icon ? b.icon + ' ' : '') + b.label;
   pbEl.className = 'ph-badge ' + b.cls;
   checkMilestone(n);
   updateGreeting();
