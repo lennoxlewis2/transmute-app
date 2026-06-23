@@ -12,10 +12,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ac:#534AB7;--acl:#1E1B3A;--acd:#3C3489;--ac2:#AFA9EC;--ac4:#7F77DD;
-  --bg:#0F0F1A;--sf:#1A1A2A;--tx:#F0F0FA;--ts:#9090A8;--tt:#5A5A70;
-  --bd:rgba(255,255,255,0.08);--bds:rgba(255,255,255,0.14);
-  --r1:8px;--r2:12px;--r3:16px;
+  --ac:#6C5CE7;--acl:#1A1730;--acd:#4834C8;--ac2:#A89CEC;--ac4:#8B7FE8;
+  --bg:#0D0D14;--sf:#13131E;--tx:#F0F0FA;--ts:#8888A8;--tt:#4A4A65;
+  --bd:rgba(255,255,255,0.06);--bds:rgba(255,255,255,0.10);
+  --r1:10px;--r2:14px;--r3:20px;
   --teal50:#0A2018;--teal4:#1D9E75;--teal6:#0F6E56;--teal8:#085041;
   --grn50:#142010;--grn1:#1E3018;--grn6:#3B6D11;--grn8:#27500A;
   --amb50:#241A08;--amb1:#3A2808;--amb6:#854F0B;--amb8:#633806;
@@ -26,20 +26,20 @@
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--tx);-webkit-font-smoothing:antialiased;}
 .app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:480px;margin:0 auto;}
-.hdr{display:flex;align-items:center;gap:10px;padding:52px 20px 12px;background:var(--sf);border-bottom:.5px solid var(--bd);flex-shrink:0;}
-.hdr-ic{width:34px;height:34px;border-radius:10px;background:var(--ac);display:flex;align-items:center;justify-content:center;font-size:17px;}
-.hdr h1{font-size:17px;font-weight:600;flex:1;}
+.hdr{display:flex;align-items:center;gap:12px;padding:52px 20px 14px;background:var(--bg);border-bottom:none;flex-shrink:0;}
+.hdr-ic{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--ac),var(--acd));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 12px rgba(108,92,231,0.4);}
+.hdr h1{font-size:17px;font-weight:700;flex:1;}
 .hdr-date{font-size:12px;color:var(--ts);}
-.cogbtn{border:none;background:transparent;cursor:pointer;font-size:22px;padding:6px;color:var(--ts);}
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 100px;}
-.tabs{display:flex;background:var(--sf);border-top:.5px solid var(--bd);padding:8px 0 max(8px,env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:480px;margin:0 auto;}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:9px;font-weight:500;}
-.tab.on{color:var(--ac);}
+.cogbtn{border:none;background:rgba(255,255,255,0.06);cursor:pointer;font-size:18px;padding:8px;color:var(--ts);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 110px;}
+.tabs{display:flex;background:rgba(19,19,30,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid var(--bd);padding:10px 16px max(10px,env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:480px;margin:0 auto;gap:4px;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:9px;font-weight:500;border-radius:14px;transition:all .2s;}
+.tab.on{color:white;background:var(--ac);}
 .tab-ic{font-size:19px;line-height:1;}
 .sec{display:none;opacity:0;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;}
   .sec.on{display:block;animation:secFadeIn .2s ease forwards;}
   @keyframes secFadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r3);padding:16px;margin-bottom:12px;}
+.card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r3);padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
 .lbl{font-size:11px;font-weight:600;color:var(--ts);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
 /* Streak card */
 .streak-block{display:flex;align-items:flex-start;gap:14px;}
