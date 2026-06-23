@@ -853,7 +853,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
     </div>
     <div style="margin-bottom:20px">
-      <div class="lbl">Language <span style="font-size:9px;color:var(--tt);font-weight:400;text-transform:none;letter-spacing:0">(coming soon)</span></div>
+      <div class="lbl">Language</div>
       <div class="lang-grid">
         <button class="lang-btn" data-lang="en">🇬🇧 English</button>
         <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
@@ -911,6 +911,515 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
 <script>
 'use strict';
+
+// ===================== I18N =====================
+const TRANSLATIONS = {
+  en: {
+    tabHome:'Today', tabSos:'SOS', tabStories:'Stories', tabTransmute:'Transmute', tabPhases:'Phases',
+    days:'days',
+    bestStreak:'Best streak', checkIns:'Check-ins', avgEnergy:'Avg energy',
+    latestCheckin:'Latest check-in', noCheckins:'No check-ins yet',
+    noCheckinsBody:'Tap the check-in card below\nto log your first entry',
+    howFeeling:'How are you feeling right now?', tapMood:'Tap a mood to log today\'s check-in',
+    fullCheckin:'Full check-in →',
+    weeklyDue:'Weekly review due', weeklyDueSub:'7+ days since your last review.',
+    startWeeklyReview:'Start weekly review',
+    streakStartDate:'Streak start date',
+    setStartDate:'Set start date', reset:'↺ Reset',
+    energy:'Energy', clarity:'Mental clarity', urgeIntensity:'Urge intensity', socialConf:'Social confidence',
+    triggersToday:'Urge triggers today?',
+    customTrigger:'Custom trigger (optional)',
+    journalNote:'Journal note', journalPlaceholder:'How\'s the day been? Wins, challenges, insights...',
+    saveCheckin:'Save check-in',
+    wentWell:'What went well?', wentWellPh:'Wins, moments of discipline...',
+    hardest:'What was hardest?', hardestPh:'Challenges, temptations...',
+    noticed:'What did you notice about yourself?', noticedPh:'Patterns, insights...',
+    intention:'Intention for next week', intentionPh:'One focus or commitment...',
+    saveReview:'Save weekly review', backDaily:'Back to daily check-in',
+    weeklyReview:'Weekly review', weeklyReviewSub:'Take 5 minutes to reflect honestly.',
+    histAll:'All', histDaily:'Daily', histWeekly:'Weekly',
+    exportCsv:'⬇ Export CSV',
+    allPhases:'All phases',
+    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditation', poses:'🐎 Poses',
+    settings:'Settings', language:'Language', colourTheme:'Colour theme',
+    bugReport:'Bug report', bugDesc:'Found an issue? Describe it and send to the developer.',
+    bugPlaceholder:'Describe the bug or error...', sendBug:'Send bug report',
+    supportApp:'Support the app',
+    installApp:'Install app',
+    pickDate:'📅 Set start date',
+    sosBtn:'🌊 I\'m feeling an urge — surf it now',
+    survived:'✓ I surfed it — urge has passed',
+    backToApp:'← Back to app',
+    startBreathing:'Start breathing', stop:'Stop',
+    startCountdown:'Start the countdown',
+    nextAffirmation:'Next affirmation',
+    beginMed:'▶ Begin', stopMed:'■ Stop',
+    greetMorning:'Good morning', greetAfternoon:'Good afternoon', greetEvening:'Good evening',
+    whatCall:'What should we call you?', yourName:'Your name', letsGo:'Let\'s go 🔥', skipNow:'Skip for now',
+    welcomeTitle:'Welcome to The Transmute App',
+    toastCheckin:'Check-in saved ✓', toastReview:'Weekly review saved ✓',
+    toastStreakSet:'Streak set — day ', toastStreakReset:'Streak reset. Start again.',
+    toastBugThanks:'Thank you for your report! We will look into it.',
+    toastNoBug:'Please describe the bug first',
+    toastNoData:'No data to export yet.',
+    toastLang:'Language updated',
+    toastFutureDate:'Start date can\'t be in the future',
+    toastPickDate:'Please pick a date',
+    toastReshuffle:'Stories reshuffled 🔀',
+    confirmReset:'Reset your streak? This will clear your start date.',
+  },
+  es: {
+    tabHome:'Hoy', tabSos:'SOS', tabStories:'Historias', tabTransmute:'Transmuta', tabPhases:'Fases',
+    days:'días',
+    bestStreak:'Mejor racha', checkIns:'Registros', avgEnergy:'Energía media',
+    latestCheckin:'Último registro', noCheckins:'Sin registros aún',
+    noCheckinsBody:'Toca la tarjeta de abajo\npara tu primer registro',
+    howFeeling:'¿Cómo te sientes ahora mismo?', tapMood:'Toca un estado para registrarlo',
+    fullCheckin:'Registro completo →',
+    weeklyDue:'Revisión semanal pendiente', weeklyDueSub:'Han pasado 7+ días desde tu última revisión.',
+    startWeeklyReview:'Iniciar revisión semanal',
+    streakStartDate:'Fecha de inicio de racha',
+    setStartDate:'Establecer fecha de inicio', reset:'↺ Reiniciar',
+    energy:'Energía', clarity:'Claridad mental', urgeIntensity:'Intensidad del impulso', socialConf:'Confianza social',
+    triggersToday:'¿Desencadenantes hoy?',
+    customTrigger:'Desencadenante personalizado (opcional)',
+    journalNote:'Nota de diario', journalPlaceholder:'¿Cómo fue el día? Victorias, retos, ideas...',
+    saveCheckin:'Guardar registro',
+    wentWell:'¿Qué salió bien?', wentWellPh:'Victorias, momentos de disciplina...',
+    hardest:'¿Qué fue lo más difícil?', hardestPh:'Retos, tentaciones...',
+    noticed:'¿Qué notaste de ti mismo?', noticedPh:'Patrones, reflexiones...',
+    intention:'Intención para la próxima semana', intentionPh:'Un foco o compromiso...',
+    saveReview:'Guardar revisión semanal', backDaily:'Volver al registro diario',
+    weeklyReview:'Revisión semanal', weeklyReviewSub:'Tómate 5 minutos para reflexionar honestamente.',
+    histAll:'Todo', histDaily:'Diario', histWeekly:'Semanal',
+    exportCsv:'⬇ Exportar CSV',
+    allPhases:'Todas las fases',
+    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditación', poses:'🐎 Posturas',
+    settings:'Ajustes', language:'Idioma', colourTheme:'Tema de color',
+    bugReport:'Reporte de error', bugDesc:'¿Encontraste un problema? Descríbelo y envíalo al desarrollador.',
+    bugPlaceholder:'Describe el error...', sendBug:'Enviar reporte',
+    supportApp:'Apoya la app',
+    installApp:'Instalar app',
+    pickDate:'📅 Establecer fecha',
+    sosBtn:'🌊 Siento un impulso — surfear ahora',
+    survived:'✓ Lo superé — el impulso ha pasado',
+    backToApp:'← Volver a la app',
+    startBreathing:'Iniciar respiración', stop:'Detener',
+    startCountdown:'Iniciar cuenta regresiva',
+    nextAffirmation:'Siguiente afirmación',
+    beginMed:'▶ Comenzar', stopMed:'■ Detener',
+    greetMorning:'Buenos días', greetAfternoon:'Buenas tardes', greetEvening:'Buenas noches',
+    whatCall:'¿Cómo debemos llamarte?', yourName:'Tu nombre', letsGo:'¡Vamos! 🔥', skipNow:'Omitir por ahora',
+    welcomeTitle:'Bienvenido a The Transmute App',
+    toastCheckin:'Registro guardado ✓', toastReview:'Revisión semanal guardada ✓',
+    toastStreakSet:'Racha establecida — día ', toastStreakReset:'Racha reiniciada. Empieza de nuevo.',
+    toastBugThanks:'¡Gracias por tu reporte! Lo revisaremos.',
+    toastNoBug:'Por favor describe el error primero',
+    toastNoData:'Aún no hay datos para exportar.',
+    toastLang:'Idioma actualizado',
+    toastFutureDate:'La fecha no puede ser en el futuro',
+    toastPickDate:'Por favor elige una fecha',
+    toastReshuffle:'Historias mezcladas 🔀',
+    confirmReset:'¿Reiniciar tu racha? Esto borrará tu fecha de inicio.',
+  },
+  fr: {
+    tabHome:'Aujourd\'hui', tabSos:'SOS', tabStories:'Histoires', tabTransmute:'Transmuter', tabPhases:'Phases',
+    days:'jours',
+    bestStreak:'Meilleure série', checkIns:'Bilans', avgEnergy:'Énergie moy.',
+    latestCheckin:'Dernier bilan', noCheckins:'Aucun bilan encore',
+    noCheckinsBody:'Appuie sur la carte ci-dessous\npour ton premier bilan',
+    howFeeling:'Comment te sens-tu maintenant ?', tapMood:'Touche une humeur pour l\'enregistrer',
+    fullCheckin:'Bilan complet →',
+    weeklyDue:'Bilan hebdomadaire dû', weeklyDueSub:'7+ jours depuis ton dernier bilan.',
+    startWeeklyReview:'Commencer le bilan hebdomadaire',
+    streakStartDate:'Date de début de série',
+    setStartDate:'Définir la date de début', reset:'↺ Réinitialiser',
+    energy:'Énergie', clarity:'Clarté mentale', urgeIntensity:'Intensité de l\'envie', socialConf:'Confiance sociale',
+    triggersToday:'Déclencheurs d\'envies aujourd\'hui ?',
+    customTrigger:'Déclencheur personnalisé (optionnel)',
+    journalNote:'Note de journal', journalPlaceholder:'Comment s\'est passée la journée ? Victoires, défis, insights...',
+    saveCheckin:'Sauvegarder le bilan',
+    wentWell:'Qu\'est-ce qui s\'est bien passé ?', wentWellPh:'Victoires, moments de discipline...',
+    hardest:'Qu\'est-ce qui était le plus dur ?', hardestPh:'Défis, tentations...',
+    noticed:'Qu\'as-tu remarqué sur toi-même ?', noticedPh:'Schémas, insights...',
+    intention:'Intention pour la semaine prochaine', intentionPh:'Un objectif ou engagement...',
+    saveReview:'Sauvegarder le bilan', backDaily:'Retour au bilan quotidien',
+    weeklyReview:'Bilan hebdomadaire', weeklyReviewSub:'Prends 5 minutes pour réfléchir honnêtement.',
+    histAll:'Tout', histDaily:'Quotidien', histWeekly:'Hebdomadaire',
+    exportCsv:'⬇ Exporter CSV',
+    allPhases:'Toutes les phases',
+    pranayama:'🌬️ Pranayama', meditation:'🧘 Méditation', poses:'🐎 Postures',
+    settings:'Paramètres', language:'Langue', colourTheme:'Thème de couleur',
+    bugReport:'Signaler un bug', bugDesc:'Tu as trouvé un problème ? Décris-le et envoie-le au développeur.',
+    bugPlaceholder:'Décris le bug ou l\'erreur...', sendBug:'Envoyer le rapport',
+    supportApp:'Soutenir l\'app',
+    installApp:'Installer l\'app',
+    pickDate:'📅 Définir la date',
+    sosBtn:'🌊 Je ressens une envie — surfer maintenant',
+    survived:'✓ J\'ai tenu — l\'envie est passée',
+    backToApp:'← Retour à l\'app',
+    startBreathing:'Commencer la respiration', stop:'Arrêter',
+    startCountdown:'Lancer le compte à rebours',
+    nextAffirmation:'Affirmation suivante',
+    beginMed:'▶ Commencer', stopMed:'■ Arrêter',
+    greetMorning:'Bonjour', greetAfternoon:'Bon après-midi', greetEvening:'Bonsoir',
+    whatCall:'Comment doit-on t\'appeler ?', yourName:'Ton prénom', letsGo:'Allons-y ! 🔥', skipNow:'Ignorer pour l\'instant',
+    welcomeTitle:'Bienvenue sur The Transmute App',
+    toastCheckin:'Bilan sauvegardé ✓', toastReview:'Bilan hebdomadaire sauvegardé ✓',
+    toastStreakSet:'Série définie — jour ', toastStreakReset:'Série réinitialisée. Recommence.',
+    toastBugThanks:'Merci pour ton rapport ! Nous allons l\'examiner.',
+    toastNoBug:'Décris d\'abord le bug',
+    toastNoData:'Pas encore de données à exporter.',
+    toastLang:'Langue mise à jour',
+    toastFutureDate:'La date ne peut pas être dans le futur',
+    toastPickDate:'Choisis une date',
+    toastReshuffle:'Histoires mélangées 🔀',
+    confirmReset:'Réinitialiser ta série ? Ta date de début sera effacée.',
+  },
+  de: {
+    tabHome:'Heute', tabSos:'SOS', tabStories:'Geschichten', tabTransmute:'Transmutation', tabPhases:'Phasen',
+    days:'Tage',
+    bestStreak:'Beste Serie', checkIns:'Einträge', avgEnergy:'Ø Energie',
+    latestCheckin:'Letzter Eintrag', noCheckins:'Noch keine Einträge',
+    noCheckinsBody:'Tippe unten auf die Karte\nfür deinen ersten Eintrag',
+    howFeeling:'Wie fühlst du dich gerade?', tapMood:'Tippe eine Stimmung zum Eintragen',
+    fullCheckin:'Vollständiger Eintrag →',
+    weeklyDue:'Wöchentliche Überprüfung fällig', weeklyDueSub:'7+ Tage seit deiner letzten Überprüfung.',
+    startWeeklyReview:'Wöchentliche Überprüfung starten',
+    streakStartDate:'Startdatum der Serie',
+    setStartDate:'Startdatum setzen', reset:'↺ Zurücksetzen',
+    energy:'Energie', clarity:'Mentale Klarheit', urgeIntensity:'Drangintensität', socialConf:'Soziales Selbstvertrauen',
+    triggersToday:'Auslöser heute?',
+    customTrigger:'Eigener Auslöser (optional)',
+    journalNote:'Tagebucheintrag', journalPlaceholder:'Wie war der Tag? Erfolge, Herausforderungen, Erkenntnisse...',
+    saveCheckin:'Eintrag speichern',
+    wentWell:'Was lief gut?', wentWellPh:'Erfolge, Momente der Disziplin...',
+    hardest:'Was war am schwersten?', hardestPh:'Herausforderungen, Versuchungen...',
+    noticed:'Was hast du an dir bemerkt?', noticedPh:'Muster, Erkenntnisse...',
+    intention:'Vorhaben für nächste Woche', intentionPh:'Ein Fokus oder Versprechen...',
+    saveReview:'Überprüfung speichern', backDaily:'Zurück zum täglichen Eintrag',
+    weeklyReview:'Wöchentliche Überprüfung', weeklyReviewSub:'Nimm dir 5 Minuten für ehrliche Reflexion.',
+    histAll:'Alle', histDaily:'Täglich', histWeekly:'Wöchentlich',
+    exportCsv:'⬇ CSV exportieren',
+    allPhases:'Alle Phasen',
+    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditation', poses:'🐎 Haltungen',
+    settings:'Einstellungen', language:'Sprache', colourTheme:'Farbthema',
+    bugReport:'Fehler melden', bugDesc:'Fehler gefunden? Beschreibe ihn und sende ihn an den Entwickler.',
+    bugPlaceholder:'Beschreibe den Fehler...', sendBug:'Fehlerbericht senden',
+    supportApp:'App unterstützen',
+    installApp:'App installieren',
+    pickDate:'📅 Datum setzen',
+    sosBtn:'🌊 Ich spüre einen Drang — jetzt surfen',
+    survived:'✓ Ich habe durchgehalten — Drang ist vorbei',
+    backToApp:'← Zurück zur App',
+    startBreathing:'Atmen starten', stop:'Stopp',
+    startCountdown:'Countdown starten',
+    nextAffirmation:'Nächste Affirmation',
+    beginMed:'▶ Beginnen', stopMed:'■ Stopp',
+    greetMorning:'Guten Morgen', greetAfternoon:'Guten Nachmittag', greetEvening:'Guten Abend',
+    whatCall:'Wie sollen wir dich nennen?', yourName:'Dein Name', letsGo:'Los geht\'s! 🔥', skipNow:'Jetzt überspringen',
+    welcomeTitle:'Willkommen bei The Transmute App',
+    toastCheckin:'Eintrag gespeichert ✓', toastReview:'Wöchentliche Überprüfung gespeichert ✓',
+    toastStreakSet:'Serie gesetzt — Tag ', toastStreakReset:'Serie zurückgesetzt. Fang wieder an.',
+    toastBugThanks:'Danke für deinen Bericht! Wir schauen uns das an.',
+    toastNoBug:'Bitte beschreibe zuerst den Fehler',
+    toastNoData:'Noch keine Daten zum Exportieren.',
+    toastLang:'Sprache aktualisiert',
+    toastFutureDate:'Startdatum kann nicht in der Zukunft liegen',
+    toastPickDate:'Bitte wähle ein Datum',
+    toastReshuffle:'Geschichten gemischt 🔀',
+    confirmReset:'Serie zurücksetzen? Das löscht dein Startdatum.',
+  },
+  pt: {
+    tabHome:'Hoje', tabSos:'SOS', tabStories:'Histórias', tabTransmute:'Transmutar', tabPhases:'Fases',
+    days:'dias',
+    bestStreak:'Melhor sequência', checkIns:'Registros', avgEnergy:'Energia média',
+    latestCheckin:'Último registro', noCheckins:'Sem registros ainda',
+    noCheckinsBody:'Toca o cartão abaixo\npara o teu primeiro registro',
+    howFeeling:'Como te sentes agora?', tapMood:'Toca um humor para registrar',
+    fullCheckin:'Registro completo →',
+    weeklyDue:'Revisão semanal pendente', weeklyDueSub:'7+ dias desde tua última revisão.',
+    startWeeklyReview:'Iniciar revisão semanal',
+    streakStartDate:'Data de início da sequência',
+    setStartDate:'Definir data de início', reset:'↺ Reiniciar',
+    energy:'Energia', clarity:'Clareza mental', urgeIntensity:'Intensidade do impulso', socialConf:'Confiança social',
+    triggersToday:'Gatilhos de impulso hoje?',
+    customTrigger:'Gatilho personalizado (opcional)',
+    journalNote:'Nota de diário', journalPlaceholder:'Como foi o dia? Vitórias, desafios, insights...',
+    saveCheckin:'Salvar registro',
+    wentWell:'O que correu bem?', wentWellPh:'Vitórias, momentos de disciplina...',
+    hardest:'O que foi mais difícil?', hardestPh:'Desafios, tentações...',
+    noticed:'O que notaste em ti mesmo?', noticedPh:'Padrões, insights...',
+    intention:'Intenção para a próxima semana', intentionPh:'Um foco ou compromisso...',
+    saveReview:'Salvar revisão semanal', backDaily:'Voltar ao registro diário',
+    weeklyReview:'Revisão semanal', weeklyReviewSub:'Tira 5 minutos para refletir honestamente.',
+    histAll:'Tudo', histDaily:'Diário', histWeekly:'Semanal',
+    exportCsv:'⬇ Exportar CSV',
+    allPhases:'Todas as fases',
+    pranayama:'🌬️ Pranayama', meditation:'🧘 Meditação', poses:'🐎 Posturas',
+    settings:'Configurações', language:'Idioma', colourTheme:'Tema de cor',
+    bugReport:'Reportar bug', bugDesc:'Encontrou um problema? Descreve e envia ao desenvolvedor.',
+    bugPlaceholder:'Descreve o bug ou erro...', sendBug:'Enviar relatório',
+    supportApp:'Apoiar a app',
+    installApp:'Instalar app',
+    pickDate:'📅 Definir data',
+    sosBtn:'🌊 Estou sentindo um impulso — surfar agora',
+    survived:'✓ Surfei — o impulso passou',
+    backToApp:'← Voltar à app',
+    startBreathing:'Iniciar respiração', stop:'Parar',
+    startCountdown:'Iniciar contagem regressiva',
+    nextAffirmation:'Próxima afirmação',
+    beginMed:'▶ Começar', stopMed:'■ Parar',
+    greetMorning:'Bom dia', greetAfternoon:'Boa tarde', greetEvening:'Boa noite',
+    whatCall:'Como devemos chamar-te?', yourName:'Teu nome', letsGo:'Vamos! 🔥', skipNow:'Ignorar por agora',
+    welcomeTitle:'Bem-vindo ao The Transmute App',
+    toastCheckin:'Registro salvo ✓', toastReview:'Revisão semanal salva ✓',
+    toastStreakSet:'Sequência definida — dia ', toastStreakReset:'Sequência reiniciada. Começa de novo.',
+    toastBugThanks:'Obrigado pelo teu relatório! Vamos analisar.',
+    toastNoBug:'Por favor descreve o bug primeiro',
+    toastNoData:'Ainda sem dados para exportar.',
+    toastLang:'Idioma atualizado',
+    toastFutureDate:'A data não pode ser no futuro',
+    toastPickDate:'Por favor escolhe uma data',
+    toastReshuffle:'Histórias embaralhadas 🔀',
+    confirmReset:'Reiniciar sequência? Isto irá apagar tua data de início.',
+  },
+  ar: {
+    tabHome:'اليوم', tabSos:'SOS', tabStories:'قصص', tabTransmute:'التحويل', tabPhases:'المراحل',
+    days:'أيام',
+    bestStreak:'أفضل سلسلة', checkIns:'تسجيلات', avgEnergy:'متوسط الطاقة',
+    latestCheckin:'آخر تسجيل', noCheckins:'لا تسجيلات بعد',
+    noCheckinsBody:'اضغط على البطاقة أدناه\nلأول تسجيل لك',
+    howFeeling:'كيف تشعر الآن؟', tapMood:'اضغط على مزاج لتسجيله',
+    fullCheckin:'تسجيل كامل →',
+    weeklyDue:'المراجعة الأسبوعية مستحقة', weeklyDueSub:'مرت 7+ أيام منذ آخر مراجعة.',
+    startWeeklyReview:'بدء المراجعة الأسبوعية',
+    streakStartDate:'تاريخ بدء السلسلة',
+    setStartDate:'تعيين تاريخ البدء', reset:'↺ إعادة تعيين',
+    energy:'الطاقة', clarity:'الوضوح الذهني', urgeIntensity:'شدة الرغبة', socialConf:'الثقة الاجتماعية',
+    triggersToday:'محفزات الرغبة اليوم؟',
+    customTrigger:'محفز مخصص (اختياري)',
+    journalNote:'ملاحظة اليومية', journalPlaceholder:'كيف كان يومك؟ انتصارات، تحديات، أفكار...',
+    saveCheckin:'حفظ التسجيل',
+    wentWell:'ما الذي سار بشكل جيد؟', wentWellPh:'انتصارات، لحظات انضباط...',
+    hardest:'ما كان الأصعب؟', hardestPh:'تحديات، إغراءات...',
+    noticed:'ماذا لاحظت في نفسك؟', noticedPh:'أنماط، أفكار...',
+    intention:'نيتك للأسبوع القادم', intentionPh:'تركيز أو التزام واحد...',
+    saveReview:'حفظ المراجعة الأسبوعية', backDaily:'العودة للتسجيل اليومي',
+    weeklyReview:'المراجعة الأسبوعية', weeklyReviewSub:'خذ 5 دقائق للتأمل بصدق.',
+    histAll:'الكل', histDaily:'يومي', histWeekly:'أسبوعي',
+    exportCsv:'⬇ تصدير CSV',
+    allPhases:'جميع المراحل',
+    pranayama:'🌬️ برانياما', meditation:'🧘 تأمل', poses:'🐎 أوضاع',
+    settings:'الإعدادات', language:'اللغة', colourTheme:'لون الثيم',
+    bugReport:'الإبلاغ عن خطأ', bugDesc:'وجدت مشكلة؟ صفها وأرسلها للمطور.',
+    bugPlaceholder:'صف الخطأ أو المشكلة...', sendBug:'إرسال التقرير',
+    supportApp:'دعم التطبيق',
+    installApp:'تثبيت التطبيق',
+    pickDate:'📅 تعيين التاريخ',
+    sosBtn:'🌊 أشعر برغبة — اركبها الآن',
+    survived:'✓ تجاوزتها — الرغبة مضت',
+    backToApp:'← العودة للتطبيق',
+    startBreathing:'بدء التنفس', stop:'إيقاف',
+    startCountdown:'بدء العد التنازلي',
+    nextAffirmation:'التأكيد التالي',
+    beginMed:'▶ ابدأ', stopMed:'■ إيقاف',
+    greetMorning:'صباح الخير', greetAfternoon:'مساء الخير', greetEvening:'مساء النور',
+    whatCall:'ماذا نناديك؟', yourName:'اسمك', letsGo:'هيا! 🔥', skipNow:'تخطي الآن',
+    welcomeTitle:'مرحباً بك في The Transmute App',
+    toastCheckin:'تم حفظ التسجيل ✓', toastReview:'تم حفظ المراجعة الأسبوعية ✓',
+    toastStreakSet:'تم تعيين السلسلة — يوم ', toastStreakReset:'تمت إعادة تعيين السلسلة. ابدأ من جديد.',
+    toastBugThanks:'شكراً على تقريرك! سننظر فيه.',
+    toastNoBug:'يرجى وصف المشكلة أولاً',
+    toastNoData:'لا توجد بيانات للتصدير بعد.',
+    toastLang:'تم تحديث اللغة',
+    toastFutureDate:'لا يمكن أن يكون التاريخ في المستقبل',
+    toastPickDate:'يرجى اختيار تاريخ',
+    toastReshuffle:'تم خلط القصص 🔀',
+    confirmReset:'إعادة تعيين سلسلتك؟ سيؤدي ذلك إلى مسح تاريخ البدء.',
+  }
+};
+
+let curLang = localStorage.getItem('sr_lang') || 'en';
+function t(key) { return (TRANSLATIONS[curLang] || TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key; }
+
+function applyLang() {
+  const isRtl = curLang === 'ar';
+  document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', curLang);
+
+  const set = (id, text) => { const el = document.getElementById(id); if(el) el.textContent = text; };
+  const setPlaceholder = (id, text) => { const el = document.getElementById(id); if(el) el.placeholder = text; };
+  const setHtml = (id, html) => { const el = document.getElementById(id); if(el) el.innerHTML = html; };
+
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  const tabKeys = ['tabHome','tabSos','tabStories','tabTransmute','tabPhases'];
+  const tabOrder = ['home','urge','stories','transmute','phases'];
+  tabs.forEach(tab => {
+    const idx = tabOrder.indexOf(tab.dataset.tab);
+    if(idx >= 0) {
+      const ic = tab.querySelector('.tab-ic');
+      const icText = ic ? ic.textContent : '';
+      tab.innerHTML = `<span class="tab-ic">${icText}</span>${t(tabKeys[idx])}`;
+    }
+  });
+
+  // Header
+  set('hdr-date', new Date().toLocaleDateString(curLang === 'en' ? 'en-GB' : curLang, {weekday:'long',day:'numeric',month:'long'}));
+
+  // Metrics
+  const bestEl = document.querySelector('#m-best')?.parentElement?.querySelector('.m-lbl');
+  const entriesEl = document.querySelector('#m-entries')?.parentElement?.querySelector('.m-lbl');
+  const energyEl = document.querySelector('#m-energy')?.parentElement?.querySelector('.m-lbl');
+  if(bestEl) bestEl.textContent = t('bestStreak');
+  if(entriesEl) entriesEl.textContent = t('checkIns');
+  if(energyEl) energyEl.textContent = t('avgEnergy');
+
+  // Home labels
+  const latestLbl = document.querySelector('#latest')?.previousElementSibling;
+  if(latestLbl && latestLbl.classList.contains('lbl')) latestLbl.textContent = t('latestCheckin');
+
+  // Streak "days" label
+  const sdayEl = document.querySelector('.aura-inner .sday');
+  if(sdayEl) sdayEl.textContent = t('days');
+
+  // Quick checkin card
+  const qcTitle = document.querySelector('#quick-checkin-card [style*="font-size:15px"]');
+  if(qcTitle) qcTitle.textContent = t('howFeeling');
+  const qcSub = document.querySelector('#quick-checkin-card [style*="font-size:11px"]');
+  if(qcSub) qcSub.textContent = t('tapMood');
+
+  // Buttons - home
+  const pickBtn = document.getElementById('pick-date-btn');
+  if(pickBtn) pickBtn.textContent = t('pickDate');
+  const resetBtn = document.getElementById('reset-btn');
+  if(resetBtn) resetBtn.textContent = t('reset');
+  const setDateBtn = document.getElementById('set-date-btn');
+  if(setDateBtn) setDateBtn.textContent = t('setStartDate');
+  const startRevBtn = document.getElementById('start-rev-btn');
+  if(startRevBtn) startRevBtn.textContent = t('startWeeklyReview');
+
+  // Weekly prompt
+  const wpEl = document.querySelector('#wprompt .w-banner p:first-child');
+  if(wpEl) wpEl.textContent = t('weeklyDue');
+  const wpEl2 = document.querySelector('#wprompt .w-banner p:last-child');
+  if(wpEl2) wpEl2.textContent = t('weeklyDueSub');
+
+  // Streak start date label
+  const sdLabel = document.querySelector('#date-block .lbl');
+  if(sdLabel) sdLabel.textContent = t('streakStartDate');
+
+  // Check-in
+  const moodLbl = document.querySelector('#s-checkin .card:first-child .lbl');
+  if(moodLbl) moodLbl.textContent = t('howFeeling');
+
+  // Sliders
+  const slRows = document.querySelectorAll('.sl-row');
+  const slKeys = ['energy','clarity','urgeIntensity','socialConf'];
+  const slIds = ['ev','cv','uv','sv'];
+  slRows.forEach((row, i) => {
+    if(i < slKeys.length) {
+      const lbl = row.querySelector('.sl-lbl');
+      if(lbl) {
+        const span = lbl.querySelector('span');
+        const val = span ? span.textContent : '5';
+        lbl.innerHTML = t(slKeys[i]) + ' <span id="' + slIds[i] + '">' + val + '</span>/10';
+      }
+    }
+  });
+
+  // Trigger grid label
+  const trigLbl = document.querySelector('#trig-grid')?.previousElementSibling;
+  if(trigLbl && trigLbl.classList.contains('lbl')) trigLbl.textContent = t('triggersToday');
+  setPlaceholder('ctrig', t('customTrigger'));
+
+  // Journal
+  const jLbl = document.querySelector('#jnote')?.previousElementSibling;
+  if(jLbl && jLbl.classList.contains('lbl')) jLbl.textContent = t('journalNote');
+  setPlaceholder('jnote', t('journalPlaceholder'));
+  set('save-btn', t('saveCheckin'));
+
+  // Weekly review form
+  const revTitle = document.querySelector('#weekly-form .w-banner p:first-child');
+  const revSub = document.querySelector('#weekly-form .w-banner p:last-child');
+  if(revTitle) revTitle.textContent = t('weeklyReview');
+  if(revSub) revSub.textContent = t('weeklyReviewSub');
+  const wLabels = document.querySelectorAll('#weekly-form .lbl');
+  const wKeys = ['wentWell','hardest','noticed','intention'];
+  wLabels.forEach((el,i) => { if(i < wKeys.length) el.textContent = t(wKeys[i]); });
+  setPlaceholder('rq1', t('wentWellPh'));
+  setPlaceholder('rq2', t('hardestPh'));
+  setPlaceholder('rq3', t('noticedPh'));
+  setPlaceholder('rq4', t('intentionPh'));
+  set('save-rev-btn', t('saveReview'));
+  set('back-daily-btn', t('backDaily'));
+
+  // History filters
+  set('hf-all', t('histAll'));
+  set('hf-daily', t('histDaily'));
+  set('hf-weekly', t('histWeekly'));
+  set('export-btn', t('exportCsv'));
+
+  // Phases
+  const allPhasesLbl = document.querySelector('#s-phases .lbl');
+  if(allPhasesLbl) allPhasesLbl.textContent = t('allPhases');
+
+  // Transmute nav
+  const trBtns = document.querySelectorAll('.tr-nav');
+  const trKeys = ['pranayama','meditation','poses'];
+  trBtns.forEach((btn,i) => { if(i < trKeys.length) btn.textContent = t(trKeys[i]); });
+
+  // SOS tab
+  set('sos-btn', t('sosBtn'));
+  const survivedBtn = document.getElementById('u-survived-btn');
+  if(survivedBtn) survivedBtn.textContent = t('survived');
+  const backBtns = document.querySelectorAll('.survived-btn:not(.green)');
+  backBtns.forEach(b => { if(b.textContent.includes('←')) b.textContent = t('backToApp'); });
+  const breathBtn = document.getElementById('u-breath-btn');
+  if(breathBtn && breathBtn.textContent !== t('stop')) breathBtn.textContent = t('startBreathing');
+  const timerBtn = document.getElementById('u-timer-btn');
+  if(timerBtn && timerBtn.textContent !== t('stop')) timerBtn.textContent = t('startCountdown');
+  set('u-next-affirm', t('nextAffirmation'));
+
+  // Meditation
+  const medBtn = document.getElementById('med-btn');
+  if(medBtn && !medRunning) medBtn.textContent = t('beginMed');
+  set('med-stop', t('stopMed'));
+
+  // Settings panel
+  const sTitle = document.querySelector('.s-panel > div > span');
+  if(sTitle) sTitle.textContent = t('settings');
+  const sLabels = document.querySelectorAll('.s-panel .lbl');
+  sLabels.forEach(el => {
+    const txt = el.textContent.replace(/\s*\(.*\)/, '').trim();
+    if(txt === 'Install app' || txt === t('installApp') || el.textContent.includes('Install')) el.firstChild.textContent = t('installApp');
+    else if(txt === 'Language' || el.textContent.includes('Language') || el.textContent.includes('Langue') || el.textContent.includes('Sprache') || el.textContent.includes('Idioma') || el.textContent.includes('اللغة')) {
+      // preserve the "(coming soon)" span
+      const span = el.querySelector('span');
+      el.firstChild.textContent = t('language') + ' ';
+    }
+    else if(txt === 'Colour theme' || txt === t('colourTheme')) el.textContent = t('colourTheme');
+    else if(txt === 'Bug report' || txt === t('bugReport')) el.textContent = t('bugReport');
+    else if(txt === 'Support the app' || txt === t('supportApp')) el.textContent = t('supportApp');
+  });
+  const bugDescEl = document.querySelector('#bug-txt')?.previousElementSibling;
+  if(bugDescEl && bugDescEl.tagName === 'P') bugDescEl.textContent = t('bugDesc');
+  setPlaceholder('bug-txt', t('bugPlaceholder'));
+  set('send-bug', t('sendBug'));
+
+  // Name modal
+  set('name-save', t('letsGo'));
+  set('name-skip', t('skipNow'));
+  const nameSub = document.querySelector('#name-modal [style*="font-size:14px"]');
+  if(nameSub) nameSub.textContent = t('whatCall');
+  const nameTitle = document.querySelector('#name-modal [style*="font-size:20px"]');
+  if(nameTitle) nameTitle.textContent = t('welcomeTitle');
+  setPlaceholder('name-input', t('yourName'));
+
+  // Update greeting
+  updateGreeting();
+}
 
 // ===================== DATA =====================
 const QUOTES = [
@@ -1241,7 +1750,7 @@ function saveEntry() {
   document.getElementById('ctrig').value = '';
   document.querySelectorAll('.mbtn.on, .trig-btn.on').forEach(b => b.classList.remove('on'));
   S.mood = null;
-  toast('Check-in saved ✓');
+  toast(t('toastCheckin'));
   goTab('home');
 }
 
@@ -1256,7 +1765,7 @@ function saveReview() {
     intention:document.getElementById('rq4').value.trim()};
   S.reviews.push(r); S.entries.push(r); save(); hideReview(); updateHome();
   ['rq1','rq2','rq3','rq4'].forEach(id => document.getElementById(id).value = '');
-  toast('Weekly review saved ✓'); goTab('home');
+  toast(t('toastReview')); goTab('home');
 }
 
 // ===================== HISTORY =====================
@@ -1362,7 +1871,7 @@ function closeSettings() { document.getElementById('s-overlay').style.display = 
 
 function showBugThankyou() {
   // Show toast immediately - always visible
-  toast('Thank you for your report! We will look into it.');
+  toast(t('toastBugThanks'));
   // Also try to show the card if settings panel is open
   setTimeout(function() {
     const el = document.getElementById('bug-thankyou');
@@ -1375,7 +1884,7 @@ function showBugThankyou() {
 
 function sendBug() {
   const msg = document.getElementById('bug-txt').value.trim();
-  if(!msg) { toast('Please describe the bug first'); return; }
+  if(!msg) { toast(t('toastNoBug')); return; }
   const btn = document.getElementById('send-bug');
   if(btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
 
@@ -1414,7 +1923,7 @@ function sendBug() {
 
 function exportCSV() {
   const daily = S.entries.filter(e => e.type === 'daily');
-  if(!daily.length) { toast('No data to export yet.'); return; }
+  if(!daily.length) { toast(t('toastNoData')); return; }
   const rows = [['Date','Day','Mood','Energy','Clarity','Urge','Social','Triggers','Note'],
     ...daily.map(e => [new Date(e.date).toLocaleDateString('en-GB'),e.day,e.mood,e.energy,e.clarity,e.urge,e.social,(e.triggers||[]).join('|'),e.note||''])];
   const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
@@ -2022,7 +2531,7 @@ function updateGreeting() {
   if(!el) return;
   if(name) {
     const h = new Date().getHours();
-    const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+    const greet = h < 12 ? t('greetMorning') : h < 17 ? t('greetAfternoon') : t('greetEvening');
     el.textContent = greet + ', ' + name;
     el.style.display = 'block';
   } else {
@@ -2051,6 +2560,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Apply theme
   applyTheme(curTheme);
+
+  // Apply saved language
+  applyLang();
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === curLang));
 
   // Quotes
   goQ(0);
@@ -2090,9 +2603,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // ---- LANG ----
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', function() {
-      localStorage.setItem('sr_lang', this.dataset.lang);
-      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === this.dataset.lang));
-      toast('Language updated');
+      curLang = this.dataset.lang;
+      localStorage.setItem('sr_lang', curLang);
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === curLang));
+      applyLang();
+      toast(t('toastLang'));
     });
   });
 
@@ -2140,15 +2655,15 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   document.getElementById('set-date-btn').addEventListener('click', function() {
     const val = document.getElementById('date-input').value;
-    if(!val) { toast('Please pick a date'); return; }
-    if(new Date(val) > new Date()) { toast("Start date can't be in the future"); return; }
+    if(!val) { toast(t('toastPickDate')); return; }
+    if(new Date(val) > new Date()) { toast(t('toastFutureDate')); return; }
     S.startDate = val; save(); updateHome();
     document.getElementById('date-block').style.display = 'none';
-    toast('Streak set — day ' + calcStreak() + ' 🔥');
+    toast(t('toastStreakSet') + calcStreak() + ' 🔥');
   });
   document.getElementById('reset-btn').addEventListener('click', function() {
-    if(confirm('Reset your streak? This will clear your start date.')) {
-      S.startDate = null; save(); updateHome(); toast('Streak reset. Start again.');
+    if(confirm(t('confirmReset'))) {
+      S.startDate = null; save(); updateHome(); toast(t('toastStreakReset'));
     }
   });
 
@@ -2166,7 +2681,7 @@ document.addEventListener('DOMContentLoaded', function() {
     storyIdx = (storyIdx - 1 + stories.length) % stories.length; renderStory();
   });
   document.getElementById('sshuffle').addEventListener('click', function() {
-    shuffle(stories); storyIdx = 0; renderStory(); toast('Stories reshuffled 🔀');
+    shuffle(stories); storyIdx = 0; renderStory(); toast(t('toastReshuffle'));
   });
   // Swipe
   let tx = 0;
