@@ -32,15 +32,15 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .hdr-date{font-size:12px;color:var(--ts);}
 .cogbtn{border:none;background:rgba(255,255,255,0.06);cursor:pointer;font-size:18px;padding:8px;color:var(--ts);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
 .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 110px;}
-.tabs{display:flex;background:rgba(19,19,30,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid var(--bd);padding:10px 16px max(10px,env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:480px;margin:0 auto;gap:4px;}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:9px;font-weight:500;border-radius:14px;transition:all .2s;}
-.tab.on{color:white;background:var(--ac);}
+.tabs{display:flex;background:rgba(10,9,18,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:.5px solid rgba(255,255,255,0.06);padding:10px 12px max(10px,env(safe-area-inset-bottom));position:fixed;bottom:0;left:0;right:0;z-index:100;max-width:480px;margin:0 auto;gap:4px;}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:9px;font-weight:600;border-radius:14px;transition:all .2s;letter-spacing:.02em;}
+.tab.on{color:white;background:linear-gradient(135deg,var(--ac),var(--acd));box-shadow:0 4px 14px rgba(108,92,231,0.4);}
 .tab-ic{font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;}.tab-ic svg{display:block;}
 .sec{display:none;opacity:0;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;}
   .sec.on{display:block;animation:secFadeIn .2s ease forwards;}
   @keyframes secFadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-.card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r3);padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
-.lbl{font-size:11px;font-weight:700;color:var(--ts);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.card{background:linear-gradient(160deg,rgba(22,20,38,0.95),rgba(13,13,20,0.98));border:.5px solid rgba(255,255,255,0.07);border-radius:var(--r3);padding:18px;margin-bottom:12px;box-shadow:0 4px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04);}
+.lbl{font-size:10px;font-weight:700;color:var(--tt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
 /* Streak card */
 .streak-block{display:flex;align-items:flex-start;gap:14px;}
 .streak-left{flex-shrink:0;text-align:center;min-width:120px;}
@@ -70,8 +70,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .bd365{background:linear-gradient(135deg,rgba(255,255,255,0.18),rgba(180,220,255,0.14));color:#F0F8FF;border:.5px solid rgba(200,230,255,0.7);box-shadow:0 0 18px rgba(200,220,255,0.4),0 0 36px rgba(200,220,255,0.15);animation:lgnd 2.5s ease-in-out infinite;}
 @keyframes lgnd{0%,100%{box-shadow:0 0 14px rgba(200,220,255,0.35),0 0 28px rgba(200,220,255,0.12);}50%{box-shadow:0 0 24px rgba(200,220,255,0.6),0 0 48px rgba(200,220,255,0.25);}}
 /* Quote */
-.q-side{flex:1;border-left:2px solid var(--ac4);padding-left:12px;}
-.q-text{font-size:12px;color:var(--ac2);line-height:1.6;font-style:italic;min-height:56px;}
+.q-side{flex:1;border-left:1.5px solid rgba(108,92,231,0.35);padding-left:14px;}
+.q-text{font-size:12px;color:rgba(196,188,255,0.85);line-height:1.7;font-style:italic;min-height:56px;}
 .q-nav{display:flex;align-items:center;gap:4px;margin-top:8px;}
 .qbtn{border:none;background:transparent;cursor:pointer;color:var(--ts);font-size:18px;padding:2px 4px;}
 .qdots{display:flex;gap:3px;flex:1;}
@@ -79,9 +79,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .qdot.on{background:var(--ac4);}
 /* Metrics */
 .m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;}
-.metric{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r2);padding:16px 8px;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
-.m-val{font-size:22px;font-weight:700;color:var(--tx);}
-.m-lbl{font-size:10px;color:var(--ts);margin-top:4px;font-weight:500;}
+.metric{background:linear-gradient(160deg,rgba(22,20,38,0.95),rgba(13,13,20,0.98));border:.5px solid rgba(255,255,255,0.07);border-radius:var(--r2);padding:16px 8px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.04);}
+.m-val{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.5px;}
+.m-lbl{font-size:10px;color:var(--tt);margin-top:4px;font-weight:500;letter-spacing:.02em;}
 /* Check-in */
 .mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:4px;}
 .mbtn{border:.5px solid var(--bds);background:rgba(255,255,255,0.03);border-radius:var(--r2);padding:10px 2px;cursor:pointer;text-align:center;font-size:10px;color:var(--ts);font-family:'Inter',sans-serif;font-weight:500;-webkit-appearance:none;}
@@ -793,10 +793,10 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <!-- HOME STATE -->
       <div id="urge-home">
         <div class="card" style="text-align:center;padding:20px;">
-          <div style="font-size:44px;margin-bottom:10px;">🌊</div>
-          <div style="font-size:16px;font-weight:600;color:var(--tx);margin-bottom:6px;">Urge Surfing</div>
+          <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,rgba(108,92,231,0.3),rgba(72,52,200,0.15));border:.5px solid rgba(108,92,231,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;box-shadow:0 0 24px rgba(108,92,231,0.25);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(196,188,255,0.9)" stroke-width="1.8" stroke-linecap="round"><path d="M2 12c2-5 4-5 6 0s4 5 6 0 4-5 6 0"/><path d="M2 17c2-4 4-4 6 0s4 4 6 0 4-4 6 0" opacity=".4"/></svg></div>
+          <div style="font-size:16px;font-weight:700;color:var(--tx);margin-bottom:6px;letter-spacing:-.2px;">Urge Surfing</div>
           <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:16px;">The average urge peaks and passes in <strong style="color:var(--tx)">3–7 minutes.</strong> You don't need to fight it — just ride the wave.</div>
-          <button class="urge-sos-btn" id="sos-btn">🌊 I'm feeling an urge — surf it now</button>
+          <button class="urge-sos-btn" id="sos-btn">Surf it now →</button>
           <div style="background:var(--bg);border-radius:10px;padding:12px;font-size:12px;color:var(--ts);line-height:1.6;">Urges are like ocean waves — they build, peak, and always break. Open this the moment one starts.</div>
         <div style="display:flex;gap:8px;margin-top:10px;">
           <div style="flex:1;background:linear-gradient(135deg,rgba(108,92,231,0.2),rgba(72,52,200,0.1));border:.5px solid rgba(108,92,231,0.3);border-radius:12px;padding:10px;text-align:center;">
@@ -1170,7 +1170,7 @@ const TRANSLATIONS = {
     supportApp:'Support the app',
     installApp:'Install app',
     pickDate:'📅 Set start date',
-    sosBtn:'🌊 I\'m feeling an urge — surf it now',
+    sosBtn:'Surf it now →',
     survived:'✓ I surfed it — urge has passed',
     backToApp:'← Back to app',
     startBreathing:'Start breathing', stop:'Stop',
