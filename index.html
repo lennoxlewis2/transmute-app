@@ -279,18 +279,28 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws-step:last-child{margin-bottom:0;}
   .ws-step-ic{font-size:20px;flex-shrink:0;}
   /* Paywall */
-  .paywall{position:fixed;inset:0;background:rgba(8,6,21,0.97);z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+  .paywall{position:fixed;inset:0;z-index:900;display:flex;flex-direction:column;overflow:hidden;}
   .paywall.hidden{display:none;}
-  .pw-icon{font-size:64px;margin-bottom:16px;}
-  .pw-badge{display:inline-block;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px;}
-  .pw-title{font-size:26px;font-weight:800;color:white;margin-bottom:10px;line-height:1.2;letter-spacing:-.4px;}
-  .pw-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;max-width:300px;margin-bottom:24px;}
-  .pw-perks{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-bottom:28px;text-align:left;}
-  .pw-perk{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,0.85);}
-  .pw-perk-ic{font-size:20px;flex-shrink:0;}
-  .pw-btn{width:100%;max-width:340px;padding:17px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;border:none;border-radius:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:10px;-webkit-appearance:none;box-shadow:0 6px 24px rgba(255,165,0,0.35);}
-  .pw-restore{background:transparent;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;padding:8px;display:block;width:100%;text-align:center;}
-  .pw-price{font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:16px;}
+  .pw-ghost{position:absolute;inset:0;filter:blur(6px) brightness(0.3);pointer-events:none;overflow:hidden;}
+  .pw-ghost-inner{padding:60px 20px 20px;opacity:0.6;}
+  .pw-overlay{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 24px 0;text-align:center;overflow-y:auto;background:linear-gradient(to bottom,rgba(8,6,21,0.3) 0%,rgba(8,6,21,0.92) 18%,rgba(8,6,21,0.98) 35%);}
+  .pw-streak-warning{background:linear-gradient(135deg,rgba(226,75,74,0.2),rgba(226,75,74,0.1));border:1px solid rgba(226,75,74,0.4);border-radius:16px;padding:14px 18px;margin-bottom:20px;width:100%;max-width:320px;}
+  .pw-streak-num{font-size:32px;font-weight:800;color:#F09595;line-height:1;}
+  .pw-streak-label{font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;}
+  .pw-streak-msg{font-size:13px;color:rgba(255,160,160,0.8);margin-top:8px;line-height:1.5;}
+  .pw-badge{display:inline-block;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:12px;}
+  .pw-title{font-size:24px;font-weight:800;color:white;margin-bottom:8px;line-height:1.2;letter-spacing:-.4px;}
+  .pw-fear{background:rgba(255,255,255,0.04);border:.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;width:100%;max-width:320px;margin-bottom:16px;text-align:left;}
+  .pw-fear-title{font-size:11px;font-weight:700;color:rgba(255,100,100,0.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+  .pw-fear-item{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;padding-left:14px;position:relative;}
+  .pw-fear-item::before{content:'→';position:absolute;left:0;color:rgba(226,75,74,0.6);}
+  .pw-perks{display:flex;flex-direction:column;gap:8px;width:100%;max-width:320px;margin-bottom:20px;text-align:left;}
+  .pw-perk{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.8);}
+  .pw-perk-ic{font-size:18px;flex-shrink:0;}
+  .pw-footer{position:sticky;bottom:0;padding:16px 24px max(20px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(8,6,21,1) 70%,transparent);width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .pw-btn{width:100%;max-width:340px;padding:17px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;border:none;border-radius:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;-webkit-appearance:none;box-shadow:0 6px 24px rgba(255,165,0,0.4);}
+  .pw-price{font-size:12px;color:rgba(255,255,255,0.3);}
+  .pw-restore{background:transparent;border:none;color:rgba(255,255,255,0.25);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;padding:4px;}
 
   .tabs{touch-action:none;user-select:none;-webkit-user-select:none;}
   .tab{transition:transform 0.18s cubic-bezier(.34,1.4,.64,1),opacity 0.15s,background 0.15s;}
@@ -1827,7 +1837,7 @@ function _hidePaywall() {
 
 // ===================== TABS =====================
 function goTab(id) {
-  if(id === 'urge' && _trialExpired()) { _showPaywall(); return; }
+  if(id === 'urge' && _trialExpired()) { if(window._showPaywall) window._showPaywall(); else document.getElementById('uw-paywall').classList.remove('hidden'); return; }
   document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   const sec = document.getElementById('s-' + id);
@@ -3301,28 +3311,74 @@ window.addEventListener('popstate', function(e) {
 
 <!-- URGE WAVE PAYWALL -->
 <div class="paywall hidden" id="uw-paywall">
-  <div class="pw-icon">🌊</div>
-  <div class="pw-badge">⭐ Premium Feature</div>
-  <div class="pw-title">Your free trial<br>has ended.</div>
-  <div class="pw-sub">You've had 7 days with Urge Wave. You know what it does. Now keep it — before the next urge hits.</div>
-  <div class="pw-perks">
-    <div class="pw-perk"><span class="pw-perk-ic">🎯</span>Real-time breath-paced urge surfing</div>
-    <div class="pw-perk"><span class="pw-perk-ic">⏱️</span>Intensity tracker that shows urges pass</div>
-    <div class="pw-perk"><span class="pw-perk-ic">🧘</span>Grounding & redirect tools in the moment</div>
-    <div class="pw-perk"><span class="pw-perk-ic">📊</span>Pattern tracking over time</div>
-    <div class="pw-perk"><span class="pw-perk-ic">🔒</span>Unlimited SOS access, forever</div>
+  <!-- Blurred ghost of SOS screen behind -->
+  <div class="pw-ghost">
+    <div class="pw-ghost-inner">
+      <div style="font-size:48px;text-align:center;margin-bottom:12px;">🌊</div>
+      <div style="font-size:22px;font-weight:700;color:white;text-align:center;margin-bottom:8px;">Urge Wave</div>
+      <div style="background:rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:12px;">
+        <div style="font-size:14px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:16px;">How intense is this urge right now?</div>
+        <div style="height:8px;background:linear-gradient(90deg,#6C5CE7,#E24B4A);border-radius:4px;margin-bottom:20px;"></div>
+        <div style="font-size:28px;text-align:center;">😤</div>
+      </div>
+      <div style="background:#E24B4A;border-radius:16px;padding:18px;text-align:center;color:white;font-size:16px;font-weight:700;">🌊 Surf this urge now</div>
+    </div>
   </div>
-  <button class="pw-btn" id="pw-unlock-btn">🔓 Unlock Urge Wave</button>
-  <div class="pw-price">One-time unlock · £2.99 · Yours forever</div>
-  <button class="pw-restore" id="pw-restore-btn">Already paid? Restore access</button>
+
+  <!-- Overlay content -->
+  <div class="pw-overlay">
+    <div class="pw-streak-warning" id="pw-streak-warning">
+      <div class="pw-streak-num" id="pw-streak-num">0</div>
+      <div class="pw-streak-label">days built</div>
+      <div class="pw-streak-msg">An urge is coming. Without this tool, you're on your own.</div>
+    </div>
+
+    <div class="pw-badge">🔒 Locked</div>
+    <div class="pw-title">Trial over.<br>Urges aren't.</div>
+
+    <div class="pw-fear">
+      <div class="pw-fear-title">Without Urge Wave</div>
+      <div class="pw-fear-item">Urges feel impossible to resist alone</div>
+      <div class="pw-fear-item">One weak moment wipes out your streak</div>
+      <div class="pw-fear-item">No tool to ground you when it matters most</div>
+    </div>
+
+    <div class="pw-perks">
+      <div class="pw-perk"><span class="pw-perk-ic">🎯</span>Breath-paced urge surfing in real time</div>
+      <div class="pw-perk"><span class="pw-perk-ic">⏱️</span>Intensity tracker — watch the urge pass</div>
+      <div class="pw-perk"><span class="pw-perk-ic">🧘</span>Grounding & redirect tools on demand</div>
+      <div class="pw-perk"><span class="pw-perk-ic">🔓</span>Unlimited SOS access, forever</div>
+    </div>
+
+    <div style="height:120px;"></div>
+  </div>
+
+  <div class="pw-footer">
+    <button class="pw-btn" id="pw-unlock-btn">🔓 Unlock Urge Wave — £2.99</button>
+    <div class="pw-price">One-time · No subscription · Yours forever</div>
+    <button class="pw-restore" id="pw-restore-btn">Already paid? Restore access</button>
+  </div>
 </div>
 
 <script>
 (function(){
   var unlockBtn = document.getElementById('pw-unlock-btn');
   var restoreBtn = document.getElementById('pw-restore-btn');
-  // Payment link — replace this URL with your Stripe payment link when ready
   var PAYMENT_URL = 'https://buy.stripe.com/REPLACE_ME';
+
+  // Populate streak number when paywall opens
+  window._showPaywall = function() {
+    var streakEl = document.getElementById('pw-streak-num');
+    if(streakEl) {
+      var s = JSON.parse(localStorage.getItem('sr_state') || '{}');
+      var days = s.startDate ? Math.floor((Date.now() - new Date(s.startDate).getTime()) / 86400000) : 0;
+      streakEl.textContent = days;
+      var warn = document.getElementById('pw-streak-warning');
+      if(warn) warn.style.display = days > 0 ? '' : 'none';
+    }
+    document.getElementById('uw-paywall').classList.remove('hidden');
+  };
+
   if(unlockBtn) unlockBtn.addEventListener('click', function() {
     window.open(PAYMENT_URL, '_blank');
   });
