@@ -278,6 +278,19 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws-step{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:14px;color:rgba(255,255,255,0.85);}
   .ws-step:last-child{margin-bottom:0;}
   .ws-step-ic{font-size:20px;flex-shrink:0;}
+  /* Paywall */
+  .paywall{position:fixed;inset:0;background:rgba(8,6,21,0.97);z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+  .paywall.hidden{display:none;}
+  .pw-icon{font-size:64px;margin-bottom:16px;}
+  .pw-badge{display:inline-block;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px;}
+  .pw-title{font-size:26px;font-weight:800;color:white;margin-bottom:10px;line-height:1.2;letter-spacing:-.4px;}
+  .pw-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.7;max-width:300px;margin-bottom:24px;}
+  .pw-perks{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-bottom:28px;text-align:left;}
+  .pw-perk{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,0.85);}
+  .pw-perk-ic{font-size:20px;flex-shrink:0;}
+  .pw-btn{width:100%;max-width:340px;padding:17px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;border:none;border-radius:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:10px;-webkit-appearance:none;box-shadow:0 6px 24px rgba(255,165,0,0.35);}
+  .pw-restore{background:transparent;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;padding:8px;display:block;width:100%;text-align:center;}
+  .pw-price{font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:16px;}
 
   .tabs{touch-action:none;user-select:none;-webkit-user-select:none;}
   .tab{transition:transform 0.18s cubic-bezier(.34,1.4,.64,1),opacity 0.15s,background 0.15s;}
@@ -1797,8 +1810,24 @@ function updateHome() {
   document.getElementById('wprompt').style.display = (n > 0 && daysSinceReview >= 7) ? 'block' : 'none';
 }
 
+// ===================== TRIAL =====================
+const TRIAL_DAYS = 7;
+if(!localStorage.getItem('first_open')) localStorage.setItem('first_open', Date.now());
+function _trialExpired() {
+  if(localStorage.getItem('uw_unlocked')) return false;
+  const ms = Date.now() - parseInt(localStorage.getItem('first_open') || Date.now());
+  return ms > TRIAL_DAYS * 86400000;
+}
+function _showPaywall() {
+  document.getElementById('uw-paywall').classList.remove('hidden');
+}
+function _hidePaywall() {
+  document.getElementById('uw-paywall').classList.add('hidden');
+}
+
 // ===================== TABS =====================
 function goTab(id) {
+  if(id === 'urge' && _trialExpired()) { _showPaywall(); return; }
   document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   const sec = document.getElementById('s-' + id);
@@ -3268,6 +3297,46 @@ window.addEventListener('popstate', function(e) {
 
   // Already on home — let browser exit the app
 });
+</script>
+
+<!-- URGE WAVE PAYWALL -->
+<div class="paywall hidden" id="uw-paywall">
+  <div class="pw-icon">🌊</div>
+  <div class="pw-badge">⭐ Premium Feature</div>
+  <div class="pw-title">Your free trial<br>has ended.</div>
+  <div class="pw-sub">You've had 7 days with Urge Wave. You know what it does. Now keep it — before the next urge hits.</div>
+  <div class="pw-perks">
+    <div class="pw-perk"><span class="pw-perk-ic">🎯</span>Real-time breath-paced urge surfing</div>
+    <div class="pw-perk"><span class="pw-perk-ic">⏱️</span>Intensity tracker that shows urges pass</div>
+    <div class="pw-perk"><span class="pw-perk-ic">🧘</span>Grounding & redirect tools in the moment</div>
+    <div class="pw-perk"><span class="pw-perk-ic">📊</span>Pattern tracking over time</div>
+    <div class="pw-perk"><span class="pw-perk-ic">🔒</span>Unlimited SOS access, forever</div>
+  </div>
+  <button class="pw-btn" id="pw-unlock-btn">🔓 Unlock Urge Wave</button>
+  <div class="pw-price">One-time unlock · £2.99 · Yours forever</div>
+  <button class="pw-restore" id="pw-restore-btn">Already paid? Restore access</button>
+</div>
+
+<script>
+(function(){
+  var unlockBtn = document.getElementById('pw-unlock-btn');
+  var restoreBtn = document.getElementById('pw-restore-btn');
+  // Payment link — replace this URL with your Stripe payment link when ready
+  var PAYMENT_URL = 'https://buy.stripe.com/REPLACE_ME';
+  if(unlockBtn) unlockBtn.addEventListener('click', function() {
+    window.open(PAYMENT_URL, '_blank');
+  });
+  if(restoreBtn) restoreBtn.addEventListener('click', function() {
+    var code = prompt('Enter your unlock code:');
+    if(code && code.trim().toUpperCase() === 'TRANSMUTE99') {
+      localStorage.setItem('uw_unlocked', '1');
+      _hidePaywall();
+      goTab('urge');
+    } else if(code !== null) {
+      alert('Code not recognised. Contact support if you have already paid.');
+    }
+  });
+})();
 </script>
 </body>
 </html>
