@@ -1,12 +1,15 @@
 {
   "name": "The Transmute App",
   "short_name": "Transmute",
-  "description": "Semen retention personal check-in and mood tracker",
+  "description": "A personal habit and wellness tracker to build streaks, log moods, and track your progress.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#534AB7",
   "theme_color": "#534AB7",
+  "lang": "en",
+  "categories": ["health", "lifestyle"],
   "icons": [
     {
       "src": "icon-192.png",
