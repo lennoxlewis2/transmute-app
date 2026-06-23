@@ -3490,6 +3490,211 @@ window.addEventListener('popstate', function(e) {
 
   // Already on home — let browser exit the app
 });
+
+// ===================== TAB SLIDE TRANSITIONS =====================
+(function(){
+  const TAB_ORDER = ['home','urge','stories','transmute','phases'];
+  let currentTab = 'home';
+  const origGoTab = window.goTab;
+  window.goTab = function(id) {
+    const fromIdx = TAB_ORDER.indexOf(currentTab);
+    const toIdx   = TAB_ORDER.indexOf(id);
+    const dir     = toIdx > fromIdx ? 1 : -1;
+    const fromSec = document.getElementById('s-' + currentTab);
+    const toSec   = document.getElementById('s-' + id);
+    if(fromSec && toSec && id !== currentTab) {
+      fromSec.style.transition = 'none';
+      toSec.style.transition   = 'none';
+      toSec.style.transform    = `translateX(${dir * 100}%)`;
+      toSec.style.opacity      = '0';
+      toSec.style.display      = 'block';
+      requestAnimationFrame(() => {
+        fromSec.style.transition = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
+        toSec.style.transition   = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
+        fromSec.style.transform  = `translateX(${-dir * 100}%)`;
+        fromSec.style.opacity    = '0';
+        toSec.style.transform    = 'translateX(0)';
+        toSec.style.opacity      = '1';
+        setTimeout(() => {
+          fromSec.style.transform = '';
+          fromSec.style.opacity   = '';
+          fromSec.style.transition= '';
+          fromSec.style.display   = '';
+          toSec.style.transform   = '';
+          toSec.style.transition  = '';
+        }, 300);
+      });
+    }
+    currentTab = id;
+    origGoTab(id);
+  };
+})();
+
+// ===================== CONFETTI =====================
+(function(){
+  const canvas = document.createElement('canvas');
+  canvas.id = 'confetti-canvas';
+  canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;width:100%;height:100%;';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let particles = [], raf = null;
+  const COLORS = ['#6C5CE7','#C4BCFF','#FFD700','#FF6B35','#5DCAA5','#FF88EE','#80E8FF','#ffffff'];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  function spawnParticles(n) {
+    for(let i=0;i<n;i++) {
+      particles.push({
+        x: Math.random()*canvas.width,
+        y: -10 - Math.random()*canvas.height*0.3,
+        vx: (Math.random()-0.5)*6,
+        vy: 2 + Math.random()*5,
+        r: 4 + Math.random()*5,
+        color: COLORS[Math.floor(Math.random()*COLORS.length)],
+        rot: Math.random()*Math.PI*2,
+        rotV: (Math.random()-0.5)*0.2,
+        shape: Math.random() > 0.5 ? 'rect' : 'circle',
+        alpha: 1, life: 0,
+        maxLife: 90 + Math.random()*60
+      });
+    }
+  }
+  function tick() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles = particles.filter(p => p.life < p.maxLife);
+    if(!particles.length) { cancelAnimationFrame(raf); raf=null; return; }
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.12;
+      p.vx *= 0.99; p.rot += p.rotV; p.life++;
+      p.alpha = p.life < 20 ? p.life/20 : Math.max(0, 1-(p.life-p.maxLife*0.6)/(p.maxLife*0.4));
+      ctx.save(); ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      if(p.shape==='rect') ctx.fillRect(-p.r/2,-p.r*0.4,p.r,p.r*0.8);
+      else { ctx.beginPath(); ctx.arc(0,0,p.r*0.5,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    });
+    raf = requestAnimationFrame(tick);
+  }
+  window.fireConfetti = function(n) {
+    resize(); spawnParticles(n||120);
+    if(!raf) raf = requestAnimationFrame(tick);
+  };
+})();
+
+// Hook confetti + haptic into milestones and urge wins
+const _origCheckMilestone = window.checkMilestone;
+window.checkMilestone = function(n) {
+  _origCheckMilestone(n);
+  if(MILESTONES[n] && !localStorage.getItem('ms_' + (n-1) + '_conf_done')) {
+    // only fire if milestone was just newly hit
+  }
+};
+// Patch: fire confetti when milestone modal opens
+const msOverlay = document.getElementById('ms-overlay');
+if(msOverlay) {
+  const obs = new MutationObserver(() => {
+    if(msOverlay.classList.contains('on')) {
+      window.fireConfetti(160);
+      if(navigator.vibrate) navigator.vibrate([40,30,40,30,80]);
+    }
+  });
+  obs.observe(msOverlay, {attributes:true, attributeFilter:['class']});
+}
+
+// Urge win confetti + haptic
+const _origUWin = window.uWin;
+window.uWin = function() {
+  _origUWin();
+  window.fireConfetti(80);
+  if(navigator.vibrate) navigator.vibrate([20,15,60]);
+};
+
+// Check-in save haptic
+const saveBtn = document.getElementById('save-btn');
+if(saveBtn) saveBtn.addEventListener('click', () => { if(navigator.vibrate) navigator.vibrate(15); }, true);
+
+// Mood tap haptic
+document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
+  b.addEventListener('click', () => { if(navigator.vibrate) navigator.vibrate(8); }, true);
+});
+
+// ===================== SHARE STREAK CARD =====================
+(function(){
+  // Inject share button next to streak
+  const streakLeft = document.querySelector('.streak-left');
+  if(!streakLeft) return;
+  const btn = document.createElement('button');
+  btn.id = 'share-btn';
+  btn.title = 'Share your streak';
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>';
+  btn.style.cssText = 'position:absolute;top:0;right:0;background:rgba(108,92,231,0.15);border:.5px solid rgba(108,92,231,0.35);border-radius:8px;padding:5px;cursor:pointer;color:rgba(196,188,255,0.8);display:flex;align-items:center;justify-content:center;';
+  streakLeft.style.position = 'relative';
+  streakLeft.appendChild(btn);
+
+  btn.addEventListener('click', async function() {
+    if(navigator.vibrate) navigator.vibrate(10);
+    const days = parseInt(document.getElementById('snum').textContent) || 0;
+    const badge = document.getElementById('pbadge');
+    const badgeText = badge ? badge.textContent.trim() : '';
+
+    const c = document.createElement('canvas');
+    c.width = 800; c.height = 420;
+    const cx = c.getContext('2d');
+
+    // Background
+    const bg = cx.createLinearGradient(0,0,800,420);
+    bg.addColorStop(0,'#1A0A3A'); bg.addColorStop(1,'#080510');
+    cx.fillStyle = bg; cx.fillRect(0,0,800,420);
+
+    // Radial glow
+    const glow = cx.createRadialGradient(400,210,0,400,210,320);
+    glow.addColorStop(0,'rgba(108,92,231,0.28)'); glow.addColorStop(1,'rgba(108,92,231,0)');
+    cx.fillStyle = glow; cx.fillRect(0,0,800,420);
+
+    // Border
+    cx.strokeStyle = 'rgba(108,92,231,0.5)'; cx.lineWidth = 2;
+    cx.strokeRect(1,1,798,418);
+
+    // App name
+    cx.font = '700 18px -apple-system,Inter,sans-serif';
+    cx.fillStyle = 'rgba(196,188,255,0.6)';
+    cx.textAlign = 'center';
+    cx.fillText('TRANSMUTE', 400, 54);
+
+    // Day count
+    cx.font = '800 120px -apple-system,Inter,sans-serif';
+    cx.fillStyle = '#F0F0FA';
+    cx.fillText(days, 400, 230);
+
+    // "days" label
+    cx.font = '600 22px -apple-system,Inter,sans-serif';
+    cx.fillStyle = 'rgba(196,188,255,0.6)';
+    cx.fillText('days', 400, 268);
+
+    // Badge
+    if(badgeText) {
+      cx.font = '600 15px -apple-system,Inter,sans-serif';
+      cx.fillStyle = '#C4BCFF';
+      cx.fillText(badgeText, 400, 320);
+    }
+
+    // Tagline
+    cx.font = '400 14px -apple-system,Inter,sans-serif';
+    cx.fillStyle = 'rgba(196,188,255,0.4)';
+    cx.fillText('Energy transmuted · streak unbroken', 400, 378);
+
+    c.toBlob(async blob => {
+      const file = new File([blob],'transmute-streak.png',{type:'image/png'});
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
+        try { await navigator.share({title:`Day ${days} — Transmute`,files:[file]}); return; } catch(e){}
+      }
+      // Fallback: download
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'transmute-streak.png';
+      a.click();
+    });
+  });
+})();
 </script>
 
 <!-- URGE WAVE PAYWALL -->
