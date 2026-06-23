@@ -3594,36 +3594,50 @@ window.addEventListener('popstate', function(e) {
   let currentTab = 'home';
   const origGoTab = window.goTab;
   window.goTab = function(id) {
+    if(id === currentTab) { origGoTab(id); return; }
     const fromIdx = TAB_ORDER.indexOf(currentTab);
     const toIdx   = TAB_ORDER.indexOf(id);
     const dir     = toIdx > fromIdx ? 1 : -1;
     const fromSec = document.getElementById('s-' + currentTab);
     const toSec   = document.getElementById('s-' + id);
-    if(fromSec && toSec && id !== currentTab) {
-      fromSec.style.transition = 'none';
-      toSec.style.transition   = 'none';
-      toSec.style.transform    = `translateX(${dir * 100}%)`;
-      toSec.style.opacity      = '0';
-      toSec.style.display      = 'block';
-      requestAnimationFrame(() => {
-        fromSec.style.transition = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
-        toSec.style.transition   = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
-        fromSec.style.transform  = `translateX(${-dir * 100}%)`;
-        fromSec.style.opacity    = '0';
-        toSec.style.transform    = 'translateX(0)';
-        toSec.style.opacity      = '1';
-        setTimeout(() => {
-          fromSec.style.transform = '';
-          fromSec.style.opacity   = '';
-          fromSec.style.transition= '';
-          fromSec.style.display   = '';
-          toSec.style.transform   = '';
-          toSec.style.transition  = '';
-        }, 300);
-      });
-    }
     currentTab = id;
+    if(!fromSec || !toSec) { origGoTab(id); return; }
+
+    // Set initial positions with no transition
+    fromSec.style.transition = 'none';
+    fromSec.style.display    = 'block';
+    toSec.style.transition   = 'none';
+    toSec.style.display      = 'block';
+    toSec.style.animation    = 'none'; // suppress secFadeIn from .on class
+    toSec.style.transform    = `translateX(${dir * 100}%)`;
+    toSec.style.opacity      = '0';
+
+    // Business logic (renders content, sets .on classes, tab highlight)
     origGoTab(id);
+    // Re-pin display: origGoTab removed .on from fromSec → CSS would hide it
+    fromSec.style.display = 'block';
+    toSec.style.display   = 'block';
+
+    // Force reflow so the browser commits the initial state before animating
+    toSec.getBoundingClientRect();
+
+    const ease = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
+    fromSec.style.transition = ease;
+    toSec.style.transition   = ease;
+    fromSec.style.transform  = `translateX(${-dir * 100}%)`;
+    fromSec.style.opacity    = '0';
+    toSec.style.transform    = 'translateX(0)';
+    toSec.style.opacity      = '1';
+
+    setTimeout(() => {
+      // outgoing: no .on class → CSS hides it; clear all inline styles
+      fromSec.style.cssText = '';
+      // incoming: clear motion styles; keep animation:none to avoid secFadeIn re-trigger
+      toSec.style.transition = '';
+      toSec.style.transform  = '';
+      toSec.style.opacity    = '';
+      toSec.style.display    = '';
+    }, 300);
   };
 })();
 
