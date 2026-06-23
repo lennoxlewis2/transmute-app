@@ -952,15 +952,24 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
       <!-- WIN STATE -->
       <div id="urge-win" style="display:none;">
-        <div class="win-card">
-          <div style="font-size:52px;margin-bottom:12px;">🌊</div>
-          <div style="font-size:22px;font-weight:600;color:var(--ac);margin-bottom:8px;">You surfed it.</div>
-          <div style="font-size:14px;color:var(--teal6);line-height:1.6;">That urge is gone. The energy stayed yours. This is exactly what the practice looks like from the inside.</div>
+        <div class="win-card" style="position:relative;overflow:hidden;">
+          <!-- animated glow burst -->
+          <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(108,92,231,0.18),transparent 70%);pointer-events:none;"></div>
+          <!-- trophy / reward icon -->
+          <div style="font-size:64px;margin-bottom:4px;line-height:1;filter:drop-shadow(0 0 16px rgba(255,215,0,0.5));">⚡</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C4BCFF;opacity:0.7;text-transform:uppercase;margin-bottom:12px;">Energy Transmuted</div>
+          <div style="font-size:26px;font-weight:800;color:#F0F0FA;margin-bottom:10px;line-height:1.2;">You surfed it.</div>
+          <div style="font-size:14px;color:#C0BBEE;line-height:1.7;">That urge is gone. The energy stayed yours.<br>This is exactly what the practice looks like.</div>
+          <!-- streak badge -->
+          <div style="margin-top:18px;display:inline-flex;align-items:center;gap:8px;background:rgba(108,92,231,0.2);border:.5px solid rgba(108,92,231,0.4);border-radius:20px;padding:8px 18px;">
+            <span style="font-size:16px;">🔥</span>
+            <span style="font-size:13px;font-weight:700;color:#E8E4FF;">Streak still alive</span>
+          </div>
         </div>
-        <div class="card" style="text-align:center;">
-          <div style="font-size:13px;color:var(--ts);line-height:1.6;">Every wave you ride makes the next one smaller. You are training your nervous system to be stronger than your impulses.</div>
+        <div class="card" style="text-align:center;border-color:rgba(108,92,231,0.2);">
+          <div style="font-size:13px;color:#A8A8C8;line-height:1.7;">Every wave you ride makes the next one smaller.<br>You are becoming stronger than your impulses.</div>
         </div>
-        <button class="urge-sos-btn" style="background:var(--teal4);margin-top:4px;" onclick="uReset()">Back to app</button>
+        <button class="urge-sos-btn" style="background:linear-gradient(135deg,var(--ac),var(--acd));color:#fff;font-weight:700;margin-top:4px;border:none;" onclick="uReset()">✓ Back to app</button>
       </div>
 
     
