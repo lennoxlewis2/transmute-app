@@ -196,21 +196,38 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .med-dot.done{background:#4433AA;}
 
   /* Urge surf */
-  .urge-sos-btn{width:100%;padding:20px;background:#E24B4A;color:white;border:none;border-radius:18px;font-size:17px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:14px;letter-spacing:0.01em;-webkit-appearance:none;}
+  .urge-sos-btn{width:100%;padding:20px;background:linear-gradient(135deg,#6C5CE7,#4834C8);color:white;border:none;border-radius:18px;font-size:17px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:14px;letter-spacing:0.01em;-webkit-appearance:none;box-shadow:0 6px 20px rgba(108,92,231,0.4);}
   .urge-sos-btn:active{transform:scale(0.98);opacity:.9;}
-  .wave-wrap{position:relative;height:110px;overflow:hidden;border-radius:14px;background:var(--bg);border:.5px solid var(--bd);margin-bottom:12px;}
-  .wave-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
-  .wave-lbl{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:10px;font-weight:600;color:var(--ts);letter-spacing:.06em;text-transform:uppercase;}
-  .intensity-bar{height:6px;border-radius:3px;background:var(--bd);margin-bottom:18px;overflow:hidden;}
-  .intensity-fill{height:100%;border-radius:3px;transition:width .8s ease,background .8s ease;width:80%;background:#E24B4A;}
-  .urge-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-  .utool-btn{padding:14px 8px;border:.5px solid var(--bds);border-radius:12px;background:var(--sf);cursor:pointer;text-align:center;font-family:'Inter',sans-serif;-webkit-appearance:none;transition:all .15s;}
-  .utool-btn:active{background:var(--bg);}
+  /* Premium surf screen */
+  .urf-header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 10px;}
+  .urf-badge{font-size:10px;font-weight:700;color:var(--ac2);letter-spacing:.08em;text-transform:uppercase;}
+  .urf-close{width:30px;height:30px;background:rgba(255,255,255,0.06);border:none;border-radius:50%;cursor:pointer;font-size:16px;color:var(--ts);font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;}
+  .urf-orb-row{display:flex;align-items:center;gap:14px;padding:0 20px;margin-bottom:12px;}
+  .urf-orb-wrap{position:relative;width:100px;height:100px;flex-shrink:0;}
+  @keyframes orbPulse{0%,100%{transform:scale(1);opacity:.3;}50%{transform:scale(1.12);opacity:.15;}}
+  @keyframes orbPulse2{0%,100%{transform:scale(1);opacity:.2;}50%{transform:scale(1.18);opacity:.08;}}
+  .urf-ring1{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(108,92,231,0.5);animation:orbPulse 2.4s ease-in-out infinite;}
+  .urf-ring2{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(108,92,231,0.25);animation:orbPulse2 2.4s ease-in-out infinite;}
+  .urf-orb-core{position:absolute;inset:14px;border-radius:50%;background:linear-gradient(135deg,#8B7FE8,#4834C8);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(108,92,231,0.5);}
+  .urf-orb-num{font-size:22px;font-weight:800;color:white;line-height:1;}
+  .urf-orb-sub{font-size:8px;color:rgba(255,255,255,0.55);letter-spacing:.05em;margin-top:2px;}
+  .urf-stats{flex:1;display:flex;flex-direction:column;gap:6px;}
+  .urf-stat{background:rgba(255,255,255,0.05);border:.5px solid rgba(255,255,255,0.07);border-radius:10px;padding:7px 10px;}
+  .urf-stat-num{font-size:15px;font-weight:700;color:white;line-height:1;}
+  .urf-stat-lbl{font-size:9px;color:rgba(255,255,255,0.35);margin-top:2px;letter-spacing:.02em;}
+  .urf-stat-arrow{color:#5DCAA5;}
+  .urf-wave-area{height:58px;background:rgba(255,255,255,0.03);border:.5px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;margin:0 20px 8px;position:relative;}
+  .urf-wave-area canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+  .urf-phase{font-size:11px;color:var(--ts);text-align:center;margin:0 20px 14px;line-height:1.5;}
+  .urge-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 20px 12px;}
+  .utool-btn{padding:12px 8px;border:.5px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.04);cursor:pointer;text-align:center;font-family:'Inter',sans-serif;-webkit-appearance:none;transition:all .15s;}
+  .utool-btn:active{opacity:.7;}
   .utool-btn.on{border-color:var(--ac);background:var(--acl);}
-  .utool-btn .ui{font-size:22px;display:block;margin-bottom:5px;}
-  .utool-btn .ul{font-size:11px;font-weight:500;color:var(--ts);}
-  .utool-btn.on .ul{color:var(--ac);}
-  .utool-sec{display:none;}.utool-sec.on{display:block;}
+  .utool-btn .ui{font-size:20px;display:block;margin-bottom:4px;}
+  .utool-btn .ul{font-size:10px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:.02em;}
+  .utool-btn.on .ul{color:var(--ac2);}
+  .utool-sec{display:none;padding:0 20px;}.utool-sec.on{display:block;}
+  .urf-survived{width:calc(100% - 40px);margin:0 20px 20px;padding:15px;background:linear-gradient(135deg,var(--ac),var(--acd));color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 6px 20px rgba(108,92,231,0.35);display:none;-webkit-appearance:none;}
   .breath-ring-wrap{width:100px;height:100px;border-radius:50%;border:3px solid var(--ac);display:flex;align-items:center;justify-content:center;margin:14px auto;transition:all 3.5s ease-in-out;}
   .breath-ring-inner{width:58px;height:58px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;transition:all 3.5s ease-in-out;}
   .breath-ring-lbl{font-size:10px;font-weight:600;color:var(--ac);text-align:center;line-height:1.3;}
@@ -793,15 +810,43 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
       <!-- SURF STATE -->
       <div id="urge-surf" style="display:none;">
-        <div class="wave-wrap">
-          <canvas id="urge-canvas"></canvas>
-          <div class="wave-lbl" id="wave-lbl">urge intensity</div>
+        <div class="urf-header">
+          <div class="urf-badge">🌊 Urge Wave — active</div>
+          <button class="urf-close" onclick="uClose(false)">×</button>
         </div>
-        <div class="intensity-bar"><div class="intensity-fill" id="int-fill"></div></div>
+
+        <div class="urf-orb-row">
+          <div class="urf-orb-wrap">
+            <div class="urf-ring2"></div>
+            <div class="urf-ring1"></div>
+            <div class="urf-orb-core">
+              <div class="urf-orb-num" id="urf-orb-num">85</div>
+              <div class="urf-orb-sub">intensity</div>
+            </div>
+          </div>
+          <div class="urf-stats">
+            <div class="urf-stat">
+              <div class="urf-stat-num" id="urf-elapsed">0:00</div>
+              <div class="urf-stat-lbl">elapsed</div>
+            </div>
+            <div class="urf-stat">
+              <div class="urf-stat-num urf-stat-arrow" id="urf-dir">↑ rising</div>
+              <div class="urf-stat-lbl">direction</div>
+            </div>
+            <div class="urf-stat">
+              <div class="urf-stat-num">~5 min</div>
+              <div class="urf-stat-lbl">avg time to pass</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="urf-wave-area">
+          <canvas id="urge-canvas"></canvas>
+        </div>
+        <div class="urf-phase" id="wave-lbl">Peak — keep breathing, it's already falling</div>
 
         <!-- Tool chooser -->
         <div id="utool-chooser">
-          <p style="font-size:13px;color:var(--ts);text-align:center;margin-bottom:10px;">Choose a tool to ride the wave:</p>
           <div class="urge-tool-grid">
             <button class="utool-btn" id="tb-breath" onclick="uShowTool('breath')">
               <span class="ui">🌬️</span><span class="ul">Breathe through it</span>
@@ -882,10 +927,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:4px;">← Back to tools</button>
         </div>
 
-        <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
-          <button class="survived-btn green" id="u-survived-btn" style="display:none;" onclick="uWin()">✓ I surfed it — urge has passed</button>
-          <button class="survived-btn" onclick="uClose()">← Back to app</button>
-        </div>
+        <button class="urf-survived" id="u-survived-btn" onclick="uWin()">✓ I surfed it — urge has passed</button>
       </div>
 
       <!-- WIN STATE -->
@@ -2482,6 +2524,8 @@ let uWaveAnim = null, uIntInterval = null;
 let uBreathInterval = null, uBreathPhase = 0;
 let uTimerRAF = null, uTimerRunning = false, uTimerStart = null;
 
+let uElapsedInterval = null, uElapsedSecs = 0;
+
 function uStart() {
   document.getElementById('urge-home').style.display = 'none';
   document.getElementById('urge-surf').style.display = 'block';
@@ -2489,11 +2533,20 @@ function uStart() {
   uShowTool(null);
   uStartWave();
   uStartIntensity();
+  // Elapsed timer
+  uElapsedSecs = 0;
+  clearInterval(uElapsedInterval);
+  uElapsedInterval = setInterval(() => {
+    uElapsedSecs++;
+    const m = Math.floor(uElapsedSecs/60), s = uElapsedSecs%60;
+    const el = document.getElementById('urf-elapsed');
+    if(el) el.textContent = m+':'+(s<10?'0':'')+s;
+  }, 1000);
   // Update streak display
   const n = calcStreak();
   const el = document.getElementById('u-streak-num');
   if(el) el.textContent = n;
-  // Show survived button after 20 seconds (only if still in surf state)
+  // Show survived button after 20 seconds
   setTimeout(() => {
     const surf = document.getElementById('urge-surf');
     const btn = document.getElementById('u-survived-btn');
@@ -2546,7 +2599,7 @@ function uStartWave() {
 }
 
 function uStartIntensity() {
-  let prog = 0;
+  let prog = 0, prevV = 0.85;
   uIntInterval = setInterval(() => {
     prog = Math.min(prog+1,100);
     let v;
@@ -2554,10 +2607,20 @@ function uStartIntensity() {
     else if(prog<55) v=0.9-((prog-25)/30)*0.45;
     else v=0.45-((prog-55)/45)*0.38;
     v=Math.max(0.07,v);
-    const fill=document.getElementById('int-fill');
-    if(fill){fill.style.width=Math.round(v*100)+'%';fill.style.background=v>0.65?'#E24B4A':v>0.38?'#EF9F27':'#1D9E75';}
+    // Orb number
+    const orbNum = document.getElementById('urf-orb-num');
+    if(orbNum) orbNum.textContent = Math.round(v*100);
+    // Direction arrow
+    const dir = document.getElementById('urf-dir');
+    if(dir) {
+      if(v > prevV+0.01){ dir.textContent='↑ rising'; dir.style.color='#E24B4A'; }
+      else if(v < prevV-0.01){ dir.textContent='↓ falling'; dir.style.color='#5DCAA5'; }
+      else { dir.textContent='→ steady'; dir.style.color='#EF9F27'; }
+    }
+    prevV = v;
+    // Phase label
     const lbl=document.getElementById('wave-lbl');
-    if(lbl) lbl.textContent=v>0.65?'peak — breathe through it':v>0.38?'subsiding — keep holding':'fading — almost gone';
+    if(lbl) lbl.textContent=v>0.65?'Peaking — breathe through it, it will pass':v>0.38?'Subsiding — you\'re winning, keep holding':'Fading — almost gone, stay strong';
   },1400);
 }
 
@@ -2589,6 +2652,7 @@ function uWin() {
 function uClose(keepState) {
   cancelAnimationFrame(uWaveAnim);
   clearInterval(uIntInterval);
+  clearInterval(uElapsedInterval);
   clearTimeout(uBreathInterval);
   uBreathInterval=null;
   uTimerRunning=false;
