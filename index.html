@@ -1905,9 +1905,32 @@ function renderDots() {
   document.getElementById('qdots').innerHTML = QUOTES.map((_,i) =>
     `<div class="qdot${i===qIdx?' on':''}" data-qi="${i}"></div>`).join('');
 }
-function goQ(i) {
-  qIdx = i; document.getElementById('qtext').textContent = QUOTES[i]; renderDots();
-  clearInterval(qTimer); qTimer = setInterval(() => goQ((qIdx+1) % QUOTES.length), 8000);
+function goQ(i, dir) {
+  const el = document.getElementById('qtext');
+  const next = ((i % QUOTES.length) + QUOTES.length) % QUOTES.length;
+  if (dir === undefined || !el) {
+    qIdx = next; el && (el.textContent = QUOTES[next]); renderDots();
+  } else {
+    const out = dir > 0 ? '-52px' : '52px';
+    const in_ = dir > 0 ? '52px' : '-52px';
+    el.style.transition = 'opacity .15s ease, transform .15s ease';
+    el.style.opacity = '0';
+    el.style.transform = `translateX(${out})`;
+    setTimeout(() => {
+      qIdx = next;
+      el.textContent = QUOTES[next];
+      renderDots();
+      el.style.transition = 'none';
+      el.style.transform = `translateX(${in_})`;
+      el.style.opacity = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        el.style.transition = 'opacity .18s ease, transform .18s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateX(0)';
+      }));
+    }, 160);
+  }
+  clearInterval(qTimer); qTimer = setInterval(() => goQ((qIdx+1) % QUOTES.length, 1), 8000);
 }
 
 // ===================== AURA =====================
@@ -3020,11 +3043,24 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('send-bug').addEventListener('click', sendBug);
 
   // ---- QUOTES ----
-  document.getElementById('qprev').addEventListener('click', () => goQ((qIdx-1+QUOTES.length)%QUOTES.length));
-  document.getElementById('qnext').addEventListener('click', () => goQ((qIdx+1)%QUOTES.length));
+  document.getElementById('qprev').addEventListener('click', () => goQ((qIdx-1+QUOTES.length)%QUOTES.length, -1));
+  document.getElementById('qnext').addEventListener('click', () => goQ((qIdx+1)%QUOTES.length, 1));
   document.getElementById('qdots').addEventListener('click', function(e) {
-    if(e.target.dataset.qi !== undefined) goQ(parseInt(e.target.dataset.qi));
+    if(e.target.dataset.qi !== undefined) { const ni=parseInt(e.target.dataset.qi); goQ(ni, ni>qIdx?1:-1); }
   });
+  // Swipe on quote card
+  (function(){
+    const card = document.querySelector('.q-side');
+    let sx=0, sy=0;
+    card.addEventListener('touchstart', e => { sx=e.touches[0].clientX; sy=e.touches[0].clientY; }, {passive:true});
+    card.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = e.changedTouches[0].clientY - sy;
+      if(Math.abs(dx) > 38 && Math.abs(dx) > Math.abs(dy)*1.2) {
+        dx < 0 ? goQ((qIdx+1)%QUOTES.length, 1) : goQ((qIdx-1+QUOTES.length)%QUOTES.length, -1);
+      }
+    }, {passive:true});
+  })();
 
   // ---- MOOD ----
   document.getElementById('mood-grid').addEventListener('click', function(e) {
@@ -3600,49 +3636,37 @@ window.addEventListener('popstate', function(e) {
   const origGoTab = window.goTab;
   window.goTab = function(id) {
     if(id === currentTab) { origGoTab(id); return; }
-    const fromIdx = TAB_ORDER.indexOf(currentTab);
-    const toIdx   = TAB_ORDER.indexOf(id);
-    const dir     = toIdx > fromIdx ? 1 : -1;
     const fromSec = document.getElementById('s-' + currentTab);
     const toSec   = document.getElementById('s-' + id);
     currentTab = id;
     if(!fromSec || !toSec) { origGoTab(id); return; }
 
-    // Set initial positions with no transition
-    fromSec.style.transition = 'none';
-    fromSec.style.display    = 'block';
-    toSec.style.transition   = 'none';
-    toSec.style.display      = 'block';
-    toSec.style.animation    = 'none'; // suppress secFadeIn from .on class
-    toSec.style.transform    = `translateX(${dir * 100}%)`;
-    toSec.style.opacity      = '0';
-
-    // Business logic (renders content, sets .on classes, tab highlight)
-    origGoTab(id);
-    // Re-pin display: origGoTab removed .on from fromSec → CSS would hide it
-    fromSec.style.display = 'block';
-    toSec.style.display   = 'block';
-
-    // Force reflow so the browser commits the initial state before animating
-    toSec.getBoundingClientRect();
-
-    const ease = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
-    fromSec.style.transition = ease;
-    toSec.style.transition   = ease;
-    fromSec.style.transform  = `translateX(${-dir * 100}%)`;
+    // Fade + micro-scale out the current section
+    fromSec.style.transition = 'opacity .14s ease, transform .14s ease';
     fromSec.style.opacity    = '0';
-    toSec.style.transform    = 'translateX(0)';
-    toSec.style.opacity      = '1';
+    fromSec.style.transform  = 'scale(0.97)';
+
+    // Prepare incoming: invisible, slightly scaled down, no slide
+    toSec.style.display    = 'block';
+    toSec.style.animation  = 'none';
+    toSec.style.transition = 'none';
+    toSec.style.opacity    = '0';
+    toSec.style.transform  = 'scale(0.97)';
 
     setTimeout(() => {
-      // outgoing: no .on class → CSS hides it; clear all inline styles
-      fromSec.style.cssText = '';
-      // incoming: clear motion styles; keep animation:none to avoid secFadeIn re-trigger
-      toSec.style.transition = '';
-      toSec.style.transform  = '';
+      origGoTab(id);
+      fromSec.style.display = 'block';
+      toSec.style.display   = 'block';
+      toSec.getBoundingClientRect(); // force reflow
+      toSec.style.transition = 'opacity .18s ease, transform .18s ease';
       toSec.style.opacity    = '1';
-      toSec.style.display    = '';
-    }, 300);
+      toSec.style.transform  = 'scale(1)';
+      setTimeout(() => {
+        fromSec.style.cssText = '';
+        toSec.style.cssText   = '';
+        toSec.style.opacity   = '1';
+      }, 200);
+    }, 120);
   };
 })();
 
