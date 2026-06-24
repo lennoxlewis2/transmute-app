@@ -705,7 +705,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <!-- Phase display -->
         <div style="text-align:center;margin-bottom:18px;">
           <div style="margin-bottom:8px;display:flex;justify-content:center;" id="med-phase-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M7 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M5 20c0-2.5 1.8-4.5 3.5-5.5"/><path d="M19 20c0-2.5-1.8-4.5-3.5-5.5"/><path d="M5 20h14"/></svg></div>
-          <div style="font-size:13px;font-weight:600;color:#C8A8FF;margin-bottom:4px" id="med-phase-name">Sexual Transmutation Meditation</div>
+          <div style="font-size:13px;font-weight:600;color:#C8A8FF;margin-bottom:4px" id="med-phase-name">Energy Transmutation Meditation</div>
           <div style="font-size:11px;color:#7755AA" id="med-duration">~15 minutes · 5 phases</div>
         </div>
 
@@ -871,7 +871,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <!-- STORIES -->
   <div id="s-stories" class="sec">
     <div class="card" style="background:linear-gradient(135deg,#0A1A0A,#0A2A1A);border-color:#2EA86A;margin-bottom:12px">
-      <p style="font-size:13px;color:#7DCAA0;line-height:1.6">Real experiences from the r/Semenretention community. Swipe or tap arrows to browse.</p>
+      <p style="font-size:13px;color:#7DCAA0;line-height:1.6">Real experiences from the retention community. Swipe or tap arrows to browse.</p>
     </div>
     <div class="story-card" id="story-card"><div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--tt);font-size:13px">Loading stories...</div></div>
     <div class="btn-row" style="margin-top:11px">
@@ -2241,7 +2241,7 @@ function renderStory() {
   const card = document.getElementById('story-card');
   card.classList.add('fade');
   setTimeout(() => {
-    card.innerHTML = `<div class="story-flair">r/Semenretention · ${s.flair}</div>
+    card.innerHTML = `<div class="story-flair">Community · ${s.flair}</div>
       <div class="story-title">${s.title}</div>
       <div class="story-meta">Day ${s.days} streak · ${s.up.toLocaleString()} upvotes</div>
       <div class="story-body">${s.body}</div>
@@ -2722,7 +2722,7 @@ function medStop() {
   const txt = document.getElementById('med-text');
   const status = document.getElementById('med-status');
   if(icon) icon.textContent = '🧘';
-  if(name) { name.textContent = 'Sexual Transmutation Meditation'; name.style.color = '#C8A8FF'; }
+  if(name) { name.textContent = 'Energy Transmutation Meditation'; name.style.color = '#C8A8FF'; }
   if(dur) dur.textContent = '~15 minutes · 5 phases';
   if(txt) txt.textContent = '';
   if(status) status.textContent = 'Tap Begin when you are ready';
