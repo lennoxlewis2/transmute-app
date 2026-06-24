@@ -1,5 +1,5 @@
-const CACHE = 'sr-tracker-v3';
-const FILES = ['/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+const CACHE = 'transmute-v4';
+const FILES = ['/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/privacy.html'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
@@ -16,11 +16,10 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Always go network first, fall back to cache
+  if (e.request.method !== 'GET') return;
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        // Update cache with fresh response
         const clone = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, clone));
         return res;
