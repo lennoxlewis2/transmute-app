@@ -36,9 +36,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border:none;background:transparent;cursor:pointer;font-family:'Inter',sans-serif;color:var(--tt);font-size:9px;font-weight:600;border-radius:14px;transition:all .2s;letter-spacing:.02em;}
 .tab.on{color:white;background:linear-gradient(135deg,var(--ac),var(--acd));box-shadow:0 4px 14px rgba(108,92,231,0.4);}
 .tab-ic{font-size:19px;line-height:1;display:flex;align-items:center;justify-content:center;}.tab-ic svg{display:block;}
-.sec{display:none;opacity:0;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease;}
-  .sec.on{display:block;animation:secFadeIn .2s ease forwards;}
-  @keyframes secFadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.sec{display:none;}
+  .sec.on{display:block;animation:secFadeIn .18s ease forwards;}
+  @keyframes secFadeIn{from{opacity:0;}to{opacity:1;}}
 .card{background:linear-gradient(160deg,rgba(22,20,38,0.95),rgba(13,13,20,0.98));border:.5px solid rgba(255,255,255,0.07);border-radius:var(--r3);padding:18px;margin-bottom:12px;box-shadow:0 4px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.04);}
 .lbl{font-size:10px;font-weight:700;color:var(--tt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
 /* Streak card */
@@ -3629,46 +3629,6 @@ window.addEventListener('popstate', function(e) {
   // Already on home — let browser exit the app
 });
 
-// ===================== TAB SLIDE TRANSITIONS =====================
-(function(){
-  const TAB_ORDER = ['home','urge','stories','transmute','phases'];
-  let currentTab = 'home';
-  const origGoTab = window.goTab;
-  window.goTab = function(id) {
-    if(id === currentTab) { origGoTab(id); return; }
-    const fromSec = document.getElementById('s-' + currentTab);
-    const toSec   = document.getElementById('s-' + id);
-    currentTab = id;
-    if(!fromSec || !toSec) { origGoTab(id); return; }
-
-    // Fade + micro-scale out the current section
-    fromSec.style.transition = 'opacity .14s ease, transform .14s ease';
-    fromSec.style.opacity    = '0';
-    fromSec.style.transform  = 'scale(0.97)';
-
-    // Prepare incoming: invisible, slightly scaled down, no slide
-    toSec.style.display    = 'block';
-    toSec.style.animation  = 'none';
-    toSec.style.transition = 'none';
-    toSec.style.opacity    = '0';
-    toSec.style.transform  = 'scale(0.97)';
-
-    setTimeout(() => {
-      origGoTab(id);
-      fromSec.style.display = 'block';
-      toSec.style.display   = 'block';
-      toSec.getBoundingClientRect(); // force reflow
-      toSec.style.transition = 'opacity .18s ease, transform .18s ease';
-      toSec.style.opacity    = '1';
-      toSec.style.transform  = 'scale(1)';
-      setTimeout(() => {
-        fromSec.style.cssText = '';
-        toSec.style.cssText   = '';
-        toSec.style.opacity   = '1';
-      }, 200);
-    }, 120);
-  };
-})();
 
 // ===================== CONFETTI =====================
 (function(){
