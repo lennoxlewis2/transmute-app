@@ -1,10 +1,12 @@
 {
+  "id": "/",
   "name": "Transmute",
   "short_name": "Transmute",
   "description": "A personal habit and wellness tracker to build streaks, log moods, and track your progress.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone"],
   "orientation": "portrait",
   "background_color": "#534AB7",
   "theme_color": "#534AB7",

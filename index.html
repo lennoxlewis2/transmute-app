@@ -3848,13 +3848,12 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
 (function(){
   var unlockBtn = document.getElementById('pw-unlock-btn');
   var restoreBtn = document.getElementById('pw-restore-btn');
-  var PAYMENT_URL = 'https://buy.stripe.com/REPLACE_ME';
+  // Must match the product ID you create in Google Play Console
+  var SKU = 'urge_wave_pro';
 
-  // Populate streak number when paywall opens
   window._showPaywall = function() {
     var streakEl = document.getElementById('pw-streak-num');
     if(streakEl) {
-      // Use the app's own streak calc (correct key sr_v3 + timezone-safe parsing)
       var days = (typeof calcStreak === 'function') ? calcStreak() : 0;
       streakEl.textContent = days;
       var warn = document.getElementById('pw-streak-warning');
@@ -3863,17 +3862,74 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     document.getElementById('uw-paywall').classList.remove('hidden');
   };
 
+  function isTWA() {
+    return typeof window.getDigitalGoodsService === 'function';
+  }
+
+  async function purchaseGooglePlay() {
+    try {
+      var service = await window.getDigitalGoodsService('https://play.google.com/billing');
+      var details = await service.getDetails([SKU]);
+      if (!details || !details.length) {
+        alert('Product not available. Please try again later.');
+        return;
+      }
+      var request = new PaymentRequest(
+        [{ supportedMethods: 'https://play.google.com/billing', data: { sku: SKU } }],
+        { total: { label: 'Urge Wave', amount: { currency: 'GBP', value: '2.99' } } }
+      );
+      if (!(await request.canMakePayment())) {
+        alert('Google Play Billing is not available on this device.');
+        return;
+      }
+      var result = await request.show();
+      await service.consume(result.details.token);
+      await result.complete('success');
+      localStorage.setItem('uw_unlocked', '1');
+      _hidePaywall();
+      goTab('urge');
+    } catch(e) {
+      if (e.name !== 'AbortError') alert('Purchase could not be completed. Please try again.');
+    }
+  }
+
+  async function restoreGooglePlay() {
+    try {
+      var service = await window.getDigitalGoodsService('https://play.google.com/billing');
+      var purchases = await service.listPurchases();
+      var owned = purchases.find(function(p) { return p.itemId === SKU; });
+      if (owned) {
+        localStorage.setItem('uw_unlocked', '1');
+        _hidePaywall();
+        goTab('urge');
+      } else {
+        alert('No active purchase found. Contact support if you believe this is an error.');
+      }
+    } catch(e) {
+      alert('Could not verify purchase. Check your connection and try again.');
+    }
+  }
+
   if(unlockBtn) unlockBtn.addEventListener('click', function() {
-    window.open(PAYMENT_URL, '_blank');
+    if (isTWA()) {
+      purchaseGooglePlay();
+    } else {
+      alert('Purchase Urge Wave through the Transmute app on Google Play.');
+    }
   });
+
   if(restoreBtn) restoreBtn.addEventListener('click', function() {
     var code = prompt('Enter your unlock code:');
     if(code && code.trim().toUpperCase() === 'TRANSMUTE99') {
       localStorage.setItem('uw_unlocked', '1');
       _hidePaywall();
       goTab('urge');
-    } else if(code !== null) {
-      alert('Code not recognised. Contact support if you have already paid.');
+      return;
+    }
+    if (isTWA()) {
+      restoreGooglePlay();
+    } else {
+      if(code !== null) alert('Code not recognised. Contact support if you have already paid.');
     }
   });
 })();
