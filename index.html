@@ -2628,8 +2628,33 @@ function elSpeak(text, onDone) {
   next();
 }
 
+// Pre-generated neural audio key lookup
+const MED_AUDIO_KEYS = {
+  welcome: 'welcome',
+  phases: ['phase_1','phase_2','phase_3','phase_4','phase_5'],
+  steps: [
+    ['p1_s01','p1_s02','p1_s03','p1_s04','p1_s05','p1_s06','p1_s07','p1_s08','p1_s09','p1_s10','p1_s11','p1_s12','p1_s13'],
+    ['p2_s01','p2_s02','p2_s03','p2_s04','p2_s05','p2_s06','p2_s07'],
+    ['p3_s01','p3_s02','p3_s03','p3_s04','p3_s05','p3_s06','p3_s07','p3_s08','p3_s09','p3_s10','p3_s11','p3_s12','p3_s13'],
+    ['p4_s01','p4_s02','p4_s03','p4_s04','p4_s05','p4_s06','p4_s07','p4_s08','p4_s09','p4_s10','p4_s11','p4_s12'],
+    ['p5_s01','p5_s02','p5_s03','p5_s04','p5_s05','p5_s06','p5_s07','p5_s08','p5_s09','p5_s10','p5_s11','p5_s12'],
+  ]
+};
+
 function medSpeak(text, onDone, audioKey) {
-  elSpeak(text, onDone);
+  if(medStopFlag) { if(onDone) onDone(); return; }
+  medSetText(text);
+  if(audioKey) {
+    if(elCurrentAudio) { try { elCurrentAudio.pause(); } catch(e){} elCurrentAudio = null; }
+    const audio = new Audio('/audio/' + audioKey + '.mp3');
+    elCurrentAudio = audio;
+    const finish = () => { elCurrentAudio = null; if(onDone) onDone(); };
+    audio.onended = finish;
+    audio.onerror = () => { elSpeak(text, onDone); };
+    audio.play().catch(() => elSpeak(text, onDone));
+  } else {
+    elSpeak(text, onDone);
+  }
 }
 
 function medRunStep(phaseIdx, stepIdx) {
@@ -2651,7 +2676,7 @@ function medRunStep(phaseIdx, stepIdx) {
         medSpeak(phaseName + '...', () => {
           const t2 = setTimeout(() => { if(!medStopFlag) medRunStep(medPhaseIdx, 0); }, 1500);
           medTimers.push(t2);
-        });
+        }, MED_AUDIO_KEYS.phases[medPhaseIdx]);
       }, 1500);
       medTimers.push(t);
     } else {
@@ -2670,6 +2695,7 @@ function medRunStep(phaseIdx, stepIdx) {
   if(status) status.textContent = 'Phase ' + (phaseIdx + 1) + ' · Step ' + (stepIdx + 1) + ' of ' + phase.steps.length;
 
   // Speak the step text, then wait the pause, then go to next step
+  const stepAudioKey = (MED_AUDIO_KEYS.steps[phaseIdx] || [])[stepIdx] || null;
   medSpeak(step.text, () => {
     if(medStopFlag) return;
     // After speaking, hold the silence (pause) before next step
@@ -2678,7 +2704,7 @@ function medRunStep(phaseIdx, stepIdx) {
       if(!medStopFlag) medRunStep(phaseIdx, stepIdx + 1);
     }, silenceDur);
     medTimers.push(t);
-  });
+  }, stepAudioKey);
 }
 
 function medStart() {
@@ -2702,7 +2728,7 @@ function medStart() {
       if(medStopFlag) return;
       const t2 = setTimeout(() => { if(!medStopFlag) medRunStep(0, 0); }, 2000);
       medTimers.push(t2);
-    });
+    }, MED_AUDIO_KEYS.welcome);
   }, 1500);
   medTimers.push(t);
 }
