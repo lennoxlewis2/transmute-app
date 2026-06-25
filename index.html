@@ -608,7 +608,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div id="streak-protect" style="display:none;margin-bottom:12px;">
       <div style="background:linear-gradient(135deg,#1A1208,#201A08);border:.5px solid rgba(255,165,0,0.6);border-radius:var(--r3);padding:16px 18px;box-shadow:0 4px 20px rgba(255,140,0,0.15);">
         <div style="display:flex;align-items:flex-start;gap:12px;">
-          <div style="font-size:28px;line-height:1;flex-shrink:0;padding-top:2px;">⚡</div>
+          <div style="line-height:1;flex-shrink:0;padding-top:2px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="#FFB800" stroke="#FFB800" stroke-width="1.5" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
           <div style="flex:1;">
             <div style="font-size:14px;font-weight:700;color:#FFB800;margin-bottom:4px;">Don't break your streak</div>
             <div style="font-size:12px;color:#CC8800;line-height:1.55;" id="streak-protect-msg">Log today before midnight to keep it alive.</div>
@@ -631,12 +631,14 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <!-- Quick mood row -->
         <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;" id="quick-mood-row">
           <button class="qmood-btn" data-mood="Powerful" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span>Powerful</span></button>
-          <button class="qmood-btn" data-mood="Calm" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity=".4"/></svg></span><span>Calm</span></button>
+          <button class="qmood-btn" data-mood="Calm" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></svg></span><span>Calm</span></button>
           <button class="qmood-btn" data-mood="Focused" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span><span>Focused</span></button>
+          <button class="qmood-btn" data-mood="Restless" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l3 3"/></svg></span><span>Restless</span></button>
+          <button class="qmood-btn" data-mood="Irritable" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Irritable</span></button>
+          <button class="qmood-btn" data-mood="Anxious" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></span><span>Anxious</span></button>
           <button class="qmood-btn" data-mood="Confident" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg></span><span>Confident</span></button>
-          <button class="qmood-btn" data-mood="Restless" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M12 6v6l3 3"/><path d="M16 4l1.5-1.5M20 8l1.5-.5" opacity=".5"/></svg></span><span>Restless</span></button>
-          <button class="qmood-btn" data-mood="Anxious" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Anxious</span></button>
           <button class="qmood-btn" data-mood="Foggy" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 15h18M3 19h14M3 11h12a4 4 0 0 0 0-8 4 4 0 0 0-4 3"/></svg></span><span>Foggy</span></button>
+          <button class="qmood-btn" data-mood="Creative" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" opacity=".6"/></svg></span><span>Creative</span></button>
           <button class="qmood-btn" data-mood="Low" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M15 15.5a4 4 0 0 0-6 0"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></span><span>Low</span></button>
         </div>
       </div>
@@ -745,7 +747,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <button class="btn-g" id="hf-weekly">Weekly</button>
     </div>
     <div id="hist-list" style="font-size:13px;color:var(--ts)">No entries yet.</div>
-    <button class="btn-g" style="width:100%;margin-top:11px" id="export-btn">⬇ Export CSV</button>
+    <button class="btn-g" style="width:100%;margin-top:11px;display:flex;align-items:center;justify-content:center;gap:7px;" id="export-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span id="export-lbl">Export CSV</span></button>
   </div>
 
 
@@ -1013,7 +1015,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <div style="flex:1;text-align:center;font-size:12px;color:var(--tt);padding-top:11px" id="sctr">1 / 20</div>
       <button class="btn-g" id="snext">Next →</button>
     </div>
-    <button class="btn-g" style="width:100%;margin-top:8px" id="sshuffle">🔀 Shuffle</button>
+    <button class="btn-g" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px;" id="sshuffle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>Shuffle</button>
   </div>
 
     <!-- URGE SURF -->
@@ -1282,7 +1284,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div style="margin-bottom:20px;">
       <div class="lbl">Install app</div>
       <div id="install-android-block">
-        <button id="settings-install-btn" style="width:100%;padding:13px;background:var(--ac);color:white;border:none;border-radius:var(--r2);font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:8px;-webkit-appearance:none;">📲 Add to Home Screen</button>
+        <button id="settings-install-btn" style="width:100%;padding:13px;background:var(--ac);color:white;border:none;border-radius:var(--r2);font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:8px;-webkit-appearance:none;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Add to Home Screen</button>
         <p style="font-size:11px;color:var(--ts);text-align:center;line-height:1.5;">Tap above to install Transmute on your phone</p>
       </div>
       <div id="install-ios-block" style="display:none;">
@@ -1293,7 +1295,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
       <div id="install-done-block" style="display:none;">
         <div style="background:var(--grn50);border-radius:var(--r2);padding:12px 14px;text-align:center;">
-          <p style="font-size:13px;color:var(--grn6);">✓ App already installed on your device</p>
+          <p style="font-size:13px;color:var(--grn6);display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>App already installed on your device</p>
         </div>
       </div>
     </div>
@@ -1321,7 +1323,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div style="margin-bottom:20px">
       <div class="lbl">Daily reminder</div>
       <div style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Get nudged if you haven't logged by evening — keeps your streak alive.</div>
-      <button class="btn" id="notif-btn" style="padding:12px;margin-top:0;font-size:14px;">🔔 Enable reminders</button>
+      <button class="btn" id="notif-btn" style="padding:12px;margin-top:0;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Enable reminders</button>
       <p id="notif-status" style="font-size:11px;color:var(--ts);text-align:center;margin-top:6px;display:none;line-height:1.5;"></p>
     </div>
     <div style="margin-bottom:20px">
@@ -1376,7 +1378,7 @@ const TRANSLATIONS = {
     saveReview:'Save weekly review', backDaily:'Back to daily check-in',
     weeklyReview:'Weekly review', weeklyReviewSub:'Take 5 minutes to reflect honestly.',
     histAll:'All', histDaily:'Daily', histWeekly:'Weekly',
-    exportCsv:'⬇ Export CSV',
+    exportCsv:'Export CSV',
     allPhases:'All phases',
     pranayama:'Pranayama', meditation:'Meditation', poses:'Poses',
     settings:'Settings', language:'Language', colourTheme:'Colour theme',
@@ -1430,7 +1432,7 @@ const TRANSLATIONS = {
     saveReview:'Guardar revisión semanal', backDaily:'Volver al registro diario',
     weeklyReview:'Revisión semanal', weeklyReviewSub:'Tómate 5 minutos para reflexionar honestamente.',
     histAll:'Todo', histDaily:'Diario', histWeekly:'Semanal',
-    exportCsv:'⬇ Exportar CSV',
+    exportCsv:'Exportar CSV',
     allPhases:'Todas las fases',
     pranayama:'Pranayama', meditation:'Meditación', poses:'Posturas',
     settings:'Ajustes', language:'Idioma', colourTheme:'Tema de color',
@@ -1484,7 +1486,7 @@ const TRANSLATIONS = {
     saveReview:'Sauvegarder le bilan', backDaily:'Retour au bilan quotidien',
     weeklyReview:'Bilan hebdomadaire', weeklyReviewSub:'Prends 5 minutes pour réfléchir honnêtement.',
     histAll:'Tout', histDaily:'Quotidien', histWeekly:'Hebdomadaire',
-    exportCsv:'⬇ Exporter CSV',
+    exportCsv:'Exporter CSV',
     allPhases:'Toutes les phases',
     pranayama:'Pranayama', meditation:'Méditation', poses:'Postures',
     settings:'Paramètres', language:'Langue', colourTheme:'Thème de couleur',
@@ -1538,7 +1540,7 @@ const TRANSLATIONS = {
     saveReview:'Überprüfung speichern', backDaily:'Zurück zum täglichen Eintrag',
     weeklyReview:'Wöchentliche Überprüfung', weeklyReviewSub:'Nimm dir 5 Minuten für ehrliche Reflexion.',
     histAll:'Alle', histDaily:'Täglich', histWeekly:'Wöchentlich',
-    exportCsv:'⬇ CSV exportieren',
+    exportCsv:'CSV exportieren',
     allPhases:'Alle Phasen',
     pranayama:'Pranayama', meditation:'Meditation', poses:'Haltungen',
     settings:'Einstellungen', language:'Sprache', colourTheme:'Farbthema',
@@ -1592,7 +1594,7 @@ const TRANSLATIONS = {
     saveReview:'Salvar revisão semanal', backDaily:'Voltar ao registro diário',
     weeklyReview:'Revisão semanal', weeklyReviewSub:'Tira 5 minutos para refletir honestamente.',
     histAll:'Tudo', histDaily:'Diário', histWeekly:'Semanal',
-    exportCsv:'⬇ Exportar CSV',
+    exportCsv:'Exportar CSV',
     allPhases:'Todas as fases',
     pranayama:'Pranayama', meditation:'Meditação', poses:'Posturas',
     settings:'Configurações', language:'Idioma', colourTheme:'Tema de cor',
@@ -1646,7 +1648,7 @@ const TRANSLATIONS = {
     saveReview:'حفظ المراجعة الأسبوعية', backDaily:'العودة للتسجيل اليومي',
     weeklyReview:'المراجعة الأسبوعية', weeklyReviewSub:'خذ 5 دقائق للتأمل بصدق.',
     histAll:'الكل', histDaily:'يومي', histWeekly:'أسبوعي',
-    exportCsv:'⬇ تصدير CSV',
+    exportCsv:'تصدير CSV',
     allPhases:'جميع المراحل',
     pranayama:'برانياما', meditation:'تأمل', poses:'أوضاع',
     settings:'الإعدادات', language:'اللغة', colourTheme:'لون الثيم',
@@ -1798,7 +1800,7 @@ function applyLang() {
   set('hf-all', t('histAll'));
   set('hf-daily', t('histDaily'));
   set('hf-weekly', t('histWeekly'));
-  set('export-btn', t('exportCsv'));
+  set('export-lbl', t('exportCsv'));
 
   // Phases
   const allPhasesLbl = document.querySelector('#s-phases .lbl');
@@ -2464,14 +2466,17 @@ function initNotifBtn() {
   const btn = document.getElementById('notif-btn');
   const status = document.getElementById('notif-status');
   if(!btn) return;
+  const icBell = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
+  const icBellOff = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  const icCheck = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   btn.onclick = null;
   if(!('Notification' in window)) {
-    btn.textContent = '🔕 Not supported on this browser';
+    btn.innerHTML = icBellOff + 'Not supported on this browser';
     btn.disabled = true;
     return;
   }
   if(Notification.permission === 'granted') {
-    btn.textContent = '✓ Reminders enabled';
+    btn.innerHTML = icCheck + 'Reminders enabled';
     btn.style.background = 'linear-gradient(135deg,rgba(94,166,64,0.3),rgba(60,120,30,0.2))';
     btn.style.border = '.5px solid rgba(94,166,64,0.5)';
     btn.style.color = '#9DD870';
@@ -2481,12 +2486,12 @@ function initNotifBtn() {
     return;
   }
   if(Notification.permission === 'denied') {
-    btn.textContent = '🔕 Blocked — enable in browser settings';
+    btn.innerHTML = icBellOff + 'Blocked — enable in browser settings';
     btn.disabled = true;
     if(status) { status.textContent = 'Open your browser site settings to allow notifications.'; status.style.display = 'block'; }
     return;
   }
-  btn.textContent = '🔔 Enable reminders';
+  btn.innerHTML = icBell + 'Enable reminders';
   btn.disabled = false;
   btn.style.background = '';
   btn.style.border = '';
