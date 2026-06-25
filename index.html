@@ -499,6 +499,20 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         </div>
     </div>
 
+    <!-- STREAK PROTECT CARD — shown when streak > 2 and no check-in today -->
+    <div id="streak-protect" style="display:none;margin-bottom:12px;">
+      <div style="background:linear-gradient(135deg,#1A1208,#201A08);border:.5px solid rgba(255,165,0,0.6);border-radius:var(--r3);padding:16px 18px;box-shadow:0 4px 20px rgba(255,140,0,0.15);">
+        <div style="display:flex;align-items:flex-start;gap:12px;">
+          <div style="font-size:28px;line-height:1;flex-shrink:0;padding-top:2px;">⚡</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:#FFB800;margin-bottom:4px;">Don't break your streak</div>
+            <div style="font-size:12px;color:#CC8800;line-height:1.55;" id="streak-protect-msg">Log today before midnight to keep it alive.</div>
+          </div>
+        </div>
+        <button onclick="goTab('checkin')" style="width:100%;margin-top:12px;padding:11px;background:linear-gradient(135deg,#FF9900,#CC6600);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 3px 10px rgba(255,140,0,0.3);">Log today →</button>
+      </div>
+    </div>
+
     <!-- QUICK CHECK-IN CARD on home screen -->
     <div class="card" id="quick-checkin-card" style="background:linear-gradient(135deg,#1A0A3A,#0A1020);border-color:var(--ac4);padding:0;overflow:hidden;cursor:pointer;" onclick="openQuickCheckin()">
       <div style="padding:16px 18px 12px;">
@@ -549,6 +563,15 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
   <!-- CHECK-IN -->
   <div id="s-checkin" class="sec">
+    <!-- shown when user already logged today -->
+    <div id="already-logged" style="display:none;">
+      <div class="card" style="text-align:center;padding:28px 20px;">
+        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,rgba(94,166,64,0.25),rgba(60,120,30,0.15));border:.5px solid rgba(94,166,64,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9DD870" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div style="font-size:16px;font-weight:700;color:var(--tx);margin-bottom:6px;">Already logged today</div>
+        <div style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:18px;" id="already-logged-summary">Your check-in is saved.</div>
+        <button class="btn-g" onclick="showDailyForm()" style="width:100%;margin-bottom:8px;">Log another entry</button>
+      </div>
+    </div>
     <div id="daily-form">
       <div class="card">
         <div class="lbl">How are you feeling right now?</div>
@@ -694,7 +717,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
             <div style="font-size:12px;color:#9977CC;line-height:1.6;">This meditation is guided by your device's built-in voice. For the best experience on Android, go to <strong style="color:#C8A8FF;">Settings → Accessibility → Text-to-speech</strong> and select <strong style="color:#C8A8FF;">Google Text-to-speech</strong> as your engine. Then tap Begin below.</div>
             <div style="margin-top:10px;display:flex;align-items:center;gap:6px;">
               <div style="width:6px;height:6px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
-              <span style="font-size:11px;color:#7DCAA0;">Free · No signup · Works offline · No credits</span>
+              <span style="font-size:11px;color:#7DCAA0;">Free · No signup · Cached after first use · No credits</span>
             </div>
           </div>
         </div>
@@ -1190,6 +1213,12 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <button class="theme-btn" data-theme="ocean"><span class="theme-dot" style="background:#0A6EBD"></span>Deep ocean</button>
         <button class="theme-btn" data-theme="gold"><span class="theme-dot" style="background:#8A6A00"></span>Sacred gold</button>
       </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <div class="lbl">Daily reminder</div>
+      <div style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Get nudged if you haven't logged by evening — keeps your streak alive.</div>
+      <button class="btn" id="notif-btn" style="padding:12px;margin-top:0;font-size:14px;">🔔 Enable reminders</button>
+      <p id="notif-status" style="font-size:11px;color:var(--ts);text-align:center;margin-top:6px;display:none;line-height:1.5;"></p>
     </div>
     <div style="margin-bottom:20px">
       <div class="lbl">Bug report</div>
@@ -2093,6 +2122,18 @@ function updateHome() {
     ? Math.floor((Date.now() - new Date(lastReview.date).getTime()) / 86400000)
     : (n > 0 ? 999 : 0);
   document.getElementById('wprompt').style.display = (n > 0 && daysSinceReview >= 7) ? 'block' : 'none';
+
+  // Streak protect card
+  const protectEl = document.getElementById('streak-protect');
+  if(protectEl) {
+    if(n > 2 && !checkedInToday()) {
+      protectEl.style.display = 'block';
+      const msgEl = document.getElementById('streak-protect-msg');
+      if(msgEl) msgEl.textContent = 'You\'re on day ' + n + '. Log today\'s check-in before midnight to keep it alive.';
+    } else {
+      protectEl.style.display = 'none';
+    }
+  }
 }
 
 // ===================== TRIAL =====================
@@ -2125,6 +2166,20 @@ function goTab(id) {
   if(id === 'phases') renderPhase();
   if(id === 'stories') { shuffle(stories); storyIdx = 0; renderStory(); }
   if(id === 'transmute') switchTr('pranayama');
+  if(id === 'checkin') {
+    const alEl = document.getElementById('already-logged');
+    const dfEl = document.getElementById('daily-form');
+    if(checkedInToday()) {
+      const last = [...S.entries].reverse().find(e => e.type === 'daily' && new Date(e.date).toDateString() === new Date().toDateString());
+      const sumEl = document.getElementById('already-logged-summary');
+      if(sumEl && last) sumEl.textContent = (last.mood || '–') + ' · Energy ' + last.energy + '/10 · Clarity ' + last.clarity + '/10' + (last.note ? ' · "' + last.note.slice(0, 60) + (last.note.length > 60 ? '…' : '') + '"' : '');
+      if(alEl) alEl.style.display = 'block';
+      if(dfEl) dfEl.style.display = 'none';
+    } else {
+      if(alEl) alEl.style.display = 'none';
+      if(dfEl) dfEl.style.display = '';
+    }
+  }
   if(id === 'urge') {
     document.getElementById('urge-home').style.display='block';
     document.getElementById('urge-surf').style.display='none';
@@ -2155,6 +2210,17 @@ function saveEntry() {
   S.mood = null;
   toast(t('toastCheckin'));
   goTab('home');
+}
+
+function checkedInToday() {
+  const today = new Date().toDateString();
+  return S.entries.some(e => e.type === 'daily' && new Date(e.date).toDateString() === today);
+}
+
+function showDailyForm() {
+  document.getElementById('already-logged').style.display = 'none';
+  document.getElementById('daily-form').style.display = '';
+  document.getElementById('weekly-form').style.display = 'none';
 }
 
 function showReview() { document.getElementById('daily-form').style.display='none'; document.getElementById('weekly-form').style.display='block'; }
@@ -2264,11 +2330,71 @@ function switchTr(name) {
   });
 }
 
+// ===================== NOTIFICATIONS =====================
+function initNotifBtn() {
+  const btn = document.getElementById('notif-btn');
+  const status = document.getElementById('notif-status');
+  if(!btn) return;
+  btn.onclick = null;
+  if(!('Notification' in window)) {
+    btn.textContent = '🔕 Not supported on this browser';
+    btn.disabled = true;
+    return;
+  }
+  if(Notification.permission === 'granted') {
+    btn.textContent = '✓ Reminders enabled';
+    btn.style.background = 'linear-gradient(135deg,rgba(94,166,64,0.3),rgba(60,120,30,0.2))';
+    btn.style.border = '.5px solid rgba(94,166,64,0.5)';
+    btn.style.color = '#9DD870';
+    btn.style.boxShadow = 'none';
+    btn.disabled = true;
+    if(status) { status.textContent = "You'll be reminded after 6 PM if you haven't logged yet."; status.style.display = 'block'; }
+    return;
+  }
+  if(Notification.permission === 'denied') {
+    btn.textContent = '🔕 Blocked — enable in browser settings';
+    btn.disabled = true;
+    if(status) { status.textContent = 'Open your browser site settings to allow notifications.'; status.style.display = 'block'; }
+    return;
+  }
+  btn.textContent = '🔔 Enable reminders';
+  btn.disabled = false;
+  btn.style.background = '';
+  btn.style.border = '';
+  btn.style.color = '';
+  btn.style.boxShadow = '';
+  btn.onclick = function() {
+    Notification.requestPermission().then(function(perm) {
+      initNotifBtn();
+      if(perm === 'granted') toast('Reminders enabled ✓');
+    });
+  };
+}
+
+function checkDailyReminder() {
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  if(checkedInToday()) return;
+  const today = new Date().toDateString();
+  if(localStorage.getItem('last_notif_date') === today) return;
+  const h = new Date().getHours();
+  if(h < 18) return;
+  const n = calcStreak();
+  if(n === 0) return;
+  localStorage.setItem('last_notif_date', today);
+  try {
+    new Notification('Transmute — keep your streak alive 🔥', {
+      body: 'Day ' + n + ' streak. Log your check-in before midnight.',
+      icon: '/icon-192.png'
+    });
+  } catch(e) {}
+}
+
 // ===================== SETTINGS =====================
 function openSettings() {
   document.getElementById('s-overlay').style.display = 'block';
   document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('on', b.dataset.theme === curTheme));
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === (localStorage.getItem('sr_lang')||'en')));
+  initNotifBtn();
 }
 function closeSettings() { document.getElementById('s-overlay').style.display = 'none'; }
 
@@ -3208,6 +3334,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   updateGreeting();
 
+  // Daily reminder check (fires if after 6pm and not yet logged)
+  checkDailyReminder();
+
   document.getElementById('sos-btn').addEventListener('click', uStart);
 
   // Breath tool
@@ -3473,6 +3602,38 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 
+
+<script>
+// ---- Swipe between tabs ----
+(function() {
+  var scroll = document.getElementById('scroll');
+  if(!scroll) return;
+  var tabOrder = ['home','urge','stories','transmute','phases'];
+  var swipeX = 0, swipeY = 0, scrollY0 = 0;
+
+  scroll.addEventListener('touchstart', function(e) {
+    swipeX = e.touches[0].clientX;
+    swipeY = e.touches[0].clientY;
+    scrollY0 = scroll.scrollTop;
+  }, {passive: true});
+
+  scroll.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - swipeX;
+    var dy = e.changedTouches[0].clientY - swipeY;
+    var scrolled = Math.abs(scroll.scrollTop - scrollY0);
+    // Only fire on clearly horizontal gesture with no vertical scroll
+    if(Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2.5 || scrolled > 18) return;
+    var active = document.querySelector('.tab.on');
+    if(!active) return;
+    var cur = tabOrder.indexOf(active.dataset.tab);
+    if(cur === -1) return;
+    var next = dx < 0
+      ? (cur + 1) % tabOrder.length
+      : (cur - 1 + tabOrder.length) % tabOrder.length;
+    goTab(tabOrder[next]);
+  }, {passive: true});
+})();
+</script>
 
 <script>
 // ---- Smooth tab reorder ----
