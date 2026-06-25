@@ -219,7 +219,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   @keyframes orbPulse2{0%,100%{transform:scale(1);opacity:.2;}50%{transform:scale(1.18);opacity:.08;}}
   .urf-ring1{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(108,92,231,0.5);animation:orbPulse 2.4s ease-in-out infinite;}
   .urf-ring2{position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(108,92,231,0.25);animation:orbPulse2 2.4s ease-in-out infinite;}
-  .urf-orb-core{position:absolute;inset:14px;border-radius:50%;background:linear-gradient(135deg,#8B7FE8,#4834C8);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(108,92,231,0.5);}
+  .urf-orb-core{position:absolute;inset:14px;border-radius:50%;background:linear-gradient(135deg,#8B7FE8,#4834C8);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(108,92,231,0.5);transition:background .5s ease,box-shadow .5s ease;}
   .urf-orb-num{font-size:22px;font-weight:800;color:white;line-height:1;}
   .urf-orb-sub{font-size:8px;color:rgba(255,255,255,0.55);letter-spacing:.05em;margin-top:2px;}
   .urf-stats{flex:1;display:flex;flex-direction:column;gap:6px;}
@@ -238,6 +238,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .utool-btn .ul{font-size:10px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:.02em;}
   .utool-btn.on .ul{color:var(--ac2);}
   .utool-sec{display:none;padding:0 20px;}.utool-sec.on{display:block;}
+  .utool-back{align-items:center;justify-content:center;gap:7px;width:calc(100% - 40px);margin:0 20px 12px;padding:13px;background:rgba(108,92,231,0.12);border:.5px solid var(--ac4);border-radius:12px;color:var(--ac2);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;}
+  .utool-back svg{display:block;}
+  .breath-only #utool-back{display:none!important;}
   .urf-survived{width:calc(100% - 40px);margin:0 20px 20px;padding:15px;background:linear-gradient(135deg,var(--ac),var(--acd));color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 6px 20px rgba(108,92,231,0.35);display:none;-webkit-appearance:none;}
   .breath-ring-wrap{width:100px;height:100px;border-radius:50%;border:3px solid var(--ac);display:flex;align-items:center;justify-content:center;margin:14px auto;transition:all 3.5s ease-in-out;}
   .breath-ring-inner{width:58px;height:58px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;transition:all 3.5s ease-in-out;}
@@ -1114,6 +1117,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           </div>
         </div>
 
+        <!-- Shown above whichever tool is open — one clear way back to the grid -->
+        <button id="utool-back" class="utool-back" onclick="uShowTool(null)" style="display:none;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Choose a different tool</button>
+
         <!-- BREATH TOOL -->
         <div id="utool-breath" class="utool-sec">
           <div class="card" style="text-align:center;">
@@ -1125,7 +1131,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
             <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Box breathing redirects energy upward and out of the urge. 4 cycles kills almost any craving.</p>
             <button class="urge-sos-btn" id="u-breath-btn" style="background:var(--ac);margin-bottom:0;padding:13px;font-size:14px;">Start breathing</button>
           </div>
-          <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:8px;">← Back to tools</button>
         </div>
 
         <!-- TIMER TOOL -->
@@ -1143,7 +1148,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
             <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Don't act. Just watch the seconds pass. Every tick is the urge getting weaker.</p>
             <button class="urge-sos-btn" id="u-timer-btn" style="background:var(--ac);margin-bottom:0;padding:13px;font-size:14px;">Start the countdown</button>
           </div>
-          <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:8px;">← Back to tools</button>
         </div>
 
         <!-- AFFIRM TOOL -->
@@ -1151,7 +1155,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <div class="affirm-box" id="u-affirm-box">"I am not my urges. I am the awareness that watches them pass."</div>
           <div class="affirm-dots" id="u-affirm-dots"></div>
           <button class="urge-sos-btn" id="u-next-affirm" style="background:var(--ac);margin-bottom:8px;padding:13px;font-size:14px;">Next affirmation</button>
-          <button class="survived-btn" onclick="uShowTool(null)">← Back to tools</button>
         </div>
 
         <!-- REMIND TOOL -->
@@ -1175,7 +1178,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
             <div class="remind-title">Most men will give in today</div>
             <div class="remind-text">Right now, thousands of men are facing the same wave and breaking. You're still here. That already makes you different. Prove it.</div>
           </div>
-          <button class="survived-btn" onclick="uShowTool(null)" style="margin-top:4px;">← Back to tools</button>
         </div>
 
         <button class="urf-survived" id="u-survived-btn" onclick="uWin()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><polyline points="20 6 9 17 4 12"/></svg>I surfed it — urge has passed</button>
@@ -3110,6 +3112,23 @@ function uStartBreath() {
   }, 20000);
 }
 
+// ----- Unified urge model -----
+// A real urge isn't random: it builds, crests once, then fades. One smooth
+// single-peaked curve drives the orb number, the wave amplitude, the direction
+// readout AND the phase label, so they always agree — no more jittering between
+// "rising / falling / steady".
+let uSurfStart = 0;
+let uIntensity = 0.62;        // 0..1, shared by the wave + the readouts
+const U_PEAK_T = 32;          // seconds until the urge crests
+function uIntensityAt(sec) {
+  const I0 = 0.62, peak = 1.0, floor = 0.08, tau = 85;
+  if(sec <= U_PEAK_T) {
+    const p = sec / U_PEAK_T;
+    return I0 + (peak - I0) * (p*p*(3 - 2*p));   // smoothstep rise to the crest
+  }
+  return floor + (peak - floor) * Math.exp(-(sec - U_PEAK_T) / tau); // exponential fade
+}
+
 function uStartWave() {
   const canvas = document.getElementById('urge-canvas');
   if(!canvas) return;
@@ -3123,10 +3142,11 @@ function uStartWave() {
   setSize();
   const W = canvas.offsetWidth||400;
   const H = canvas.offsetHeight||110;
-  let t = 0, intensity = 0.85;
+  let t = 0;
   function draw() {
+    const intensity = uIntensity;                 // read the shared curve
     ctx.clearRect(0,0,W,H);
-    const amp = intensity * H * 0.32;
+    const amp = (0.18 + intensity * 0.82) * H * 0.34; // calmer as the urge fades
     const baseY = H * 0.5;
     ctx.beginPath();
     ctx.moveTo(0,H);
@@ -3148,36 +3168,51 @@ function uStartWave() {
       x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
     ctx.strokeStyle=`rgba(${r},${g},${b},0.9)`;ctx.lineWidth=2;ctx.stroke();
-    t+=0.022;
+    t += 0.012 + intensity*0.022;                 // waves slow down as it passes
     uWaveAnim=requestAnimationFrame(draw);
   }
   draw();
 }
 
 function uStartIntensity() {
-  let prog = 0, prevV = 0.85;
-  uIntInterval = setInterval(() => {
-    prog = Math.min(prog+1,100);
-    let v;
-    if(prog<25) v=0.35+(prog/25)*0.55;
-    else if(prog<55) v=0.9-((prog-25)/30)*0.45;
-    else v=0.45-((prog-55)/45)*0.38;
-    v=Math.max(0.07,v);
-    // Orb number
+  uSurfStart = Date.now();
+  clearInterval(uIntInterval);
+  const tick = () => {
+    const sec = (Date.now() - uSurfStart) / 1000;
+    uIntensity = uIntensityAt(sec);
+    const v = uIntensity;
     const orbNum = document.getElementById('urf-orb-num');
     if(orbNum) orbNum.textContent = Math.round(v*100);
-    // Direction arrow
+    // Orb takes the same colour as the wave: hot red at the crest, cooling to
+    // calm purple as the urge passes — so the user *sees* it working.
+    const core = document.querySelector('.urf-orb-core');
+    if(core) {
+      const cr = Math.round(127+v*(226-127)), cg = Math.round(119+v*(75-119)), cb = Math.round(221+v*(75-221));
+      core.style.background = `linear-gradient(135deg, rgb(${cr},${cg},${cb}), rgb(${Math.round(cr*0.55)},${Math.round(cg*0.55)},${Math.round(cb*0.62)}))`;
+      core.style.boxShadow = `0 0 ${12+v*22}px rgba(${cr},${cg},${cb},0.55)`;
+    }
+    // Direction is read straight off the curve's shape, so it moves once:
+    // rising → peaking → falling, and never flickers.
     const dir = document.getElementById('urf-dir');
     if(dir) {
-      if(v > prevV+0.01){ dir.textContent='↑ rising'; dir.style.color='#E24B4A'; }
-      else if(v < prevV-0.01){ dir.textContent='↓ falling'; dir.style.color='#5DCAA5'; }
-      else { dir.textContent='→ steady'; dir.style.color='#EF9F27'; }
+      if(sec < U_PEAK_T - 3) { dir.textContent='↑ rising'; dir.style.color='#E24B4A'; }
+      else if(sec <= U_PEAK_T + 3) { dir.textContent='● peaking'; dir.style.color='#EF9F27'; }
+      else { dir.textContent='↓ passing'; dir.style.color='#5DCAA5'; }
     }
-    prevV = v;
-    // Phase label
+    // Phase label always agrees with the direction + level.
     const lbl=document.getElementById('wave-lbl');
-    if(lbl) lbl.textContent=v>0.65?'Peaking — breathe through it, it will pass':v>0.38?'Subsiding — you\'re winning, keep holding':'Fading — almost gone, stay strong';
-  },1400);
+    if(lbl) {
+      let msg;
+      if(sec < U_PEAK_T - 3) msg = 'Building — breathe slow, let it rise without acting on it';
+      else if(sec <= U_PEAK_T + 3) msg = 'This is the peak — stay with the breath, it only falls from here';
+      else if(v > 0.45) msg = "Passing — the hardest moment is behind you, keep holding";
+      else if(v > 0.2) msg = "Fading fast — you've almost surfed it";
+      else msg = "The wave has broken — it passed, and you stayed in control";
+      lbl.textContent = msg;
+    }
+  };
+  tick();
+  uIntInterval = setInterval(tick, 120);
 }
 
 function uShowTool(name) {
@@ -3185,6 +3220,8 @@ function uShowTool(name) {
   document.querySelectorAll('.utool-btn').forEach(b=>b.classList.remove('on'));
   const chooser=document.getElementById('utool-chooser');
   if(chooser) chooser.style.display=name?'none':'block';
+  const back=document.getElementById('utool-back');
+  if(back) back.style.display=name?'flex':'none';
   if(!name) return;
   const sec=document.getElementById('utool-'+name);
   if(sec) sec.classList.add('on');
@@ -3783,7 +3820,11 @@ document.addEventListener('DOMContentLoaded', function() {
 (function() {
   var scroll = document.getElementById('scroll');
   if(!scroll) return;
-  var swipeX = 0, swipeY = 0, scrollY0 = 0;
+  var swipeX = 0, swipeY = 0, scrollY0 = 0, ignoreSwipe = false;
+
+  // Elements that own their own horizontal swipe/scroll — a gesture that
+  // starts inside one of these should browse *that* widget, not change tabs.
+  var HSWIPE_SEL = '.q-side, #story-card, #quick-mood-row';
 
   function getLiveTabOrder() {
     return Array.from(document.querySelectorAll('.tab')).map(function(t) { return t.dataset.tab; });
@@ -3793,9 +3834,11 @@ document.addEventListener('DOMContentLoaded', function() {
     swipeX = e.touches[0].clientX;
     swipeY = e.touches[0].clientY;
     scrollY0 = scroll.scrollTop;
+    ignoreSwipe = !!(e.target.closest && e.target.closest(HSWIPE_SEL));
   }, {passive: true});
 
   scroll.addEventListener('touchend', function(e) {
+    if(ignoreSwipe) return;
     var dx = e.changedTouches[0].clientX - swipeX;
     var dy = e.changedTouches[0].clientY - swipeY;
     var scrolled = Math.abs(scroll.scrollTop - scrollY0);
