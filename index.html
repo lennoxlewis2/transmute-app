@@ -2103,7 +2103,8 @@ function updateHome() {
   updateAura(n); updateFlame(n);
   const b = getBadge(n);
   const pbEl = document.getElementById('pbadge');
-  pbEl.innerHTML = (b.icon ? b.icon + ' ' : '') + b.label;
+  const badgeLabel = (n === 0 && S.startDate) ? 'Day 1 · Started' : b.label;
+  pbEl.innerHTML = (b.icon ? b.icon + ' ' : '') + badgeLabel;
   pbEl.className = 'ph-badge ' + b.cls;
   checkMilestone(n);
   updateGreeting();
