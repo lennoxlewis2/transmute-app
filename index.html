@@ -3605,11 +3605,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 // ---- Swipe between tabs ----
+// Reads live DOM order so it always respects the user's tab arrangement
 (function() {
   var scroll = document.getElementById('scroll');
   if(!scroll) return;
-  var tabOrder = ['home','urge','stories','transmute','phases'];
   var swipeX = 0, swipeY = 0, scrollY0 = 0;
+
+  function getLiveTabOrder() {
+    return Array.from(document.querySelectorAll('.tab')).map(function(t) { return t.dataset.tab; });
+  }
 
   scroll.addEventListener('touchstart', function(e) {
     swipeX = e.touches[0].clientX;
@@ -3621,10 +3625,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var dx = e.changedTouches[0].clientX - swipeX;
     var dy = e.changedTouches[0].clientY - swipeY;
     var scrolled = Math.abs(scroll.scrollTop - scrollY0);
-    // Only fire on clearly horizontal gesture with no vertical scroll
     if(Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2.5 || scrolled > 18) return;
     var active = document.querySelector('.tab.on');
     if(!active) return;
+    var tabOrder = getLiveTabOrder();
     var cur = tabOrder.indexOf(active.dataset.tab);
     if(cur === -1) return;
     var next = dx < 0
