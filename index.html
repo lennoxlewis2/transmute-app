@@ -276,12 +276,12 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws.hidden{display:none;}
   .ws-slides{display:flex;flex:1;transition:transform .4s cubic-bezier(.4,0,.2,1);will-change:transform;}
   .ws-slide{min-width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 28px 24px;text-align:center;}
-  .ws-icon{font-size:72px;margin-bottom:20px;line-height:1;}
+  .ws-icon{display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
   .ws-title{font-size:30px;font-weight:800;color:white;margin-bottom:12px;line-height:1.2;letter-spacing:-.5px;}
   .ws-sub{font-size:15px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:300px;}
   .ws-features{display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;margin-top:28px;text-align:left;}
   .ws-feat{display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,0.05);border:.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;}
-  .ws-feat-ic{font-size:24px;flex-shrink:0;margin-top:1px;}
+  .ws-feat-ic{display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;color:var(--ac);}
   .ws-feat-txt strong{display:block;font-size:14px;font-weight:700;color:white;margin-bottom:2px;}
   .ws-feat-txt span{font-size:12px;color:rgba(255,255,255,0.45);line-height:1.5;}
   .ws-hero{width:100%;max-width:320px;margin-top:28px;background:linear-gradient(135deg,rgba(108,92,231,0.25),rgba(72,52,200,0.15));border:1px solid rgba(108,92,231,0.4);border-radius:20px;padding:22px;text-align:left;}
@@ -301,7 +301,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws-ios{background:rgba(255,255,255,0.08);border-radius:14px;padding:18px;width:100%;max-width:300px;margin-bottom:16px;text-align:left;}
   .ws-step{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:14px;color:rgba(255,255,255,0.85);}
   .ws-step:last-child{margin-bottom:0;}
-  .ws-step-ic{font-size:20px;flex-shrink:0;}
+  .ws-step-ic{display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ac);}
   /* Paywall */
   .paywall{position:fixed;inset:0;z-index:900;display:flex;flex-direction:column;overflow:hidden;}
   .paywall.hidden{display:none;}
@@ -358,26 +358,43 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
     <!-- SLIDE 1: Hook -->
     <div class="ws-slide">
-      <div class="ws-icon">⚡</div>
+      <div class="ws-icon">
+        <svg width="88" height="88" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(108,92,231,0.9)) drop-shadow(0 0 8px rgba(196,188,255,0.5));animation:flamePulse 2s ease-in-out infinite;">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="url(#wsZap1)"/>
+          <defs><linearGradient id="wsZap1" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="55%" stop-color="#C4BCFF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
       <div class="ws-title">This changes<br>everything.</div>
       <div class="ws-sub">Most men never learn to use their sexual energy. You're about to. Transmute is the only tool built around your journey — not just tracking days, but transforming them.</div>
     </div>
 
     <!-- SLIDE 2: Features -->
     <div class="ws-slide">
-      <div class="ws-icon">🔥</div>
+      <div class="ws-icon">
+        <svg width="88" height="88" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(108,92,231,0.9)) drop-shadow(0 0 8px rgba(196,188,255,0.5));animation:flamePulse 1.6s ease-in-out infinite;">
+          <path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="url(#wsFlame2)"/>
+          <path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="white" opacity=".9"/>
+          <defs><linearGradient id="wsFlame2" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="50%" stop-color="#C4BCFF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
       <div class="ws-title">Built for<br>your journey.</div>
       <div class="ws-features">
         <div class="ws-feat">
-          <div class="ws-feat-ic">📅</div>
+          <div class="ws-feat-ic">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M12 3 a9 9 0 0 1 6.4 15.4" stroke-width="2.5"/><path d="M12 2c0 0-3 2.5-3 5.5a3 3 0 0 0 6 0c0-3-3-5.5-3-5.5z" fill="currentColor" stroke="none" transform="translate(0,7.5) scale(0.55) translate(9.8,0)"/></svg>
+          </div>
           <div class="ws-feat-txt"><strong>Streak tracking</strong><span>See your progress build day by day with phases, badges and energy scores.</span></div>
         </div>
         <div class="ws-feat">
-          <div class="ws-feat-ic">🧠</div>
+          <div class="ws-feat-ic">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg>
+          </div>
           <div class="ws-feat-txt"><strong>Daily check-ins</strong><span>Log mood, energy and focus so you can see what changes when you commit.</span></div>
         </div>
         <div class="ws-feat">
-          <div class="ws-feat-ic">📖</div>
+          <div class="ws-feat-ic">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
           <div class="ws-feat-txt"><strong>Transmutation guides</strong><span>Techniques to redirect your energy into focus, creativity and drive — on demand.</span></div>
         </div>
       </div>
@@ -385,17 +402,28 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
     <!-- SLIDE 3: Urge Wave hero -->
     <div class="ws-slide">
-      <div class="ws-icon">🌊</div>
+      <div class="ws-icon">
+        <svg width="88" height="88" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(108,92,231,0.9)) drop-shadow(0 0 8px rgba(196,188,255,0.5));animation:flamePulse 1.8s ease-in-out infinite;">
+          <path d="M2 12c2-5 4-5 6 0s4 5 6 0 4-5 6 0" stroke="url(#wsWave3a)" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+          <path d="M2 17c2-5 4-5 6 0s4 5 6 0 4-5 6 0" stroke="url(#wsWave3b)" stroke-width="2" stroke-linecap="round" fill="none" opacity=".4"/>
+          <path d="M2 7c2-5 4-5 6 0s4 5 6 0 4-5 6 0" stroke="url(#wsWave3c)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".2"/>
+          <defs>
+            <linearGradient id="wsWave3a" x1="2" y1="12" x2="22" y2="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#C4BCFF"/></linearGradient>
+            <linearGradient id="wsWave3b" x1="2" y1="17" x2="22" y2="17" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#C4BCFF"/></linearGradient>
+            <linearGradient id="wsWave3c" x1="2" y1="7" x2="22" y2="7" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#C4BCFF"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
       <div class="ws-title">Your secret<br>weapon.</div>
       <div class="ws-hero">
-        <div class="ws-hero-badge">⭐ Most powerful feature</div>
+        <div class="ws-hero-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-1px;margin-right:3px"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>Most powerful feature</div>
         <div class="ws-hero-title">Urge Wave — SOS Tool</div>
         <div class="ws-hero-desc">When an urge hits, you have seconds before it controls you. Urge Wave meets you in that moment with a guided, real-time technique to ride the wave — and come out stronger.</div>
         <div class="ws-hero-perks">
-          <div class="ws-hero-perk">🎯 Breath-paced urge surfing</div>
-          <div class="ws-hero-perk">⏱️ Real-time intensity tracker</div>
-          <div class="ws-hero-perk">🧘 Grounding & redirect tools</div>
-          <div class="ws-hero-perk">📊 Tracks your patterns over time</div>
+          <div class="ws-hero-perk"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;color:#C4BCFF"><path d="M12 4v4"/><circle cx="8" cy="15" r="4"/><circle cx="16" cy="15" r="4"/></svg>Breath-paced urge surfing</div>
+          <div class="ws-hero-perk"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;color:#C4BCFF"><circle cx="12" cy="13" r="8"/><path d="M12 9v4"/><path d="M10 2h4m-2 0v3"/></svg>Real-time intensity tracker</div>
+          <div class="ws-hero-perk"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;color:#C4BCFF"><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="14"/><path d="M5 19a7 7 0 0 0 14 0"/><path d="M5 19H3m16 0h2"/></svg>Grounding &amp; redirect tools</div>
+          <div class="ws-hero-perk"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;color:#C4BCFF"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="17" rx="1"/></svg>Tracks your patterns over time</div>
         </div>
         <div class="ws-trial"><strong>Free for your first 7 days.</strong><br>After that, unlock it for less than a coffee a month. Your streak is worth it.</div>
       </div>
@@ -403,18 +431,29 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
     <!-- SLIDE 4: Install CTA -->
     <div class="ws-slide">
-      <div class="ws-icon">🚀</div>
+      <div class="ws-icon">
+        <svg width="88" height="88" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(108,92,231,0.9)) drop-shadow(0 0 8px rgba(196,188,255,0.5));animation:flamePulse 2.2s ease-in-out infinite;">
+          <path d="M5 18l7-5.5 7 5.5" stroke="url(#wsGo4a)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5 13l7-5.5 7 5.5" stroke="url(#wsGo4b)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>
+          <path d="M5 8l7-5 7 5" stroke="url(#wsGo4c)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" opacity=".3"/>
+          <defs>
+            <linearGradient id="wsGo4a" x1="5" y1="18" x2="19" y2="18" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#C4BCFF"/></linearGradient>
+            <linearGradient id="wsGo4b" x1="5" y1="13" x2="19" y2="13" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#C4BCFF"/></linearGradient>
+            <linearGradient id="wsGo4c" x1="5" y1="8" x2="19" y2="8" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6C5CE7"/><stop offset="100%" stop-color="#C4BCFF"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
       <div class="ws-title">Ready to<br>start?</div>
       <div class="ws-sub" style="margin-bottom:28px;">Free to use. No account. Works offline. Your data stays on your device.</div>
       <div id="ws-android" style="width:100%;display:flex;flex-direction:column;align-items:center;">
-        <button class="ws-btn" id="ws-install" style="max-width:340px;margin-bottom:10px;">📲 Add to Home Screen</button>
+        <button class="ws-btn" id="ws-install" style="max-width:340px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></svg>Add to Home Screen</button>
         <div style="font-size:12px;color:rgba(255,255,255,0.25);">Free · No account needed · Works offline</div>
       </div>
       <div id="ws-ios" style="display:none;width:100%;flex-direction:column;align-items:center;">
         <div class="ws-ios" style="max-width:340px;">
-          <div class="ws-step"><span class="ws-step-ic">⬆️</span><span>Tap <strong>Share</strong> at the bottom of Safari</span></div>
-          <div class="ws-step"><span class="ws-step-ic">➕</span><span>Tap <strong>Add to Home Screen</strong></span></div>
-          <div class="ws-step"><span class="ws-step-ic">✅</span><span>Tap <strong>Add</strong> — installed!</span></div>
+          <div class="ws-step"><span class="ws-step-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></span><span>Tap <strong>Share</strong> at the bottom of Safari</span></div>
+          <div class="ws-step"><span class="ws-step-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><span>Tap <strong>Add to Home Screen</strong></span></div>
+          <div class="ws-step"><span class="ws-step-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg></span><span>Tap <strong>Add</strong> — installed!</span></div>
         </div>
       </div>
     </div>
