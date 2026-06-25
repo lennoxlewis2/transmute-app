@@ -241,6 +241,12 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .utool-back{align-items:center;justify-content:center;gap:7px;width:calc(100% - 40px);margin:0 20px 12px;padding:13px;background:rgba(108,92,231,0.12);border:.5px solid var(--ac4);border-radius:12px;color:var(--ac2);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;-webkit-appearance:none;}
   .utool-back svg{display:block;}
   .breath-only #utool-back{display:none!important;}
+  .uint-grid{display:flex;flex-direction:column;gap:8px;}
+  .uint-btn{display:flex;align-items:center;gap:12px;width:100%;padding:15px 16px;border:.5px solid var(--bds);border-radius:14px;background:rgba(255,255,255,0.03);cursor:pointer;font-family:'Inter',sans-serif;-webkit-appearance:none;transition:transform .12s,background .15s,border-color .15s;}
+  .uint-btn:active{transform:scale(0.97);background:rgba(255,255,255,0.07);border-color:var(--c);}
+  .uint-dot{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);flex-shrink:0;}
+  .uint-l{flex:1;text-align:left;font-size:15px;font-weight:600;color:var(--tx);}
+  .uint-n{font-size:13px;font-weight:700;color:var(--c);}
   .urf-survived{width:calc(100% - 40px);margin:0 20px 20px;padding:15px;background:linear-gradient(135deg,var(--ac),var(--acd));color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 6px 20px rgba(108,92,231,0.35);display:none;-webkit-appearance:none;}
   .breath-ring-wrap{width:100px;height:100px;border-radius:50%;border:3px solid var(--ac);display:flex;align-items:center;justify-content:center;margin:14px auto;transition:all 3.5s ease-in-out;}
   .breath-ring-inner{width:58px;height:58px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;transition:all 3.5s ease-in-out;}
@@ -1058,6 +1064,27 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <div style="background:var(--ac);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div>
               <span><strong style="color:var(--tx)">Watch it pass</strong> — it always does. Every wave breaks.</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTENSITY SELF-REPORT (step 1, before the wave) -->
+      <div id="urge-intensity" style="display:none;">
+        <div class="urf-header">
+          <div class="urf-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="vertical-align:-1px;margin-right:5px"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></svg>Urge Wave</div>
+          <button class="urf-close" onclick="uClose(false)">×</button>
+        </div>
+        <div class="card" style="padding:20px;">
+          <div style="text-align:center;margin-bottom:18px;">
+            <div style="font-size:18px;font-weight:700;color:var(--tx);margin-bottom:6px;letter-spacing:-.2px;">How strong is it right now?</div>
+            <div style="font-size:12px;color:var(--ts);line-height:1.6;">Name it honestly — that alone takes some of its power. Then watch it pass.</div>
+          </div>
+          <div class="uint-grid">
+            <button class="uint-btn" style="--c:#5DCAA5" onclick="uBeginSurf(0.30)"><span class="uint-dot"></span><span class="uint-l">Barely there</span><span class="uint-n">30</span></button>
+            <button class="uint-btn" style="--c:#9DD870" onclick="uBeginSurf(0.45)"><span class="uint-dot"></span><span class="uint-l">Noticeable</span><span class="uint-n">45</span></button>
+            <button class="uint-btn" style="--c:#EFAF27" onclick="uBeginSurf(0.62)"><span class="uint-dot"></span><span class="uint-l">Strong</span><span class="uint-n">62</span></button>
+            <button class="uint-btn" style="--c:#F0844A" onclick="uBeginSurf(0.80)"><span class="uint-dot"></span><span class="uint-l">Intense</span><span class="uint-n">80</span></button>
+            <button class="uint-btn" style="--c:#E24B4A" onclick="uBeginSurf(0.95)"><span class="uint-dot"></span><span class="uint-l">Overwhelming</span><span class="uint-n">95</span></button>
           </div>
         </div>
       </div>
@@ -3054,15 +3081,30 @@ let uBreathInterval = null, uBreathPhase = 0;
 let uTimerRAF = null, uTimerRunning = false, uTimerStart = null;
 
 let uElapsedInterval = null, uElapsedSecs = 0;
+let uStartLevel = 0.62;   // the user's own reported intensity, anchors the curve
 
+// Step 1 of the surf: ask the user to name how strong the urge is right now.
+// Self-reporting it is itself a known urge-curbing step, and it makes the whole
+// model *theirs* — the number that then falls is the one they just set.
 function uStart() {
   // Full Urge Wave (live wave + intensity + all tools) is the paid product.
   // The breathing tool stays free — see uStartBreath().
   if(_trialExpired()) { if(window._showPaywall) window._showPaywall(); else document.getElementById('uw-paywall').classList.remove('hidden'); return; }
   document.getElementById('urge-surf').classList.remove('breath-only');
   document.getElementById('urge-home').style.display = 'none';
-  document.getElementById('urge-surf').style.display = 'block';
+  document.getElementById('urge-surf').style.display = 'none';
   document.getElementById('urge-win').style.display = 'none';
+  document.getElementById('urge-intensity').style.display = 'block';
+}
+
+// Step 2: they tapped a level — start the live surf anchored to it.
+function uBeginSurf(level) {
+  uStartLevel = level;
+  document.getElementById('urge-intensity').style.display = 'none';
+  document.getElementById('urge-home').style.display = 'none';
+  document.getElementById('urge-win').style.display = 'none';
+  document.getElementById('urge-surf').style.display = 'block';
+  if(navigator.vibrate) navigator.vibrate(10);
   uShowTool(null);
   uStartWave();
   uStartIntensity();
@@ -3120,8 +3162,13 @@ function uStartBreath() {
 let uSurfStart = 0;
 let uIntensity = 0.62;        // 0..1, shared by the wave + the readouts
 const U_PEAK_T = 32;          // seconds until the urge crests
-function uIntensityAt(sec) {
-  const I0 = 0.62, peak = 1.0, floor = 0.08, tau = 85;
+// Anchored to the user's reported level I0: an urge still climbs a little before
+// it crests, then fades well below where it started — the falling number is the
+// reassurance, and it's honest whether they reported mild or overwhelming.
+function uIntensityAt(sec, I0) {
+  if(I0 == null) I0 = uStartLevel;
+  const floor = 0.08, tau = 85;
+  const peak = Math.min(1.0, I0 + 0.15);
   if(sec <= U_PEAK_T) {
     const p = sec / U_PEAK_T;
     return I0 + (peak - I0) * (p*p*(3 - 2*p));   // smoothstep rise to the crest
@@ -3256,6 +3303,7 @@ function uClose(keepState) {
   if(!keepState) {
     document.getElementById('urge-surf').style.display='none';
     document.getElementById('urge-surf').classList.remove('breath-only');
+    document.getElementById('urge-intensity').style.display='none';
     document.getElementById('urge-home').style.display='block';
     document.getElementById('urge-win').style.display='none';
     uShowTool(null);
