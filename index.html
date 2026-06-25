@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#534AB7" id="tc">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Transmute">
@@ -57,6 +57,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 @keyframes flamePulse{0%,100%{transform:scaleY(1) scaleX(1);}50%{transform:scaleY(1.08) scaleX(0.93);}}
 .ph-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:700;margin-top:4px;letter-spacing:.03em;}
 .ph-badge svg{flex-shrink:0;}
+#pbadge{cursor:pointer;}
+.subback{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--ts);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:4px 2px;margin-bottom:12px;}
+.subback svg{display:block;}
+#pbadge::after{content:'›';margin-left:6px;font-weight:700;opacity:.6;}
 .bd0{background:rgba(255,255,255,0.07);color:#888;border:.5px solid rgba(255,255,255,0.1);}
 .bd7{background:linear-gradient(135deg,rgba(94,166,64,0.25),rgba(60,120,30,0.15));color:#9DD870;border:.5px solid rgba(94,166,64,0.4);}
 .bd14{background:linear-gradient(135deg,rgba(108,92,231,0.3),rgba(72,52,200,0.18));color:#C4BCFF;border:.5px solid rgba(108,92,231,0.5);}
@@ -312,7 +316,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pw-streak-num{font-size:32px;font-weight:800;color:#F09595;line-height:1;}
   .pw-streak-label{font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;}
   .pw-streak-msg{font-size:13px;color:rgba(255,160,160,0.8);margin-top:8px;line-height:1.5;}
-  .pw-badge{display:inline-block;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:12px;}
+  .pw-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:12px;}
   .pw-title{font-size:24px;font-weight:800;color:white;margin-bottom:8px;line-height:1.2;letter-spacing:-.4px;}
   .pw-fear{background:rgba(255,255,255,0.04);border:.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;width:100%;max-width:320px;margin-bottom:16px;text-align:left;}
   .pw-fear-title{font-size:11px;font-weight:700;color:rgba(255,100,100,0.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
@@ -320,9 +324,16 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pw-fear-item::before{content:'→';position:absolute;left:0;color:rgba(226,75,74,0.6);}
   .pw-perks{display:flex;flex-direction:column;gap:8px;width:100%;max-width:320px;margin-bottom:20px;text-align:left;}
   .pw-perk{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.8);}
-  .pw-perk-ic{font-size:18px;flex-shrink:0;}
+  .pw-perk-ic{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--ac4);}
+  .pw-perk-ic svg{display:block;}
+  .pw-badge svg{display:block;}
+  .pw-btn svg{display:block;}
+  .pw-free{background:rgba(255,255,255,0.06);border:.5px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;padding:11px 16px;border-radius:12px;width:100%;max-width:340px;display:flex;align-items:center;justify-content:center;gap:7px;-webkit-appearance:none;}
+  .pw-free svg{display:block;flex-shrink:0;}
+  .breath-only .urf-orb-row,.breath-only .urf-wave-area,.breath-only .urf-phase{display:none!important;}
+  .breath-only #utool-breath .survived-btn{display:none!important;}
   .pw-footer{position:sticky;bottom:0;padding:16px 24px max(20px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(8,6,21,1) 70%,transparent);width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;}
-  .pw-btn{width:100%;max-width:340px;padding:17px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;border:none;border-radius:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;-webkit-appearance:none;box-shadow:0 6px 24px rgba(255,165,0,0.4);}
+  .pw-btn{width:100%;max-width:340px;padding:17px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;border:none;border-radius:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;-webkit-appearance:none;box-shadow:0 6px 24px rgba(255,165,0,0.4);display:flex;align-items:center;justify-content:center;gap:8px;}
   .pw-price{font-size:12px;color:rgba(255,255,255,0.3);}
   .pw-restore{background:transparent;border:none;color:rgba(255,255,255,0.25);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;padding:4px;}
 
@@ -348,6 +359,18 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .btn,.btn-g,.urge-sos-btn,.ws-btn,.tab,.utool-btn,.qmood-btn,.mbtn{transition:transform .12s cubic-bezier(.34,1.56,.64,1),opacity .12s;}
   .btn:active,.btn-g:active,.urge-sos-btn:active,.ws-btn:active,.tab:active,.utool-btn:active,.qmood-btn:active,.mbtn:active{transform:scale(0.94);opacity:.85;}
   .card{transition:transform .15s ease;}
+
+  /* Respect users who prefer reduced motion — kills the looping decorative
+     animations (flame pulse, aura glow, legendary badge, win orb/sparks).
+     The breathing-ring transitions still change state, just without the slow tween. */
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:.001ms!important;
+      animation-iteration-count:1!important;
+      transition-duration:.01ms!important;
+      scroll-behavior:auto!important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -479,7 +502,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div class="hdr-date" id="hdr-date"></div>
           <div id="hdr-greeting" style="font-size:11px;color:var(--ac2);font-weight:500;display:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:200px;"></div>
   </div>
-  <button class="cogbtn" id="cog"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  <button class="cogbtn" id="histbtn" aria-label="History" title="History" style="margin-right:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></button>
+  <button class="cogbtn" id="cog" aria-label="Settings" title="Settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
 
 <div class="scroll" id="scroll">
@@ -502,7 +526,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <div class="sday">days</div>
             </div>
           </div>
-          <div class="ph-badge bd0" id="pbadge">Day 0 · Begin</div>
+          <div class="ph-badge bd0" id="pbadge" role="button" tabindex="0" aria-label="View phase guidance" onclick="goTab('phases')">Day 0 · Begin</div>
         </div>
         <div class="q-side">
           <div class="q-text" id="qtext"></div>
@@ -529,7 +553,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <div class="m-lbl">Best urge streak</div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" id="latest-card">
       <div class="lbl">Latest check-in</div>
       <div id="latest">
           <div style="text-align:center;padding:12px 0;">
@@ -636,7 +660,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <button class="btn" id="set-date-btn" style="margin-top:0">Set start date</button>
       </div>
     </div>
-    <div class="btn-row">
+    <div class="btn-row" id="home-btn-row">
       <button class="btn-g" id="pick-date-btn" style="display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Set start date</button>
       <button class="btn-g btn-d" id="reset-btn">↺ Reset</button>
     </div>
@@ -714,6 +738,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
   <!-- HISTORY -->
   <div id="s-history" class="sec">
+    <button class="subback" onclick="goTab('home')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
     <div class="btn-row" style="margin-bottom:11px">
       <button class="btn-g" id="hf-all" style="border-color:var(--ac);color:var(--ac)">All</button>
       <button class="btn-g" id="hf-daily">Daily</button>
@@ -727,6 +752,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
   <!-- PHASES -->
   <div id="s-phases" class="sec">
+    <button class="subback" onclick="goTab('home')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
     <div id="ph-current" class="ph-block ph1" style="margin-bottom:14px">
       <div class="ph-title" id="pc-title">Your current phase</div>
       <div class="ph-text" id="pc-text">Set your start date to see phase guidance.</div>
@@ -1228,8 +1254,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <button class="tab" data-tab="urge"><span class="tab-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>SOS</button>
   <button class="tab" data-tab="stories"><span class="tab-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span>Stories</button>
   <button class="tab" data-tab="transmute"><span class="tab-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0C19 8 12 2 12 2z"/><path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z"/></svg></span>Transmute</button>
-  <button class="tab" data-tab="phases"><span class="tab-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>Phases</button>
-  <button class="tab" data-tab="history"><span class="tab-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>History</button>
 </nav>
 
 <!-- end app -->
@@ -2167,9 +2191,18 @@ function updateHome() {
     : (n > 0 ? 999 : 0);
   document.getElementById('wprompt').style.display = (n > 0 && daysSinceReview >= 7) ? 'block' : 'none';
 
-  // Day-0 welcome card
+  // Day-0 welcome card. On a true first run (no streak, no start date) the
+  // welcome card is the whole story — hide the dashboard cards and the
+  // duplicate start-date / quick-check-in CTAs so there's one clear next step.
+  const isDay0 = (n === 0 && !S.startDate);
   const d0El = document.getElementById('day0-card');
-  if(d0El) d0El.style.display = (n === 0 && !S.startDate) ? 'block' : 'none';
+  if(d0El) d0El.style.display = isDay0 ? 'block' : 'none';
+  const showWhenStarted = ['quick-checkin-card','home-btn-row','latest-card'];
+  showWhenStarted.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = isDay0 ? 'none' : (id === 'home-btn-row' ? 'flex' : 'block');
+  });
+  document.querySelectorAll('#s-home .m-grid').forEach(g => { g.style.display = isDay0 ? 'none' : 'grid'; });
 
   // Streak protect card
   const protectEl = document.getElementById('streak-protect');
@@ -2201,7 +2234,6 @@ function _hidePaywall() {
 
 // ===================== TABS =====================
 function goTab(id) {
-  if(id === 'urge' && _trialExpired()) { if(window._showPaywall) window._showPaywall(); else document.getElementById('uw-paywall').classList.remove('hidden'); return; }
   document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   const sec = document.getElementById('s-' + id);
@@ -3017,6 +3049,10 @@ let uTimerRAF = null, uTimerRunning = false, uTimerStart = null;
 let uElapsedInterval = null, uElapsedSecs = 0;
 
 function uStart() {
+  // Full Urge Wave (live wave + intensity + all tools) is the paid product.
+  // The breathing tool stays free — see uStartBreath().
+  if(_trialExpired()) { if(window._showPaywall) window._showPaywall(); else document.getElementById('uw-paywall').classList.remove('hidden'); return; }
+  document.getElementById('urge-surf').classList.remove('breath-only');
   document.getElementById('urge-home').style.display = 'none';
   document.getElementById('urge-surf').style.display = 'block';
   document.getElementById('urge-win').style.display = 'none';
@@ -3041,6 +3077,31 @@ function uStart() {
     const surf = document.getElementById('urge-surf');
     const btn = document.getElementById('u-survived-btn');
     if(btn && surf && surf.style.display !== 'none') btn.style.display = 'block';
+  }, 20000);
+}
+
+// Free breathing-only escape (also reachable from the paywall).
+function uStartBreath() {
+  if(window._hidePaywall) window._hidePaywall();
+  goTab('urge');
+  document.getElementById('urge-home').style.display = 'none';
+  document.getElementById('urge-win').style.display = 'none';
+  const surf = document.getElementById('urge-surf');
+  surf.style.display = 'block';
+  surf.classList.add('breath-only');
+  uShowTool('breath');
+  // Elapsed timer so the "I surfed it" button still appears
+  uElapsedSecs = 0;
+  clearInterval(uElapsedInterval);
+  uElapsedInterval = setInterval(() => {
+    uElapsedSecs++;
+    const m = Math.floor(uElapsedSecs/60), s = uElapsedSecs%60;
+    const el = document.getElementById('urf-elapsed');
+    if(el) el.textContent = m+':'+(s<10?'0':'')+s;
+  }, 1000);
+  setTimeout(() => {
+    const btn = document.getElementById('u-survived-btn');
+    if(btn && surf.style.display !== 'none') btn.style.display = 'block';
   }, 20000);
 }
 
@@ -3152,6 +3213,7 @@ function uClose(keepState) {
   cancelAnimationFrame(uTimerRAF);
   if(!keepState) {
     document.getElementById('urge-surf').style.display='none';
+    document.getElementById('urge-surf').classList.remove('breath-only');
     document.getElementById('urge-home').style.display='block';
     document.getElementById('urge-win').style.display='none';
     uShowTool(null);
@@ -3160,6 +3222,7 @@ function uClose(keepState) {
 
 function uReset() {
   document.getElementById('urge-win').style.display='none';
+  document.getElementById('urge-surf').classList.remove('breath-only');
   document.getElementById('urge-home').style.display='block';
   document.getElementById('u-survived-btn').style.display='none';
   uAffirmIdx=0;
@@ -3265,6 +3328,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ---- COG ----
   document.getElementById('cog').addEventListener('click', openSettings);
+  document.getElementById('histbtn').addEventListener('click', function(){ goTab('history'); });
+  document.getElementById('pbadge').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goTab('phases'); } });
   document.getElementById('close-s').addEventListener('click', closeSettings);
   document.getElementById('s-overlay').addEventListener('click', function(e) { if(e.target === this) closeSettings(); });
 
@@ -4088,14 +4153,14 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
   <!-- Blurred ghost of SOS screen behind -->
   <div class="pw-ghost">
     <div class="pw-ghost-inner">
-      <div style="font-size:48px;text-align:center;margin-bottom:12px;">🌊</div>
+      <div style="display:flex;justify-content:center;margin-bottom:12px;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round"><path d="M2 12c2-5 4-5 6 0s4 5 6 0 4-5 6 0"/><path d="M2 17c2-4 4-4 6 0s4 4 6 0 4-4 6 0" opacity=".5"/></svg></div>
       <div style="font-size:22px;font-weight:700;color:white;text-align:center;margin-bottom:8px;">Urge Wave</div>
       <div style="background:rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:12px;">
         <div style="font-size:14px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:16px;">How intense is this urge right now?</div>
         <div style="height:8px;background:linear-gradient(90deg,#6C5CE7,#E24B4A);border-radius:4px;margin-bottom:20px;"></div>
-        <div style="font-size:28px;text-align:center;">😤</div>
+        <div style="font-size:28px;font-weight:800;text-align:center;color:#E24B4A;">85</div>
       </div>
-      <div style="background:#E24B4A;border-radius:16px;padding:18px;text-align:center;color:white;font-size:16px;font-weight:700;">🌊 Surf this urge now</div>
+      <div style="background:#E24B4A;border-radius:16px;padding:18px;display:flex;align-items:center;justify-content:center;gap:8px;color:white;font-size:16px;font-weight:700;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 17c2-4 4-4 6 0s4 4 6 0 4-4 6 0" opacity=".5"/></svg>Surf this urge now</div>
     </div>
   </div>
 
@@ -4107,22 +4172,23 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
       <div class="pw-streak-msg">Keep the momentum going — you've earned this.</div>
     </div>
 
-    <div class="pw-badge">🔒 Locked</div>
+    <div class="pw-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Locked</div>
     <div class="pw-title">You know it works.<br>Keep it.</div>
 
     <div class="pw-perks">
-      <div class="pw-perk"><span class="pw-perk-ic">🎯</span>Ride any urge — guided breath in real time</div>
-      <div class="pw-perk"><span class="pw-perk-ic">⏱️</span>Watch the intensity rise and fall — and pass</div>
-      <div class="pw-perk"><span class="pw-perk-ic">🧘</span>Grounding tools that bring you back instantly</div>
-      <div class="pw-perk"><span class="pw-perk-ic">💪</span>Every urge you surf makes you stronger</div>
-      <div class="pw-perk"><span class="pw-perk-ic">🔓</span>Unlimited access, forever — one price</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity=".45"/></svg></span>Ride any urge — guided breath in real time</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 3h6"/><path d="M12 3v2"/></svg></span>Watch the intensity rise and fall — and pass</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M7 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M5 20c0-2.5 1.8-4.5 3.5-5.5"/><path d="M19 20c0-2.5-1.8-4.5-3.5-5.5"/><path d="M5 20h14"/></svg></span>Grounding tools that bring you back instantly</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z"/><path d="M12 10c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="currentColor" opacity=".3"/></svg></span>Every urge you surf makes you stronger</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/></svg></span>Unlimited access, forever — one price</div>
     </div>
 
     <div style="height:120px;"></div>
   </div>
 
   <div class="pw-footer">
-    <button class="pw-btn" id="pw-unlock-btn">🔓 Unlock Urge Wave — £2.99</button>
+    <button class="pw-btn" id="pw-unlock-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/></svg>Unlock Urge Wave — £2.99</button>
+    <button class="pw-free" onclick="uStartBreath()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></svg>Just need to breathe? Open the free breathing tool</button>
     <div class="pw-price">One-time · No subscription · Yours forever</div>
     <button class="pw-restore" id="pw-restore-btn">Already paid? Restore access</button>
   </div>
