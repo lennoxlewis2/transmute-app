@@ -53,7 +53,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .aura-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(108,92,231,0.08) 0%,transparent 70%);border-radius:50%;}
 .aura-inner .snum{font-size:36px;font-weight:800;color:var(--tx);line-height:1;letter-spacing:-1px;}
 .aura-inner .sday{font-size:10px;color:var(--tt);margin-top:2px;letter-spacing:.06em;}
-.flame-wrap{display:flex;align-items:center;justify-content:center;margin:4px auto 6px;transition:all .5s;}
+.flame-wrap{display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+@keyframes flamePulse{0%,100%{transform:scaleY(1) scaleX(1);}50%{transform:scaleY(1.08) scaleX(0.93);}}
 .ph-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:700;margin-top:4px;letter-spacing:.03em;}
 .ph-badge svg{flex-shrink:0;}
 .bd0{background:rgba(255,255,255,0.07);color:#888;border:.5px solid rgba(255,255,255,0.1);}
@@ -457,6 +458,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <circle class="aura-ring2" id="ar2" cx="75" cy="75" r="61" stroke-dasharray="383.3" stroke-dashoffset="383.3"/>
             </svg>
             <div class="aura-inner">
+              <div class="flame-wrap" id="fw"><svg id="fsv" viewBox="0 0 24 24" fill="none"></svg></div>
               <div class="snum" id="snum">0</div>
               <div class="sday">days</div>
             </div>
@@ -2017,66 +2019,42 @@ function updateAura(n) {
 
 // ===================== FLAME =====================
 function updateFlame(n) {
-  const svg = document.getElementById('fsv');
   const fw = document.getElementById('fw');
-  if(!svg || !fw) return;
-  if(typeof svg.setAttribute !== 'function') return;
-  const scale = 1 + Math.min(n / 90, 1) * 0.8;
-  const w = Math.round(44 * scale), h = Math.round(56 * scale);
-  fw.style.width = w+'px'; fw.style.height = h+'px';
-  svg.setAttribute('width', w); svg.setAttribute('height', h);
-  let html = '';
+  const fsv = document.getElementById('fsv');
+  if(!fw || !fsv) return;
+
+  // Grow from 16px at day 0 to 28px at day 90+
+  const size = 16 + Math.round(Math.min(n / 90, 1) * 12);
+  fsv.setAttribute('width', size);
+  fsv.setAttribute('height', size);
+
+  let outer, inner, glow, animate;
   if(n === 0) {
-    html = `<circle cx="30" cy="62" r="5" fill="#FFD700" opacity=".7"/><circle cx="30" cy="54" r="2.5" fill="#FFF8D0" opacity=".5"/>`;
+    outer = 'rgba(255,255,255,0.14)'; inner = 'rgba(255,255,255,0.06)';
+    glow = ''; animate = false;
+  } else if(n < 3) {
+    outer = '#9A5000'; inner = '#FFD060';
+    glow = 'drop-shadow(0 0 3px #9A5000)'; animate = true;
   } else if(n < 7) {
-    html = `<defs><linearGradient id="g1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="100%" stop-color="#FFD700"/></linearGradient></defs>
-    <polygon points="30,20 24,47 27,60 33,60 36,47" fill="url(#g1)"/>
-    <polygon points="30,30 27,48 29,58 31,58 33,48" fill="#FFF0A0"/>`;
-  } else if(n < 21) {
-    html = `<defs><linearGradient id="g2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF4400"/><stop offset="50%" stop-color="#FF9900"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
-    <polygon points="30,10 20,38 18,54 22,64 38,64 42,54 40,38" fill="#FF4400" opacity=".35"/>
-    <polygon points="30,10 22,38 20,57 27,66 33,66 40,57 38,38" fill="url(#g2)"/>
-    <polygon points="30,16 25,40 24,58 29,65 31,65 36,58 35,40" fill="#FFD060"/>
-    <polygon points="30,22 27,42 27,59 30,64 33,59 33,42" fill="#FFF8C0"/>
-    <circle cx="30" cy="7" r="3" fill="#FFF8D0" opacity=".8"/>`;
-  } else if(n < 40) {
-    html = `<defs><linearGradient id="g3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF2200"/><stop offset="40%" stop-color="#FF8800"/><stop offset="100%" stop-color="#FFE000"/></linearGradient></defs>
-    <polygon points="30,6 14,34 12,52 16,66 44,66 48,52 46,34" fill="#FF3300" opacity=".2"/>
-    <polygon points="30,6 16,36 14,54 20,68 40,68 46,54 44,36" fill="url(#g3)"/>
-    <polygon points="30,12 23,38 22,57 28,67 32,67 38,57 37,38" fill="#FFD060"/>
-    <polygon points="30,20 26,40 26,58 30,66 34,58 34,40" fill="#FFF8C0"/>
-    <polygon points="30,6 27,22 29,38 30,44 31,38 33,22" fill="white" opacity=".7"/>
-    <circle cx="18" cy="26" r="2.5" fill="#FFB800" opacity=".7"/>
-    <circle cx="42" cy="22" r="2" fill="#FFB800" opacity=".7"/>
-    <circle cx="30" cy="4" r="3" fill="white" opacity=".9"/>`;
+    outer = '#FF5500'; inner = '#FFD060';
+    glow = 'drop-shadow(0 0 4px #FF5500)'; animate = true;
+  } else if(n < 14) {
+    outer = '#FF3300'; inner = '#FFCC30';
+    glow = 'drop-shadow(0 0 6px #FF3300)'; animate = true;
+  } else if(n < 30) {
+    outer = '#FF2200'; inner = '#FFE060';
+    glow = 'drop-shadow(0 0 7px #FF2200)'; animate = true;
   } else if(n < 60) {
-    html = `<defs><linearGradient id="g4" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF1100"/><stop offset="35%" stop-color="#FF7700"/><stop offset="70%" stop-color="#FFD700"/><stop offset="100%" stop-color="#FFFFFF"/></linearGradient></defs>
-    <polygon points="30,4 10,30 8,50 12,68 48,68 52,50 50,30" fill="#FF2200" opacity=".15"/>
-    <polygon points="30,4 12,32 10,52 16,70 44,70 50,52 48,32" fill="#FF5500" opacity=".5"/>
-    <polygon points="30,4 15,32 13,54 20,70 40,70 47,54 45,32" fill="url(#g4)"/>
-    <polygon points="30,10 22,36 20,57 27,69 33,69 40,57 38,36" fill="#FFD060"/>
-    <polygon points="30,18 25,38 24,58 29,68 31,68 36,58 35,38" fill="#FFF8D0"/>
-    <polygon points="30,4 27,20 29,38 30,48 31,38 33,20" fill="white" opacity=".85"/>
-    <circle cx="14" cy="20" r="3" fill="#FF9900" opacity=".8"/>
-    <circle cx="46" cy="16" r="2.5" fill="#FF9900" opacity=".8"/>
-    <circle cx="30" cy="2" r="3.5" fill="white"/>`;
+    outer = '#FF1100'; inner = '#ffffff';
+    glow = 'drop-shadow(0 0 9px #FF3300)'; animate = true;
   } else {
-    html = `<defs><linearGradient id="g5" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#FF0000"/><stop offset="25%" stop-color="#FF5500"/><stop offset="55%" stop-color="#FFD700"/><stop offset="80%" stop-color="#FFFFFF"/><stop offset="100%" stop-color="#E0F0FF"/></linearGradient></defs>
-    <polygon points="30,2 6,26 4,48 8,70 52,70 56,48 54,26" fill="#FF1100" opacity=".12"/>
-    <polygon points="30,2 8,28 6,50 12,72 48,72 54,50 52,28" fill="#FF3300" opacity=".3"/>
-    <polygon points="30,2 10,30 8,52 15,72 45,72 52,52 50,30" fill="url(#g5)"/>
-    <polygon points="30,8 20,32 18,54 25,71 35,71 42,54 40,32" fill="#FFE060"/>
-    <polygon points="30,16 23,36 22,56 28,70 32,70 38,56 37,36" fill="#FFF8D0"/>
-    <polygon points="30,2 27,20 29,38 30,48 31,38 33,20" fill="white" opacity=".95"/>
-    <circle cx="12" cy="20" r="3.5" fill="#FF8800" opacity=".85"/>
-    <circle cx="48" cy="16" r="3" fill="#FF8800" opacity=".85"/>
-    <circle cx="8" cy="38" r="2.5" fill="#FFD700"/>
-    <circle cx="52" cy="34" r="2.5" fill="#FFD700"/>
-    <circle cx="30" cy="0" r="4" fill="white"/>
-    <circle cx="22" cy="-3" r="2" fill="#E0F0FF" opacity=".8"/>
-    <circle cx="38" cy="-3" r="2" fill="#E0F0FF" opacity=".8"/>`;
+    outer = '#FF0800'; inner = '#E8F6FF';
+    glow = 'drop-shadow(0 0 12px #FF2200) drop-shadow(0 0 5px #FFA500)'; animate = true;
   }
-  svg.innerHTML = html;
+
+  fsv.style.filter = glow;
+  fsv.style.animation = animate ? 'flamePulse 1.4s ease-in-out infinite' : '';
+  fsv.innerHTML = `<path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="${outer}"/><path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="${inner}"/>`;
 }
 
 // ===================== BADGE =====================
