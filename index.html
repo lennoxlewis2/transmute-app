@@ -3112,10 +3112,16 @@ function checkDailyReminder() {
   if(h < 18) return;
   const n = calcStreak();
   if(n === 0) return;
+  // Taper the nudges — daily for the habit-forming first two weeks, then every
+  // third day, then only weekly. A seasoned streak doesn't need nagging.
+  if(n > 14 && n <= 90 && n % 3 !== 0) return;
+  if(n > 90 && n % 7 !== 0) return;
   localStorage.setItem('last_notif_date', today);
   try {
-    new Notification('Transmute — keep your streak alive 🔥', {
-      body: 'Day ' + n + ' streak. Log your check-in before midnight.',
+    // Honest framing: the streak is date-based and rolls over on its own —
+    // logging captures the day, it doesn't "save" the streak.
+    new Notification('Transmute', {
+      body: 'Day ' + n + ' · close out today — log how it felt before midnight.',
       icon: '/icon-192.png'
     });
   } catch(e) {}
