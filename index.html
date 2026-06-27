@@ -58,6 +58,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .aura-inner .sday{font-size:10px;color:var(--tt);margin-top:2px;letter-spacing:.06em;}
 .flame-wrap{display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
 @keyframes flamePulse{0%,100%{transform:scaleY(1) scaleX(1);}50%{transform:scaleY(1.08) scaleX(0.93);}}
+.flame-evolve{animation:flameEvolve .8s cubic-bezier(.34,1.56,.64,1);}
+@keyframes flameEvolve{0%{transform:scale(.35) rotate(-14deg);opacity:.35;}55%{transform:scale(1.3) rotate(8deg);opacity:1;}100%{transform:scale(1) rotate(0);}}
 .ph-badge{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px;letter-spacing:.03em;cursor:pointer;}
 .ph-badge svg{flex-shrink:0;}
 #pbadge{cursor:pointer;}
@@ -2406,6 +2408,26 @@ const FLAME_FORMS = {
   phoenix:(o,i)=>`<path d="M12 3.5c1.3 1.8 1.3 3.5 0 5.1 1.3-1.1 3.2-1.4 4.5-.7-1.1.8-1.6 1.9-1.6 3.2 1.9-1.5 4.7-1.6 6.7-.3-2.1.4-3.5 1.7-4.2 3.6 1.4-.7 3-.7 4.2.3-3.2.9-6.6 2.1-9.6 2.1s-6.4-1.2-9.6-2.1c1.2-1 2.8-1 4.2-.3-.7-1.9-2.1-3.2-4.2-3.6 2-1.3 4.8-1.2 6.7.3 0-1.3-.5-2.4-1.6-3.2 1.3-.7 3.2-.4 4.5.7-1.3-1.6-1.3-3.3 0-5.1z" fill="${o}"/><path d="M12 9.5c0 0-2.4 2.4-2.4 4.8a2.4 2.4 0 0 0 4.8 0c0-2.4-2.4-4.8-2.4-4.8z" fill="${i}"/>`
 };
 
+// Which flame form + palette + glow a given streak day earns. Shared by the
+// home ring and the milestone modal so the unlocked form is shown consistently.
+function flameTier(n) {
+  if(n === 0)      return {form:'ember',   o:'rgba(255,255,255,0.13)', i:'rgba(255,255,255,0.05)', glow:'', animate:false};
+  if(n < 7)        return {form:'spark',   o:'#FF7A18', i:'#FFD56B', glow:'drop-shadow(0 0 4px #FF7A18)', animate:true};
+  if(n < 30)       return {form:'flame',   o:'#FF4500', i:'#FFD24A', glow:'drop-shadow(0 0 6px #FF4500)', animate:true};
+  if(n < 90)       return {form:'blaze',   o:'#FF2A00', i:'#FFE9A8', glow:'drop-shadow(0 0 8px #FF3300)', animate:true};
+  if(n < 180)      return {form:'flame',   o:'#2E7BFF', i:'#EAF4FF', glow:'drop-shadow(0 0 9px #2E7BFF) drop-shadow(0 0 4px #9FC6FF)', animate:true}; // blue = hottest
+  if(n < 270)      return {form:'radiant', o:'#B66BFF', i:'#F3E9FF', glow:'drop-shadow(0 0 10px #B66BFF)', animate:true};
+  if(n < 365)      return {form:'solar',   o:'#FFC21E', i:'#FFF4C2', glow:'drop-shadow(0 0 11px #FFB000) drop-shadow(0 0 5px #FFD24A)', animate:true};
+  return                  {form:'phoenix', o:'#FFE38A', i:'#FFFFFF', glow:'drop-shadow(0 0 13px #FFD24A) drop-shadow(0 0 6px #FF8A00)', animate:true};
+}
+
+// Standalone flame SVG markup (used by the milestone modal).
+function flameSVG(n, size) {
+  const t = flameTier(n);
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" style="filter:${t.glow}">${FLAME_FORMS[t.form](t.o, t.i)}</svg>`;
+}
+
+let _lastFlameForm = null;
 function updateFlame(n) {
   const fw = document.getElementById('fw');
   const fsv = document.getElementById('fsv');
@@ -2417,19 +2439,19 @@ function updateFlame(n) {
   fsv.setAttribute('height', size);
   fsv.setAttribute('viewBox', '0 0 24 24');
 
-  let form, o, i, glow, animate = true;
-  if(n === 0)        { form='ember';   o='rgba(255,255,255,0.13)'; i='rgba(255,255,255,0.05)'; glow=''; animate=false; }
-  else if(n < 7)     { form='spark';   o='#FF7A18'; i='#FFD56B'; glow='drop-shadow(0 0 4px #FF7A18)'; }
-  else if(n < 30)    { form='flame';   o='#FF4500'; i='#FFD24A'; glow='drop-shadow(0 0 6px #FF4500)'; }
-  else if(n < 90)    { form='blaze';   o='#FF2A00'; i='#FFE9A8'; glow='drop-shadow(0 0 8px #FF3300)'; }
-  else if(n < 180)   { form='flame';   o='#2E7BFF'; i='#EAF4FF'; glow='drop-shadow(0 0 9px #2E7BFF) drop-shadow(0 0 4px #9FC6FF)'; } // blue = hottest
-  else if(n < 270)   { form='radiant'; o='#B66BFF'; i='#F3E9FF'; glow='drop-shadow(0 0 10px #B66BFF)'; }
-  else if(n < 365)   { form='solar';   o='#FFC21E'; i='#FFF4C2'; glow='drop-shadow(0 0 11px #FFB000) drop-shadow(0 0 5px #FFD24A)'; }
-  else               { form='phoenix'; o='#FFE38A'; i='#FFFFFF'; glow='drop-shadow(0 0 13px #FFD24A) drop-shadow(0 0 6px #FF8A00)'; }
+  const t = flameTier(n);
+  fsv.style.filter = t.glow;
+  fsv.style.animation = t.animate ? 'flamePulse 1.4s ease-in-out infinite' : '';
+  fsv.innerHTML = FLAME_FORMS[t.form](t.o, t.i);
 
-  fsv.style.filter = glow;
-  fsv.style.animation = animate ? 'flamePulse 1.4s ease-in-out infinite' : '';
-  fsv.innerHTML = FLAME_FORMS[form](o, i);
+  // Evolution flourish: when the form actually changes tier (not on first paint
+  // of the session), play a one-shot "pop" on the flame wrapper.
+  if(_lastFlameForm !== null && _lastFlameForm !== t.form) {
+    fw.classList.remove('flame-evolve'); void fw.offsetWidth; // restart the animation
+    fw.classList.add('flame-evolve');
+    setTimeout(() => fw.classList.remove('flame-evolve'), 800);
+  }
+  _lastFlameForm = t.form;
 }
 
 // ===================== BADGE =====================
@@ -2446,7 +2468,11 @@ function checkMilestone(n) {
   if(localStorage.getItem(key)) return;
   localStorage.setItem(key, '1');
   const ms = MILESTONES[n];
-  document.getElementById('ms-flame').innerHTML = ms.flame;
+  // Celebrate with the flame FORM the user just unlocked, not a generic icon.
+  const msf = document.getElementById('ms-flame');
+  msf.innerHTML = flameSVG(n, 56);
+  const msfsvg = msf.querySelector('svg');
+  if(msfsvg) msfsvg.style.animation = 'flamePulse 1.6s ease-in-out infinite';
   document.getElementById('ms-day').textContent = 'Day ' + n + ' Milestone';
   document.getElementById('ms-title').textContent = ms.title;
   document.getElementById('ms-msg').textContent = ms.msg;
