@@ -382,7 +382,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
      animations (flame pulse, aura glow, legendary badge, win orb/sparks).
      The breathing-ring transitions still change state, just without the slow tween. */
   @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{
+    /* .fx-keep is exempt: the breathing-pacer rings ARE the guidance, not decoration */
+    *:not(.fx-keep),*::before,*::after{
       animation-duration:.001ms!important;
       animation-iteration-count:1!important;
       transition-duration:.01ms!important;
@@ -862,8 +863,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
         <!-- Breathing ring -->
         <div style="display:flex;justify-content:center;margin-bottom:18px;">
-          <div id="breath-ring" style="width:90px;height:90px;border-radius:50%;border:3px solid #6644FF;display:flex;align-items:center;justify-content:center;transition:all 4s ease-in-out;position:relative;">
-            <div id="breath-ring-inner" style="width:50px;height:50px;border-radius:50%;background:rgba(102,68,255,0.3);transition:all 4s ease-in-out;display:flex;align-items:center;justify-content:center;">
+          <div id="breath-ring" class="fx-keep" style="width:90px;height:90px;border-radius:50%;border:3px solid #6644FF;display:flex;align-items:center;justify-content:center;transition:all 4s ease-in-out;position:relative;">
+            <div id="breath-ring-inner" class="fx-keep" style="width:50px;height:50px;border-radius:50%;background:rgba(102,68,255,0.3);transition:all 4s ease-in-out;display:flex;align-items:center;justify-content:center;">
               <span id="breath-label" style="font-size:10px;color:#C8A8FF;font-weight:600;text-align:center;line-height:1.2">TAP<br>BEGIN</span>
             </div>
           </div>
@@ -1160,12 +1161,13 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <!-- BREATH TOOL -->
         <div id="utool-breath" class="utool-sec">
           <div class="card" style="text-align:center;">
-            <div class="breath-ring-wrap" id="u-br">
-              <div class="breath-ring-inner" id="u-bi">
+            <div class="breath-ring-wrap fx-keep" id="u-br">
+              <div class="breath-ring-inner fx-keep" id="u-bi">
                 <span class="breath-ring-lbl" id="u-bl">TAP<br>START</span>
               </div>
             </div>
-            <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Box breathing redirects energy upward and out of the urge. 4 cycles kills almost any craving.</p>
+            <div id="u-breath-cycle" style="font-size:12px;font-weight:700;color:var(--ac2);min-height:16px;margin-bottom:8px;letter-spacing:.02em;"></div>
+            <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Box breathing redirects energy upward and out of the urge. Follow the ring for 4 slow cycles — it ends on its own.</p>
             <button class="urge-sos-btn" id="u-breath-btn" style="background:var(--ac);margin-bottom:0;padding:13px;font-size:14px;">Start breathing</button>
           </div>
         </div>
@@ -3312,7 +3314,20 @@ function uStartIntensity() {
   uIntInterval = setInterval(tick, 120);
 }
 
+function uStopBreath() {
+  if(uBreathInterval) clearTimeout(uBreathInterval);
+  uBreathInterval=null;
+  const br=document.getElementById('u-br'), bi=document.getElementById('u-bi'), bl=document.getElementById('u-bl');
+  const cyc=document.getElementById('u-breath-cycle'), btn=document.getElementById('u-breath-btn');
+  if(br){br.style.transition='all .5s ease';br.style.transform='scale(1)';br.style.borderColor='';}
+  if(bi){bi.style.transition='all .5s ease';bi.style.transform='scale(1)';bi.style.background='';}
+  if(bl) bl.innerHTML='TAP<br>START';
+  if(cyc) cyc.textContent='';
+  if(btn) btn.textContent='Start breathing';
+}
+
 function uShowTool(name) {
+  uStopBreath(); // never let the breathing pacer (or its haptics) run after you leave it
   document.querySelectorAll('.utool-sec').forEach(s=>s.classList.remove('on'));
   document.querySelectorAll('.utool-btn').forEach(b=>b.classList.remove('on'));
   const chooser=document.getElementById('utool-chooser');
@@ -3382,6 +3397,8 @@ function uReset() {
   if(bi){bi.style.transform='';bi.style.background='';}
   const bl=document.getElementById('u-bl');
   if(bl) bl.innerHTML='TAP<br>START';
+  const cyc=document.getElementById('u-breath-cycle');
+  if(cyc) cyc.textContent='';
 }
 
 
@@ -3653,17 +3670,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Breath tool
   document.getElementById('u-breath-btn').addEventListener('click', function() {
-    if(uBreathInterval) {
-      clearTimeout(uBreathInterval); uBreathInterval=null;
-      this.textContent='Start breathing';
-      const br=document.getElementById('u-br');
-      const bi=document.getElementById('u-bi');
-      const bl=document.getElementById('u-bl');
-      if(br){br.style.transform='scale(1)';br.style.borderColor='';}
-      if(bi){bi.style.transform='scale(1)';bi.style.background='';}
-      if(bl) bl.innerHTML='TAP<br>START';
-      return;
-    }
+    if(uBreathInterval) { uStopBreath(); return; }
     this.textContent='Stop';
     const phases=[
       {lbl:'INHALE',dur:4,rs:'scale(1.22)',is:'scale(1.35)',ib:'rgba(127,119,221,0.35)',bc:'var(--ac)'},
@@ -3671,19 +3678,33 @@ document.addEventListener('DOMContentLoaded', function() {
       {lbl:'EXHALE',dur:6,rs:'scale(1)',is:'scale(1)',ib:'rgba(127,119,221,0.1)',bc:'var(--ac2)'},
       {lbl:'HOLD',dur:2,rs:'scale(1)',is:'scale(1)',ib:'rgba(127,119,221,0.08)',bc:'var(--bd)'},
     ];
+    const TOTAL_CYCLES=4;
     let pi=0;
     function next(){
       if(!uBreathInterval) return; // stopped
-      const p=phases[pi%phases.length];
-      const br=document.getElementById('u-br');
-      const bi=document.getElementById('u-bi');
-      const bl=document.getElementById('u-bl');
+      const br=document.getElementById('u-br'), bi=document.getElementById('u-bi'), bl=document.getElementById('u-bl'), cyc=document.getElementById('u-breath-cycle');
       if(!br) return;
-      br.style.transform=p.rs; br.style.borderColor=p.bc;
-      br.style.transition='all '+p.dur+'s ease-in-out';
-      bi.style.transform=p.is; bi.style.background=p.ib;
-      bi.style.transition='all '+p.dur+'s ease-in-out';
+      // finished all cycles — end on its own, calmly
+      if(pi >= phases.length*TOTAL_CYCLES){
+        uBreathInterval=null;
+        br.style.transition='all .8s ease'; br.style.transform='scale(1)'; br.style.borderColor='var(--teal4)';
+        bi.style.transition='all .8s ease'; bi.style.transform='scale(1)'; bi.style.background='rgba(29,158,117,0.2)';
+        bl.innerHTML='WELL<br>DONE';
+        if(cyc) cyc.textContent='4 cycles done — notice how the urge has settled.';
+        document.getElementById('u-breath-btn').textContent='Breathe again';
+        if(navigator.vibrate) navigator.vibrate([60,40,60]);
+        return;
+      }
+      const p=phases[pi%phases.length];
+      br.style.transition='all '+p.dur+'s ease-in-out'; br.style.transform=p.rs; br.style.borderColor=p.bc;
+      bi.style.transition='all '+p.dur+'s ease-in-out'; bi.style.transform=p.is; bi.style.background=p.ib;
       bl.textContent=p.lbl;
+      if(cyc && pi%phases.length===0) cyc.textContent='Cycle '+(Math.floor(pi/phases.length)+1)+' of '+TOTAL_CYCLES;
+      // gentle eyes-closed haptic cue on the two active phases
+      if(navigator.vibrate){
+        if(p.lbl==='INHALE') navigator.vibrate(35);
+        else if(p.lbl==='EXHALE') navigator.vibrate([20,30,20]);
+      }
       pi++;
       uBreathInterval=setTimeout(next, p.dur*1000);
     }
@@ -3714,9 +3735,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if(rem>0&&uTimerRunning){uTimerRAF=requestAnimationFrame(tick);}
       else if(rem<=0){
         uTimerRunning=false;
-        if(tnum) tnum.textContent='Done ✓';
+        if(tnum) tnum.textContent='Done';
         if(tarc) tarc.style.stroke='#1D9E75';
-        document.getElementById('u-timer-btn').textContent='The urge is gone ✓';
+        document.getElementById('u-timer-btn').textContent='You stayed with it';
       }
     };
     tick();
