@@ -282,6 +282,22 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .streak-remind-card{background:var(--acl);border:.5px solid var(--ac2);border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
   .streak-remind-num{font-size:30px;font-weight:700;color:var(--ac);flex-shrink:0;}
   .streak-remind-txt{font-size:13px;color:var(--acd);line-height:1.5;}
+  /* Personal "why" card — the user's own reason, shown during an urge */
+  .why-card{position:relative;background:linear-gradient(160deg,var(--acl),var(--sf));border:.5px solid var(--ac2);border-radius:16px;padding:20px 18px 16px;margin-bottom:12px;overflow:hidden;}
+  .why-quote-mark{position:absolute;top:2px;left:12px;font-size:54px;line-height:1;color:var(--ac2);opacity:.28;font-family:Georgia,'Times New Roman',serif;pointer-events:none;}
+  .why-text{position:relative;font-size:16px;font-weight:600;color:var(--tx);line-height:1.55;white-space:pre-wrap;word-break:break-word;}
+  .why-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;}
+  .why-label{font-size:12px;color:var(--ac);font-weight:600;letter-spacing:.02em;}
+  .why-edit{background:none;border:none;color:var(--ts);font-size:12px;font-weight:600;cursor:pointer;padding:4px 6px;}
+  .why-edit:active{opacity:.6;}
+  /* First-run capture form */
+  .why-capture{background:var(--sf);border:.5px solid var(--bd);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .why-cap-title{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:6px;}
+  .why-cap-sub{font-size:12.5px;color:var(--ts);line-height:1.55;margin-bottom:11px;}
+  .why-capture textarea{width:100%;box-sizing:border-box;background:var(--bg);border:.5px solid var(--bd);border-radius:10px;color:var(--tx);font-size:14px;line-height:1.5;padding:11px 12px;resize:none;font-family:inherit;margin-bottom:10px;}
+  .why-capture textarea:focus{outline:none;border-color:var(--ac2);}
+  .why-save{width:100%;background:var(--ac);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;}
+  .why-save:active{opacity:.85;}
   .win-card{background:linear-gradient(135deg,var(--acl),var(--teal50));border:.5px solid var(--ac2);border-radius:18px;padding:24px;text-align:center;margin-bottom:12px;}
   .survived-btn{width:100%;padding:13px;background:transparent;border:.5px solid var(--bds);border-radius:12px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ts);font-family:'Inter',sans-serif;-webkit-appearance:none;}
   .survived-btn.green{border-color:var(--teal4);color:var(--teal6);}
@@ -1210,6 +1226,27 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
             <div class="streak-remind-num" id="u-streak-num">–</div>
             <div class="streak-remind-txt">days of power stored. One urge is not worth losing that.</div>
           </div>
+
+          <!-- Personal "why" — shown in the user's own words once they've set one -->
+          <div class="why-card" id="u-why-personal" style="display:none">
+            <span class="why-quote-mark">"</span>
+            <div class="why-text" id="u-why-text"></div>
+            <div class="why-foot">
+              <span class="why-label">— your reason</span>
+              <button type="button" class="why-edit" id="u-why-edit" onclick="uEditWhy()">Edit</button>
+            </div>
+          </div>
+
+          <!-- First-run capture: only appears when no reason is set yet -->
+          <div class="why-capture" id="u-why-capture" style="display:none">
+            <div class="why-cap-title">Why did you start?</div>
+            <div class="why-cap-sub">Write it once — your own words — and we'll show it back to you here whenever an urge hits.</div>
+            <textarea id="u-why-input" rows="3" maxlength="280" placeholder="The man I'm becoming doesn't do this. I want to feel clear, driven and in control of my own life…"></textarea>
+            <button type="button" class="why-save" id="u-why-save" onclick="uSaveWhy()">Save my reason</button>
+          </div>
+
+          <!-- Generic reminders — fallback shown until the user sets their own reason -->
+          <div id="u-remind-generic">
           <div class="remind-card">
             <span class="remind-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 0 1-2-2V5h4"/><path d="M18 9h2a2 2 0 0 0 2-2V5h-4"/><path d="M12 17v4"/><path d="M8 21h8"/><path d="M6 9a6 6 0 0 0 12 0V3H6z"/></svg></span>
             <div class="remind-title">You've already won</div>
@@ -1224,6 +1261,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
             <span class="remind-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M5 8l7 4 7-4"/></svg></span>
             <div class="remind-title">Most men will give in today</div>
             <div class="remind-text">Right now, thousands of men are facing the same wave and breaking. You're still here. That already makes you different. Prove it.</div>
+          </div>
           </div>
         </div>
 
@@ -1381,6 +1419,12 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <button class="theme-btn" data-theme="ocean"><span class="theme-dot" style="background:#0A6EBD"></span>Deep ocean</button>
         <button class="theme-btn" data-theme="gold"><span class="theme-dot" style="background:#8A6A00"></span>Sacred gold</button>
       </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <div class="lbl">Your reason</div>
+      <p style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Why did you start? We'll show this back to you in the SOS Remind tool when an urge hits.</p>
+      <textarea id="set-why-input" rows="3" maxlength="280" placeholder="The man I'm becoming doesn't do this. I want to feel clear, driven and in control…" style="margin-bottom:8px"></textarea>
+      <button class="btn" id="set-why-save" style="margin-top:0">Save my reason</button>
     </div>
     <div style="margin-bottom:20px">
       <div class="lbl">Daily reminder</div>
@@ -3358,6 +3402,56 @@ function uShowTool(name) {
   const btn=document.getElementById('tb-'+name);
   if(btn) btn.classList.add('on');
   if(name==='affirm') uRenderAffirmDots();
+  if(name==='remind') uRenderRemind();
+}
+
+// Remind tool: show the user's own "why" if they've written one (replacing the
+// generic cards), otherwise prompt them to capture it once.
+function uRenderRemind() {
+  const why = (S.why || '').trim();
+  const personal = document.getElementById('u-why-personal');
+  const capture  = document.getElementById('u-why-capture');
+  const generic  = document.getElementById('u-remind-generic');
+  if(why) {
+    document.getElementById('u-why-text').textContent = why;
+    if(personal) personal.style.display = 'block';
+    if(capture)  capture.style.display = 'none';
+    if(generic)  generic.style.display = 'none';
+  } else {
+    if(personal) personal.style.display = 'none';
+    if(capture)  capture.style.display = 'block';
+    if(generic)  generic.style.display = 'block';
+    const input = document.getElementById('u-why-input');
+    if(input) input.value = '';
+  }
+}
+
+function uSaveWhy() {
+  const input = document.getElementById('u-why-input');
+  const val = input ? input.value.trim() : '';
+  if(!val) { if(input) input.focus(); return; }
+  S.why = val;
+  save();
+  syncWhyFields();
+  uRenderRemind();
+  if(navigator.vibrate) navigator.vibrate(8);
+  if(typeof toast==='function') toast('Your reason is saved ✓');
+}
+
+// Drop back to the capture form, pre-filled, so they can refine their reason.
+function uEditWhy() {
+  const input = document.getElementById('u-why-input');
+  if(input) input.value = S.why || '';
+  document.getElementById('u-why-personal').style.display = 'none';
+  document.getElementById('u-remind-generic').style.display = 'none';
+  document.getElementById('u-why-capture').style.display = 'block';
+  if(input) input.focus();
+}
+
+// Keep the Remind capture box and the Settings field showing the same value.
+function syncWhyFields() {
+  const set = document.getElementById('set-why-input');
+  if(set && document.activeElement !== set) set.value = S.why || '';
 }
 
 // Mark the tool that has helped this user most, so it draws the eye next time.
@@ -3558,6 +3652,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ---- BUG ----
   document.getElementById('send-bug').addEventListener('click', sendBug);
+
+  // ---- YOUR REASON (the "why") ----
+  (function(){
+    const inp = document.getElementById('set-why-input');
+    const btn = document.getElementById('set-why-save');
+    if(inp) inp.value = S.why || '';
+    if(btn) btn.addEventListener('click', function(){
+      S.why = (inp.value || '').trim();
+      save();
+      uRenderRemind();
+      toast(S.why ? 'Your reason is saved ✓' : 'Reason cleared');
+    });
+  })();
 
   // ---- QUOTES ----
   document.getElementById('qprev').addEventListener('click', () => goQ((qIdx-1+QUOTES.length)%QUOTES.length, -1));
