@@ -2393,43 +2393,43 @@ function updateAura(n) {
 }
 
 // ===================== FLAME =====================
+// The flame is the app's living brand emblem. It doesn't just recolour — it
+// changes FORM at each milestone tier, so the streak becomes a collectible:
+// ember → spark → flame → blaze → blue flame → radiant → solar → phoenix.
+const FLAME_FORMS = {
+  ember:  (o,i)=>`<circle cx="12" cy="13" r="4.8" fill="${o}"/><circle cx="12" cy="13" r="2" fill="${i}"/>`,
+  spark:  (o,i)=>`<path d="M12 5c0 0-5 4.5-5 9a5 5 0 0 0 10 0c0-4.5-5-9-5-9z" fill="${o}"/><path d="M12 11c0 0-2.2 2.2-2.2 4.5a2.2 2.2 0 0 0 4.4 0c0-2.3-2.2-4.5-2.2-4.5z" fill="${i}"/>`,
+  flame:  (o,i)=>`<path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="${o}"/><path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="${i}"/>`,
+  blaze:  (o,i)=>`<path d="M6.6 12.4c-1.5 1.3-2 3-1.4 4.6.5-1.4 1.5-2.2 2.6-2.7-.6-.5-1-1.2-1.2-1.9z" fill="${o}"/><path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="${o}"/><path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="${i}"/>`,
+  radiant:(o,i)=>`${FLAME_FORMS.flame(o,i)}<circle cx="5.5" cy="6" r="1" fill="${i}"/><circle cx="18.5" cy="7" r="0.9" fill="${i}"/><circle cx="12" cy="3.1" r="0.8" fill="${i}"/>`,
+  solar:  (o,i)=>`<g stroke="${o}" stroke-width="1.3" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180;return `<line x1="${(12+Math.cos(r)*8.6).toFixed(1)}" y1="${(12+Math.sin(r)*8.6).toFixed(1)}" x2="${(12+Math.cos(r)*11).toFixed(1)}" y2="${(12+Math.sin(r)*11).toFixed(1)}"/>`;}).join('')}</g>${FLAME_FORMS.flame(o,i)}`,
+  phoenix:(o,i)=>`<path d="M12 3.5c1.3 1.8 1.3 3.5 0 5.1 1.3-1.1 3.2-1.4 4.5-.7-1.1.8-1.6 1.9-1.6 3.2 1.9-1.5 4.7-1.6 6.7-.3-2.1.4-3.5 1.7-4.2 3.6 1.4-.7 3-.7 4.2.3-3.2.9-6.6 2.1-9.6 2.1s-6.4-1.2-9.6-2.1c1.2-1 2.8-1 4.2-.3-.7-1.9-2.1-3.2-4.2-3.6 2-1.3 4.8-1.2 6.7.3 0-1.3-.5-2.4-1.6-3.2 1.3-.7 3.2-.4 4.5.7-1.3-1.6-1.3-3.3 0-5.1z" fill="${o}"/><path d="M12 9.5c0 0-2.4 2.4-2.4 4.8a2.4 2.4 0 0 0 4.8 0c0-2.4-2.4-4.8-2.4-4.8z" fill="${i}"/>`
+};
+
 function updateFlame(n) {
   const fw = document.getElementById('fw');
   const fsv = document.getElementById('fsv');
   if(!fw || !fsv) return;
 
-  // Grow from 16px at day 0 to 28px at day 90+
-  const size = 16 + Math.round(Math.min(n / 90, 1) * 12);
+  // Grows from 18px to 30px as the streak matures.
+  const size = 18 + Math.round(Math.min(n / 120, 1) * 12);
   fsv.setAttribute('width', size);
   fsv.setAttribute('height', size);
+  fsv.setAttribute('viewBox', '0 0 24 24');
 
-  let outer, inner, glow, animate;
-  if(n === 0) {
-    outer = 'rgba(255,255,255,0.14)'; inner = 'rgba(255,255,255,0.06)';
-    glow = ''; animate = false;
-  } else if(n < 3) {
-    outer = '#9A5000'; inner = '#FFD060';
-    glow = 'drop-shadow(0 0 3px #9A5000)'; animate = true;
-  } else if(n < 7) {
-    outer = '#FF5500'; inner = '#FFD060';
-    glow = 'drop-shadow(0 0 4px #FF5500)'; animate = true;
-  } else if(n < 14) {
-    outer = '#FF3300'; inner = '#FFCC30';
-    glow = 'drop-shadow(0 0 6px #FF3300)'; animate = true;
-  } else if(n < 30) {
-    outer = '#FF2200'; inner = '#FFE060';
-    glow = 'drop-shadow(0 0 7px #FF2200)'; animate = true;
-  } else if(n < 60) {
-    outer = '#FF1100'; inner = '#ffffff';
-    glow = 'drop-shadow(0 0 9px #FF3300)'; animate = true;
-  } else {
-    outer = '#FF0800'; inner = '#E8F6FF';
-    glow = 'drop-shadow(0 0 12px #FF2200) drop-shadow(0 0 5px #FFA500)'; animate = true;
-  }
+  let form, o, i, glow, animate = true;
+  if(n === 0)        { form='ember';   o='rgba(255,255,255,0.13)'; i='rgba(255,255,255,0.05)'; glow=''; animate=false; }
+  else if(n < 7)     { form='spark';   o='#FF7A18'; i='#FFD56B'; glow='drop-shadow(0 0 4px #FF7A18)'; }
+  else if(n < 30)    { form='flame';   o='#FF4500'; i='#FFD24A'; glow='drop-shadow(0 0 6px #FF4500)'; }
+  else if(n < 90)    { form='blaze';   o='#FF2A00'; i='#FFE9A8'; glow='drop-shadow(0 0 8px #FF3300)'; }
+  else if(n < 180)   { form='flame';   o='#2E7BFF'; i='#EAF4FF'; glow='drop-shadow(0 0 9px #2E7BFF) drop-shadow(0 0 4px #9FC6FF)'; } // blue = hottest
+  else if(n < 270)   { form='radiant'; o='#B66BFF'; i='#F3E9FF'; glow='drop-shadow(0 0 10px #B66BFF)'; }
+  else if(n < 365)   { form='solar';   o='#FFC21E'; i='#FFF4C2'; glow='drop-shadow(0 0 11px #FFB000) drop-shadow(0 0 5px #FFD24A)'; }
+  else               { form='phoenix'; o='#FFE38A'; i='#FFFFFF'; glow='drop-shadow(0 0 13px #FFD24A) drop-shadow(0 0 6px #FF8A00)'; }
 
   fsv.style.filter = glow;
   fsv.style.animation = animate ? 'flamePulse 1.4s ease-in-out infinite' : '';
-  fsv.innerHTML = `<path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="${outer}"/><path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="${inner}"/>`;
+  fsv.innerHTML = FLAME_FORMS[form](o, i);
 }
 
 // ===================== BADGE =====================
