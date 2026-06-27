@@ -2508,12 +2508,15 @@ function setQuickCheckinSub() {
     el.style.color = '#7FE0C0';
     return;
   }
-  const evening = new Date().getHours() >= 20;   // earn urgency, don't default to it
+  // The streak is date-based (calcStreak) and rolls over on its own — logging
+  // never keeps it alive, it just captures the day's data. So the copy nudges
+  // toward recording the day, not "saving" the streak.
+  const evening = new Date().getHours() >= 20;
   if(n > 2 && evening) {
-    el.textContent = 'Before midnight — keep your ' + n + '-day streak going';
+    el.textContent = 'Close out day ' + n + ' — log how it felt';
     el.style.color = '#F0C078';
   } else if(n > 2) {
-    el.textContent = 'Day ' + n + ' · tap a mood to keep it going';
+    el.textContent = 'Day ' + n + ' · how\'s today landing?';
     el.style.color = '';
   } else {
     el.textContent = t('tapMood');
