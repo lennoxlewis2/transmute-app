@@ -832,8 +832,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <div style="padding:16px 18px 12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <div>
-            <div style="font-size:15px;font-weight:700;color:white;margin-bottom:2px;">How are you feeling right now?</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.45);">Tap a mood to log today's check-in</div>
+            <div id="qc-title" style="font-size:15px;font-weight:700;color:white;margin-bottom:2px;">How are you feeling right now?</div>
+            <div id="qc-sub" style="font-size:11px;color:rgba(255,255,255,0.45);">Tap a mood to log today's check-in</div>
           </div>
           <div style="width:36px;height:36px;border-radius:10px;background:rgba(108,92,231,0.15);display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(168,156,236,0.9)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
         </div>
@@ -850,10 +850,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <button class="qmood-btn" data-mood="Creative" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" opacity=".6"/></svg></span><span>Creative</span></button>
           <button class="qmood-btn" data-mood="Low" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M15 15.5a4 4 0 0 0-6 0"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></span><span>Low</span></button>
         </div>
-      </div>
-      <div style="background:rgba(255,255,255,0.06);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:12px;color:rgba(255,255,255,0.4);">Or tap to open full check-in</span>
-        <span style="font-size:12px;color:var(--ac4);font-weight:600;">Full check-in →</span>
       </div>
     </div>
 
@@ -1640,7 +1636,7 @@ const TRANSLATIONS = {
     bestStreak:'Best streak', checkIns:'Check-ins', avgEnergy:'Avg energy',
     latestCheckin:'Latest check-in', noCheckins:'No check-ins yet',
     noCheckinsBody:'Tap the check-in card below\nto log your first entry',
-    howFeeling:'How are you feeling right now?', tapMood:'Tap a mood to log today\'s check-in',
+    howFeeling:'How are you feeling right now?', tapMood:'Tap a mood to log today\'s check-in', checkedInShort:'Checked in today ✓ — tap to update',
     fullCheckin:'Full check-in →',
     weeklyDue:'Weekly review due', weeklyDueSub:'7+ days since your last review.',
     startWeeklyReview:'Start weekly review',
@@ -2014,10 +2010,10 @@ function applyLang() {
   if(sdayEl) sdayEl.textContent = t('days');
 
   // Quick checkin card
-  const qcTitle = document.querySelector('#quick-checkin-card [style*="font-size:15px"]');
+  const qcTitle = document.getElementById('qc-title');
   if(qcTitle) qcTitle.textContent = t('howFeeling');
-  const qcSub = document.querySelector('#quick-checkin-card [style*="font-size:11px"]');
-  if(qcSub) qcSub.textContent = t('tapMood');
+  const qcSub = document.getElementById('qc-sub');
+  if(qcSub) qcSub.textContent = checkedInToday() ? t('checkedInShort') : t('tapMood');
 
   // Buttons - home
   const pickBtn = document.getElementById('pick-date-btn');
@@ -2508,7 +2504,13 @@ function updateHome() {
   });
   document.querySelectorAll('#s-home .m-grid').forEach(g => { g.style.display = isDay0 ? 'none' : 'grid'; });
 
-  // Streak protect card
+  // Quick check-in card: once logged, stop nudging — show a calm confirmation.
+  const qcSubEl = document.getElementById('qc-sub');
+  if(qcSubEl) qcSubEl.textContent = checkedInToday() ? t('checkedInShort') : t('tapMood');
+
+  // Streak protect card — only when there's a streak at risk AND not yet logged.
+  // (When not logged this is the single urgency nudge; the quick card stays a
+  // calm mood logger, so the two no longer duplicate the same "log today" CTA.)
   const protectEl = document.getElementById('streak-protect');
   if(protectEl) {
     if(n > 2 && !checkedInToday()) {
