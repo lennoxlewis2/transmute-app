@@ -128,6 +128,36 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .urge-sum-top{font-size:14px;color:var(--tx);font-weight:600;margin-bottom:4px;}
 .urge-sum-num{font-size:20px;font-weight:800;color:var(--teal4);}
 .urge-sum-sub{font-size:12px;color:var(--ts);line-height:1.5;}
+/* ---- History redesign ---- */
+.hist-head{margin-bottom:15px;}
+.hist-head h2{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.5px;margin-bottom:2px;}
+.hist-head p{font-size:12.5px;color:var(--ts);}
+.btn-g.on{background:var(--ac);border-color:var(--ac);color:#fff;font-weight:600;}
+.he{display:flex;gap:12px;background:var(--sf);border:.5px solid var(--bd);border-radius:14px;padding:13px 14px;margin-bottom:9px;}
+.he-ic{width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.he-ic svg{width:18px;height:18px;}
+.he-ic.t-daily{background:rgba(108,92,231,0.15);color:var(--ac2);}
+.he-ic.t-urge{background:rgba(29,158,117,0.15);color:#3FC79B;}
+.he-ic.t-weekly{background:rgba(217,164,65,0.14);color:#E0A93F;}
+.he-ic.t-relapse{background:rgba(216,90,48,0.16);color:var(--cor2);}
+.he.t-relapse{border-color:rgba(216,90,48,0.28);}
+.he-body{flex:1;min-width:0;}
+.he-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px;}
+.he-title{font-size:14px;font-weight:700;color:var(--tx);}
+.he-date{font-size:10px;color:var(--tt);font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;flex-shrink:0;}
+.he-stats{display:flex;flex-wrap:wrap;gap:6px;}
+.he-stat{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border:.5px solid var(--bd);border-radius:8px;padding:3px 8px;font-size:11px;color:var(--ts);font-weight:600;}
+.he-stat b{color:var(--tx);font-weight:700;font-size:11.5px;}
+.he-stat.hi{border-color:var(--cor6);}.he-stat.hi b{color:var(--cor2);}
+.he-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.he-tag{font-size:10.5px;color:var(--ac2);background:var(--acl);border-radius:7px;padding:3px 8px;font-weight:600;}
+.he-note{font-size:12px;color:var(--ts);line-height:1.55;margin-top:8px;padding-left:9px;border-left:2px solid var(--bds);}
+.he-line{font-size:12px;color:var(--ts);line-height:1.55;margin-top:4px;}
+.he-line b{color:var(--tx);font-weight:600;}
+.he-empty{text-align:center;padding:38px 20px;color:var(--ts);}
+.he-empty svg{width:34px;height:34px;color:var(--tt);margin-bottom:12px;}
+.he-empty p{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:4px;}
+.he-empty span{font-size:12.5px;color:var(--ts);line-height:1.5;display:block;max-width:240px;margin:0 auto;}
 /* Insights */
 .ic{background:var(--acl);border:.5px solid var(--ac2);border-radius:var(--r2);padding:14px;margin-bottom:10px;}
 .ic-t{font-size:11px;font-weight:700;color:var(--ac2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;}
@@ -839,9 +869,10 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <!-- HISTORY -->
   <div id="s-history" class="sec">
     <button class="subback" onclick="goTab('home')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
+    <div class="hist-head"><h2 id="hist-title">Your journey</h2><p id="hist-sub">Every check-in, review and urge you've ridden out.</p></div>
     <div id="relapse-insights" style="display:none;margin-bottom:14px;"></div>
-    <div class="btn-row" style="margin-bottom:11px">
-      <button class="btn-g" id="hf-all" style="border-color:var(--ac);color:var(--ac)">All</button>
+    <div class="btn-row" style="margin-bottom:13px">
+      <button class="btn-g on" id="hf-all">All</button>
       <button class="btn-g" id="hf-daily">Daily</button>
       <button class="btn-g" id="hf-weekly">Weekly</button>
       <button class="btn-g" id="hf-urge">Urges</button>
@@ -2498,15 +2529,16 @@ function renderHistory(f) {
   renderRelapsePatterns();
   ['all','daily','weekly','urge'].forEach(x => {
     const el = document.getElementById('hf-'+x);
-    if(el) { el.style.borderColor = x===f?'var(--ac)':''; el.style.color = x===f?'var(--ac)':''; }
+    if(el) { el.classList.toggle('on', x===f); el.style.borderColor = ''; el.style.color = ''; }
   });
   const el = document.getElementById('hist-list');
-  if(!S.entries.length) { el.innerHTML = '<p>No entries yet.</p>'; return; }
+  const emptyState = (title, sub) => `<div class="he-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><p>${title}</p><span>${sub}</span></div>`;
+  if(!S.entries.length) { el.innerHTML = emptyState('No entries yet', 'Your check-ins, weekly reviews and the urges you ride out will all appear here.'); return; }
   const list = f==='weekly' ? S.entries.filter(e=>e.type==='weekly')
     : f==='daily' ? S.entries.filter(e=>e.type==='daily')
     : f==='urge' ? S.entries.filter(e=>e.type==='urge')
     : S.entries;
-  if(!list.length) { el.innerHTML = f==='urge' ? '<p>No surfed urges logged yet. Every urge you ride out gets recorded here.</p>' : '<p>No entries of this type yet.</p>'; return; }
+  if(!list.length) { el.innerHTML = f==='urge' ? emptyState('No urges logged yet', 'Every urge you ride out with the SOS tool gets recorded here.') : emptyState('Nothing here yet', 'No '+f+' entries so far — they\'ll show up once you log them.'); return; }
 
   // "Getting easier" summary on the Urges view
   let summary = '';
@@ -2522,12 +2554,28 @@ function renderHistory(f) {
     summary = `<div class="urge-sum"><div class="urge-sum-top"><span class="urge-sum-num">${list.length}</span> urge${list.length>1?'s':''} ridden out · avg start ${avg(list)}</div><div class="urge-sum-sub">${trend}</div></div>`;
   }
 
+  // Icon badges per entry type — keeps History on-brand with the rest of the app.
+  const HIC = {
+    daily:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg>',
+    urge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 14c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></svg>',
+    weekly:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M8 11h8M8 15h6"/></svg>',
+    relapse:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>'
+  };
+
   el.innerHTML = summary + [...list].reverse().map(e => {
-    const dt = new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · day ' + e.day;
-    if(e.type === 'urge') return `<div class="urge-entry"><div class="e-date">${dt}</div><div class="e-mood">Rode out a${e.level>=75?'n':''} ${uLevelLabel(e.level)} urge</div><div class="e-note">Started at ${e.level} · stayed with it ${uFmtSecs(e.secs)}</div></div>`;
-    if(e.type === 'relapse') return `<div class="entry"><div class="e-date">${dt}</div><div class="e-mood" style="color:var(--cor2)">Streak ended</div><div class="e-note">Reached day ${e.day} — a fresh start from here.</div></div>`;
-    if(e.type === 'weekly') return `<div class="wk-card"><div class="e-date">${dt} · <span style="color:var(--amb8);font-weight:600">Weekly review</span></div>${e.wentWell?'<div class="e-note"><b>Went well:</b> '+escHtml(e.wentWell)+'</div>':''}${e.hardest?'<div class="e-note"><b>Hardest:</b> '+escHtml(e.hardest)+'</div>':''}${e.intention?'<div class="e-note"><b>Intention:</b> '+escHtml(e.intention)+'</div>':''}</div>`;
-    return `<div class="entry"><div class="e-date">${dt}</div><div class="e-mood">${escHtml(e.mood)} · E${e.energy} C${e.clarity} U${e.urge}</div>${e.triggers&&e.triggers.length?'<div class="e-note">Triggers: '+e.triggers.map(escHtml).join(', ')+'</div>':''}${e.note?'<div class="e-note">'+escHtml(e.note)+'</div>':''}</div>`;
+    const dt = new Date(e.date).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}) + ' · Day ' + e.day;
+    if(e.type === 'urge') return `<div class="he t-urge"><div class="he-ic t-urge">${HIC.urge}</div><div class="he-body"><div class="he-top"><span class="he-title">Rode out a${e.level>=75?'n':''} ${uLevelLabel(e.level)} urge</span><span class="he-date">${dt}</span></div><div class="he-stats"><span class="he-stat">Peak <b>${e.level}</b></span><span class="he-stat">Held <b>${uFmtSecs(e.secs)}</b></span></div></div></div>`;
+    if(e.type === 'relapse') return `<div class="he t-relapse"><div class="he-ic t-relapse">${HIC.relapse}</div><div class="he-body"><div class="he-top"><span class="he-title" style="color:var(--cor2)">Streak ended</span><span class="he-date">${dt}</span></div><div class="he-line">Reached <b>day ${e.day}</b> — a fresh start from here.</div></div></div>`;
+    if(e.type === 'weekly') {
+      const rows = [['Went well',e.wentWell],['Hardest',e.hardest],['Intention',e.intention]].filter(r=>r[1]);
+      return `<div class="he t-weekly"><div class="he-ic t-weekly">${HIC.weekly}</div><div class="he-body"><div class="he-top"><span class="he-title">Weekly review</span><span class="he-date">${dt}</span></div>${rows.map(([k,v])=>`<div class="he-line"><b>${k}:</b> ${escHtml(v)}</div>`).join('')}</div></div>`;
+    }
+    // daily
+    const stats = [['Energy',e.energy],['Clarity',e.clarity],['Urge',e.urge,e.urge>=7],['Social',e.social]]
+      .filter(s=>s[1]!=null)
+      .map(([k,v,hi])=>`<span class="he-stat${hi?' hi':''}">${k} <b>${v}</b></span>`).join('');
+    const tags = (e.triggers&&e.triggers.length) ? `<div class="he-tags">${e.triggers.map(t=>`<span class="he-tag">${escHtml(t)}</span>`).join('')}</div>` : '';
+    return `<div class="he t-daily"><div class="he-ic t-daily">${HIC.daily}</div><div class="he-body"><div class="he-top"><span class="he-title">${escHtml(e.mood)}</span><span class="he-date">${dt}</span></div><div class="he-stats">${stats}</div>${tags}${e.note?`<div class="he-note">${escHtml(e.note)}</div>`:''}</div></div>`;
   }).join('');
 }
 
