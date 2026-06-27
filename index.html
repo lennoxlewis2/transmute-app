@@ -965,16 +965,16 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <!-- INSIGHTS -->
   <div id="s-insights" class="sec">
     <button class="subback" onclick="goTab('home')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
-    <div class="in-head"><h2>Your insights</h2><p>What's actually changing — read from your own check-ins.</p></div>
+    <div class="in-head"><h2 id="ins-title">Your insights</h2><p id="ins-sub">What's actually changing — read from your own check-ins.</p></div>
     <div id="ins-content"></div>
   </div>
 
   <!-- PHASES -->
   <div id="s-phases" class="sec">
     <button class="subback" onclick="goTab('home')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
-    <div class="ph-head"><h2>Your phases</h2><p>The full arc of the journey — and exactly where you stand on it.</p></div>
+    <div class="ph-head"><h2 id="ph-title2">Your phases</h2><p id="ph-sub">The full arc of the journey — and exactly where you stand on it.</p></div>
     <div id="ph-current" class="ph-hero"></div>
-    <div class="ph-tl-lbl">The full journey</div>
+    <div class="ph-tl-lbl" id="ph-tl-lbl-el">The full journey</div>
     <div id="ph-list"></div>
   </div>
 
@@ -1647,6 +1647,13 @@ const TRANSLATIONS = {
     streakStartDate:'Streak start date',
     setStartDate:'Set start date', reset:'Start fresh',
     resetTitle:'A slip isn\'t the end', resetMsg:'Every day you held changed you — and none of that resets. Your best streak and your insights stay with you. This is just day one of the next one.', resetConfirm:'Start a fresh streak', resetCancel:'Stay on this streak', yourPhase:'Your phase',
+    histTitle:'Your journey', histSub:'Every check-in, review and urge you\'ve ridden out.',
+    insTitle:'Your insights', insSub:'What\'s actually changing — read from your own check-ins.',
+    insVitalsLbl:'Your vitals · all-time avg vs last 7 days', insDayStreak:'Day streak', insCheckins:'Check-ins', insUrgesBeaten:'Urges beaten',
+    insEnergy:'Energy', insClarity:'Clarity', insSocial:'Social', insUrge:'Urge', insShowUp:'How you show up most', insPulls:'What pulls at you most',
+    phScreenTitle:'Your phases', phScreenSub:'The full arc of the journey — and exactly where you stand on it.', phFullJourney:'The full journey',
+    phCurrentPhase:'Current phase', phNotStarted:'Not started yet', phYouAreHere:'You are here',
+    relWhereBreak:'Where your streaks break',
     energy:'Energy', clarity:'Mental clarity', urgeIntensity:'Urge intensity', socialConf:'Social confidence',
     triggersToday:'Urge triggers today?',
     customTrigger:'Custom trigger (optional)',
@@ -2018,6 +2025,14 @@ function applyLang() {
   const resetBtn = document.getElementById('reset-btn');
   if(resetBtn) resetBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>' + t('reset');
   set('aura-tap-lbl', t('yourPhase'));
+  // New retrospective screens — static headers
+  set('hist-title', t('histTitle'));
+  set('hist-sub', t('histSub'));
+  set('ins-title', t('insTitle'));
+  set('ins-sub', t('insSub'));
+  set('ph-title2', t('phScreenTitle'));
+  set('ph-sub', t('phScreenSub'));
+  set('ph-tl-lbl-el', t('phFullJourney'));
   set('reset-title', t('resetTitle'));
   set('reset-msg', t('resetMsg'));
   set('reset-confirm', t('resetConfirm'));
@@ -2684,7 +2699,7 @@ function renderRelapsePatterns() {
   if(rel.length === 0) { box.style.display = 'none'; box.innerHTML = ''; return; }
   box.style.display = 'block';
   if(rel.length < 2) {
-    box.innerHTML = `<div class="rp-card"><div class="rp-title">${icChart}Where your streaks break</div><div class="rp-teaser">We've logged <b>1</b> streak ending so far. After one more, we'll show you the day and time you're most at risk — so the pattern stops being a mystery and you can plan for it.</div></div>`;
+    box.innerHTML = `<div class="rp-card"><div class="rp-title">${icChart}${t('relWhereBreak')}</div><div class="rp-teaser">We've logged <b>1</b> streak ending so far. After one more, we'll show you the day and time you're most at risk — so the pattern stops being a mystery and you can plan for it.</div></div>`;
     return;
   }
 
@@ -2724,7 +2739,7 @@ function renderRelapsePatterns() {
   }).join('');
 
   box.innerHTML = `<div class="rp-card">
-    <div class="rp-title">${icChart}Where your streaks break</div>
+    <div class="rp-title">${icChart}${t('relWhereBreak')}</div>
     <div class="rp-head">Across <b class="pos">${rel.length}</b> streaks that ended, the wave usually takes you on <b>${FULL[peakDow]}</b>${peakBandC>0?`, in the <b>${peakBandLbl}</b>`:''} — and most often around <b class="pos">day ${avgDay}</b>.</div>
     <div class="rp-bars">${bars}</div>
     <div class="rp-bands">${bandHtml}</div>
@@ -2800,26 +2815,26 @@ function renderInsights() {
 
   el.innerHTML = `
     <div class="in-stats">
-      <div class="in-stat"><div class="in-stat-n ac">${calcStreak()||(S.startDate?1:0)}</div><div class="in-stat-l">Day streak</div></div>
-      <div class="in-stat"><div class="in-stat-n">${daily.length}</div><div class="in-stat-l">Check-ins</div></div>
-      <div class="in-stat"><div class="in-stat-n teal">${S.urgesBeat||0}</div><div class="in-stat-l">Urges beaten</div></div>
+      <div class="in-stat"><div class="in-stat-n ac">${calcStreak()||(S.startDate?1:0)}</div><div class="in-stat-l">${t('insDayStreak')}</div></div>
+      <div class="in-stat"><div class="in-stat-n">${daily.length}</div><div class="in-stat-l">${t('insCheckins')}</div></div>
+      <div class="in-stat"><div class="in-stat-n teal">${S.urgesBeat||0}</div><div class="in-stat-l">${t('insUrgesBeaten')}</div></div>
     </div>
 
-    <div class="in-lbl">Your vitals · all-time avg vs last 7 days</div>
+    <div class="in-lbl">${t('insVitalsLbl')}</div>
     <div class="in-card">
-      ${vital('Energy','energy',true)}
-      ${vital('Clarity','clarity',true)}
-      ${vital('Social','social',true)}
-      ${vital('Urge','urge',false)}
+      ${vital(t('insEnergy'),'energy',true)}
+      ${vital(t('insClarity'),'clarity',true)}
+      ${vital(t('insSocial'),'social',true)}
+      ${vital(t('insUrge'),'urge',false)}
     </div>
 
-    <div class="in-lbl">Energy · last ${series.length} check-ins</div>
+    <div class="in-lbl">${t('insEnergy')} · ${series.length} ${t('insCheckins').toLowerCase()}</div>
     <div class="in-card">${spark}<div class="in-spark-cap"><span>${series.length} check-ins ago</span><span>now</span></div></div>
 
-    <div class="in-lbl">How you show up most</div>
+    <div class="in-lbl">${t('insShowUp')}</div>
     <div class="in-card">${rankRows(moods, moodMax, 'mood')}</div>
 
-    ${trigs.length ? `<div class="in-lbl">What pulls at you most</div><div class="in-card">${rankRows(trigs, trigMax, 'trig')}</div>` : ''}
+    ${trigs.length ? `<div class="in-lbl">${t('insPulls')}</div><div class="in-card">${rankRows(trigs, trigMax, 'trig')}</div>` : ''}
 
     <div class="in-synth">${synth}</div>`;
 }
@@ -2845,7 +2860,7 @@ function renderPhase() {
   const hero = document.getElementById('ph-current');
 
   if(!started) {
-    hero.innerHTML = `<div class="ph-hero-tag">${icSpark} Your phases</div><div class="ph-hero-name">Not started yet</div><div class="ph-hero-text" style="margin-bottom:0">Set your start date on the home screen to see exactly which phase you're in — and what's coming next.</div>`;
+    hero.innerHTML = `<div class="ph-hero-tag">${icSpark} ${t('phScreenTitle')}</div><div class="ph-hero-name">${t('phNotStarted')}</div><div class="ph-hero-text" style="margin-bottom:0">Set your start date on the home screen to see exactly which phase you're in — and what's coming next.</div>`;
   } else {
     const cur = PHASES[curIdx];
     const next = PHASES[curIdx + 1];
@@ -2860,7 +2875,7 @@ function renderPhase() {
     } else {
       prog = `<div class="ph-prog-lbl"><span class="l">The final phase</span><span class="r">Keep the flame</span></div><div class="ph-prog-track"><div class="ph-prog-fill" style="width:100%"></div></div>`;
     }
-    hero.innerHTML = `<div class="ph-hero-tag">${icSpark} Current phase</div><div class="ph-hero-name">${cur.label}</div><div class="ph-hero-day">Day ${dispDay} · ${cur.range}</div><div class="ph-hero-text">${cur.text}</div>${prog}`;
+    hero.innerHTML = `<div class="ph-hero-tag">${icSpark} ${t('phCurrentPhase')}</div><div class="ph-hero-name">${cur.label}</div><div class="ph-hero-day">Day ${dispDay} · ${cur.range}</div><div class="ph-hero-text">${cur.text}</div>${prog}`;
   }
 
   const icCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -2868,7 +2883,7 @@ function renderPhase() {
   document.getElementById('ph-list').innerHTML = PHASES.map((p, i) => {
     const st = i < curIdx ? 'pl-done' : i === curIdx ? 'pl-cur' : 'pl-next';
     const node = i < curIdx ? icCheck : i === curIdx ? icDot : '';
-    const here = i === curIdx ? '<span class="pl-here">You are here</span>' : '';
+    const here = i === curIdx ? `<span class="pl-here">${t('phYouAreHere')}</span>` : '';
     return `<div class="pl-row ${st}"><div class="pl-node">${node}</div><div class="pl-card"><div class="pl-top"><span class="pl-name">${p.label}${here}</span><span class="pl-range">${p.range}</span></div><div class="pl-text">${p.text}</div></div></div>`;
   }).join('');
 }
