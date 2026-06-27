@@ -252,6 +252,14 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .uint-dot{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);flex-shrink:0;}
   .uint-l{flex:1;text-align:left;font-size:15px;font-weight:600;color:var(--tx);}
   .uint-n{font-size:13px;font-weight:700;color:var(--c);}
+  .w-help{background:rgba(255,255,255,0.03);border:.5px solid rgba(108,92,231,0.18);border-radius:16px;padding:16px;margin-bottom:12px;animation:winRise .5s ease-out .2s both;}
+  .w-help-q{font-size:13px;color:#A8A4CC;text-align:center;margin-bottom:12px;line-height:1.5;}
+  .w-help-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .w-help-btn{padding:11px 8px;border:.5px solid var(--bds);border-radius:10px;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.78);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;-webkit-appearance:none;transition:transform .12s,background .15s,border-color .15s;}
+  .w-help-btn:active{transform:scale(0.96);}
+  .w-help-btn.on{border-color:var(--ac4);background:var(--acl);color:var(--ac2);}
+  .utool-suggested{border-color:var(--ac)!important;position:relative;}
+  .utool-suggested::after{content:'★ helps you';position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--ac);color:#fff;font-size:8px;font-weight:700;padding:2px 8px;border-radius:8px;letter-spacing:.03em;white-space:nowrap;}
   .urf-done{display:none;padding:0 20px 20px;}
   .urf-done.show{display:block;animation:urfDoneIn .6s cubic-bezier(.22,1,.36,1) both;}
   @keyframes urfDoneIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
@@ -1285,6 +1293,16 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
         <div class="w-quote">
           <div style="font-size:13px;color:#A8A4CC;line-height:1.75;">Every wave you ride makes the next one smaller.<br>You are becoming stronger than your impulses.</div>
+        </div>
+
+        <div class="w-help" id="w-help">
+          <div class="w-help-q" id="w-help-q">What helped you ride it out?</div>
+          <div class="w-help-grid">
+            <button class="w-help-btn" onclick="uHelped('breath',this)">Breathing</button>
+            <button class="w-help-btn" onclick="uHelped('timer',this)">The timer</button>
+            <button class="w-help-btn" onclick="uHelped('affirm',this)">An affirmation</button>
+            <button class="w-help-btn" onclick="uHelped('remind',this)">Remembering why</button>
+          </div>
         </div>
 
         <button class="urge-sos-btn" style="background:linear-gradient(135deg,#6C5CE7,#4834C8);color:#fff;font-weight:700;margin-top:4px;border:none;font-size:16px;padding:16px;" onclick="uReset()">Continue your streak →</button>
@@ -3334,12 +3352,34 @@ function uShowTool(name) {
   if(chooser) chooser.style.display=name?'none':'block';
   const back=document.getElementById('utool-back');
   if(back) back.style.display=name?'flex':'none';
-  if(!name) return;
+  if(!name) { uHighlightTopTool(); return; }
   const sec=document.getElementById('utool-'+name);
   if(sec) sec.classList.add('on');
   const btn=document.getElementById('tb-'+name);
   if(btn) btn.classList.add('on');
   if(name==='affirm') uRenderAffirmDots();
+}
+
+// Mark the tool that has helped this user most, so it draws the eye next time.
+function uHighlightTopTool() {
+  document.querySelectorAll('.utool-btn').forEach(b=>b.classList.remove('utool-suggested'));
+  const th = S.toolHelp || {};
+  let top=null, max=0;
+  for(const k in th){ if(th[k]>max){ max=th[k]; top=k; } }
+  if(top){ const b=document.getElementById('tb-'+top); if(b) b.classList.add('utool-suggested'); }
+}
+
+// On the win screen: which tool got them through? Remember it.
+function uHelped(tool, btn) {
+  S.toolHelp = S.toolHelp || {};
+  S.toolHelp[tool] = (S.toolHelp[tool]||0) + 1;
+  for(let i=S.entries.length-1;i>=0;i--){ if(S.entries[i].type==='urge'){ S.entries[i].tool=tool; break; } }
+  save();
+  document.querySelectorAll('#w-help .w-help-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const q=document.getElementById('w-help-q');
+  if(q) q.textContent="Noted — we'll put that front and centre next time.";
+  if(navigator.vibrate) navigator.vibrate(8);
 }
 
 function uRenderAffirmDots() {
@@ -3355,6 +3395,10 @@ function uWin() {
   // Log the surfed urge so the user can watch them get easier over time.
   S.entries.push({type:'urge', date:new Date().toISOString(), day:calcStreak(), level:Math.round(uStartLevel*100), secs:uElapsedSecs});
   save(); updateHome();
+  // reset the "what helped?" prompt for this fresh win
+  document.querySelectorAll('#w-help .w-help-btn').forEach(b=>b.classList.remove('on'));
+  const hq=document.getElementById('w-help-q');
+  if(hq) hq.textContent='What helped you ride it out?';
   document.getElementById('urge-surf').style.display='none';
   document.getElementById('urge-win').style.display='block';
 }
