@@ -214,6 +214,28 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .pl-here{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ac2);background:rgba(255,255,255,0.14);border-radius:5px;padding:2px 6px;margin-left:7px;vertical-align:1px;}
 .pl-range{font-size:9.5px;color:var(--tt);font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em;}
 .pl-text{font-size:12px;color:var(--ts);line-height:1.55;}
+.pl-row{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.pl-card{transition:transform .12s ease;}
+.pl-row:active .pl-card{transform:scale(0.985);}
+.pl-more{display:flex;align-items:center;gap:2px;margin-top:8px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ac2);opacity:.85;}
+.pl-more svg{width:11px;height:11px;}
+.pl-next .pl-more{color:var(--ts);}
+/* Phase detail bottom sheet */
+.pd-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:420;align-items:flex-end;justify-content:center;}
+.pd-sheet{position:relative;background:var(--sf);border:.5px solid var(--bd);border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;animation:pdUp .32s cubic-bezier(.4,0,.2,1);}
+@keyframes pdUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.pd-close{position:absolute;top:13px;right:13px;z-index:2;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.07);border:none;color:var(--ts);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.pd-scroll{overflow-y:auto;padding:26px 20px 30px;-webkit-overflow-scrolling:touch;}
+.pd-range{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--tt);margin-bottom:4px;}
+.pd-name{font-size:26px;font-weight:800;color:var(--tx);letter-spacing:-.5px;margin-bottom:12px;}
+.pd-lede{font-size:14px;color:var(--ac2);line-height:1.6;margin-bottom:6px;}
+.pd-sec{margin-top:20px;}
+.pd-sec-h{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ac4);margin-bottom:7px;}
+.pd-sec-b{font-size:13.5px;color:var(--ts);line-height:1.65;}
+.pd-tips{margin:0;padding:0;list-style:none;}
+.pd-tips li{position:relative;font-size:13.5px;color:var(--ts);line-height:1.55;padding-left:20px;margin-bottom:9px;}
+.pd-tips li:last-child{margin-bottom:0;}
+.pd-tips li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac2);}
 /* ---- Insights ---- */
 .in-head{margin-bottom:15px;}
 .in-head h2{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.5px;margin-bottom:2px;}
@@ -1611,6 +1633,14 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   </div>
 </div>
 
+<!-- PHASE DETAIL — full breakdown of a single phase (opened from the timeline) -->
+<div class="pd-overlay" id="phase-detail">
+  <div class="pd-sheet">
+    <button class="pd-close" id="pd-close" aria-label="Close"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="pd-scroll" id="pd-scroll"><div id="pd-body"></div></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1637,6 +1667,7 @@ const TRANSLATIONS = {
     insEnergy:'Energy', insClarity:'Clarity', insSocial:'Social', insUrge:'Urge', insShowUp:'How you show up most', insPulls:'What pulls at you most',
     phScreenTitle:'Your phases', phScreenSub:'The full arc of the journey — and exactly where you stand on it.', phFullJourney:'The full journey',
     phCurrentPhase:'Current phase', phNotStarted:'Not started yet', phYouAreHere:'You are here',
+    phReadMore:'Read more', phdBody:'Your body', phdMind:'Your mind & mood', phdHard:'What\'s hard here', phdTips:'Make the most of it',
     relWhereBreak:'Where your streaks break',
     energy:'Energy', clarity:'Mental clarity', urgeIntensity:'Urge intensity', socialConf:'Social confidence',
     triggersToday:'Urge triggers today?',
@@ -2844,15 +2875,51 @@ function renderInsights() {
 
 // ===================== PHASES =====================
 const PHASES = [
-  {min:0,  max:7,    label:'Foundation',      range:'Days 1–7',     text:'Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding — the foundation is being laid.'},
-  {min:8,  max:21,   label:'Rewiring',        range:'Days 8–21',    text:'Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.'},
-  {min:22, max:40,   label:'Peak energy',     range:'Days 22–40',   text:'Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.'},
-  {min:41, max:89,   label:'Mastery',         range:'Days 41–89',   text:'The practice becomes identity. Urges stabilise and energy is sustained. Your voice deepens, eye contact holds longer, others respond to you differently.'},
-  {min:90, max:119,  label:'Crystallisation', range:'Days 90–119',  text:'The rewiring is largely complete. Old urge pathways atrophy from disuse. Creativity peaks — the transmutation is real and measurable.'},
-  {min:120,max:179,  label:'Diamond Mind',    range:'Days 120–179', text:'Emotional regulation reaches a new level. You think more clearly under pressure. People feel your stillness — you are no longer fighting yourself.'},
-  {min:180,max:269,  label:'Transcendence',   range:'Days 180–269', text:'For many men, spiritual experience begins to open here. Heightened intuition, vivid dreams, synchronicities. Something genuinely shifts at this depth.'},
-  {min:270,max:364,  label:'Solar',           range:'Days 270–364', text:'Nine months. Presence becomes a felt quality others sense but cannot explain. Leadership comes naturally. Physical vitality is at its peak.'},
-  {min:365,max:9999, label:'Eternal Flame',   range:'Day 365+',     text:'This is no longer a practice — it is a philosophy and a permanent upgrade. You carry a quiet, unshakeable power. Guard it. Grow it. Give from it.'}
+  {min:0,  max:7,    label:'Foundation',      range:'Days 1–7',     text:'Your body is recalibrating. Flatlines and low energy are normal. Focus on sleep, hydration, and grounding — the foundation is being laid.',
+   d:{body:'Your brain\'s dopamine receptors begin downregulating after constant overstimulation. Expect restlessness, brain fog, broken sleep or low energy — this is recalibration, not damage, and it passes.',
+      mind:'Motivation dips and urges spike hardest now, usually driven by old habit and cues rather than real desire. Every urge you ride out is the first rep of rebuilding willpower.',
+      hard:'Days 3–5 are typically the sharpest. Your old routines — phone in bed, idle scrolling, the same triggers — will pull hard to reclaim you.',
+      tips:['Remove easy access: keep the phone out of the bedroom.','Move daily — even a walk burns off restless energy.','Sleep and water do more for you right now than motivation.']}},
+  {min:8,  max:21,   label:'Rewiring',        range:'Days 8–21',    text:'Urges intensify as dopamine pathways rewire. Channel the energy into exercise, creativity, or cold exposure. Avoid idle time.',
+   d:{body:'Energy returns in waves. Testosterone trends up from its suppressed baseline — many notice deeper sleep, stronger morning energy and a clearer head between the waves.',
+      mind:'Urges intensify because your brain is actively renegotiating what it finds rewarding. Mood can swing. This discomfort is the rewiring happening in real time.',
+      hard:'This is the classic relapse window — the novelty has worn off but the urges are real. Boredom and unstructured time are the enemy.',
+      tips:['Channel the charge into hard training or a demanding project.','Cold showers blunt an urge within seconds.','Fill idle time deliberately — that\'s when slips happen.']}},
+  {min:22, max:40,   label:'Peak energy',     range:'Days 22–40',   text:'Heightened confidence, magnetism, and drive. Testosterone expression tends to peak. Stay grounded — overconfidence is a real risk.',
+   d:{body:'Testosterone expression tends to peak in this window. Physical vitality, libido and drive run high; gym performance and recovery often jump noticeably.',
+      mind:'Confidence, magnetism and verbal fluency rise — people respond to you differently. The shadow side is overconfidence and impulsivity.',
+      hard:'High energy plus high libido means urges come back with real force around day 30. Don\'t mistake feeling strong for being invincible.',
+      tips:['Pour the surplus into ambitious goals, not ego.','Keep your routines tight — structure protects the gains.','Redirect the sexual charge upward with breathwork or creative work.']}},
+  {min:41, max:89,   label:'Mastery',         range:'Days 41–89',   text:'The practice becomes identity. Urges stabilise and energy is sustained. Your voice deepens, eye contact holds longer, others respond to you differently.',
+   d:{body:'Energy settles into a steady, sustainable baseline instead of peaks and crashes. Sleep, skin and posture commonly improve.',
+      mind:'The practice becomes identity rather than effort. Urges quieten and lose their grip. Your voice deepens, eye contact holds, presence grows.',
+      hard:'Complacency. The dramatic early gains slow, and without a new challenge motivation can plateau.',
+      tips:['Set a bigger goal to channel the stable energy into.','Deepen one discipline — strength, a skill, or stillness.','Protect the routines that got you this far.']}},
+  {min:90, max:119,  label:'Crystallisation', range:'Days 90–119',  text:'The rewiring is largely complete. Old urge pathways atrophy from disuse. Creativity peaks — the transmutation is real and measurable.',
+   d:{body:'The rewiring is largely complete and old urge pathways atrophy from disuse. Many report their clearest skin, deepest sleep and steadiest energy yet.',
+      mind:'Creativity peaks — a lot of men do their most inspired work here. Focus comes easily and the mind feels quiet and sharp.',
+      hard:'A brief flatline can resurface as the system fully resets. It\'s the last echo of the old wiring, and it passes.',
+      tips:['Build something real — channel the creative surge.','Stay humble; 90 days is a foundation, not a finish line.','Keep logging — the data shows how far you\'ve come.']}},
+  {min:120,max:179,  label:'Diamond Mind',    range:'Days 120–179', text:'Emotional regulation reaches a new level. You think more clearly under pressure. People feel your stillness — you are no longer fighting yourself.',
+   d:{body:'Hormonal and neurological systems run at a refined, stable level. Stress recovery is faster and the nervous system noticeably calmer.',
+      mind:'Emotional regulation reaches a new level — you think clearly under pressure and react less. People feel your stillness before you speak.',
+      hard:'Few external urges remain, so the challenge turns inward: staying humble and purposeful instead of quietly coasting.',
+      tips:['Mentor or lead someone — your stability is a resource now.','Channel the calm into deep, focused work.','Guard your sleep and stress like the assets they are.']}},
+  {min:180,max:269,  label:'Transcendence',   range:'Days 180–269', text:'For many men, spiritual experience begins to open here. Heightened intuition, vivid dreams, synchronicities. Something genuinely shifts at this depth.',
+   d:{body:'Deep physiological stability. Vivid dreams and heightened sensory clarity are commonly reported at this depth.',
+      mind:'For many a spiritual dimension opens — sharper intuition, synchronicities, and a sense of purpose beyond the self.',
+      hard:'Integrating these shifts into ordinary life. It can feel isolating if the people around you don\'t understand what you\'re experiencing.',
+      tips:['Keep a journal — the insights here are worth recording.','Stay connected to people and to a purpose.','Use the clarity to serve something larger than yourself.']}},
+  {min:270,max:364,  label:'Solar',           range:'Days 270–364', text:'Nine months. Presence becomes a felt quality others sense but cannot explain. Leadership comes naturally. Physical vitality is at its peak.',
+   d:{body:'Physical vitality operates at a level most men never experience. Energy is abundant, steady and fully under your direction.',
+      mind:'Presence becomes a felt quality others sense but can\'t explain. Leadership comes naturally; your standards quietly raise the room.',
+      hard:'The work is no longer about resisting — it\'s about what you build with the energy. Aimlessness is the only real risk left.',
+      tips:['Lead, build, give — the energy wants direction.','Set a mission worthy of nine months of discipline.','Stay humble; true mastery is quiet.']}},
+  {min:365,max:9999, label:'Eternal Flame',   range:'Day 365+',     text:'This is no longer a practice — it is a philosophy and a permanent upgrade. You carry a quiet, unshakeable power. Guard it. Grow it. Give from it.',
+   d:{body:'A permanent recalibration. Your baseline is simply higher now — energy, recovery and vitality are your normal, not a peak.',
+      mind:'This is no longer a practice; it\'s who you are. A quiet, unshakeable power that no circumstance can take from you.',
+      hard:'The only threat left is forgetting how you got here. Guard the identity you built day by day.',
+      tips:['Keep the keystone habits that made you.','Become the example for the men just starting out.','Grow it and give from it — never coast on it.']}}
 ];
 
 function renderPhase() {
@@ -2864,6 +2931,7 @@ function renderPhase() {
 
   if(!started) {
     hero.innerHTML = `<div class="ph-hero-tag">${icSpark} ${t('phScreenTitle')}</div><div class="ph-hero-name">${t('phNotStarted')}</div><div class="ph-hero-text" style="margin-bottom:0">Set your start date on the home screen to see exactly which phase you're in — and what's coming next.</div>`;
+    hero.onclick = null; hero.style.cursor = '';
   } else {
     const cur = PHASES[curIdx];
     const next = PHASES[curIdx + 1];
@@ -2879,6 +2947,7 @@ function renderPhase() {
       prog = `<div class="ph-prog-lbl"><span class="l">The final phase</span><span class="r">Keep the flame</span></div><div class="ph-prog-track"><div class="ph-prog-fill" style="width:100%"></div></div>`;
     }
     hero.innerHTML = `<div class="ph-hero-tag">${icSpark} ${t('phCurrentPhase')}</div><div class="ph-hero-name">${cur.label}</div><div class="ph-hero-day">Day ${dispDay} · ${cur.range}</div><div class="ph-hero-text">${cur.text}</div>${prog}`;
+    hero.onclick = () => openPhaseDetail(curIdx); hero.style.cursor = 'pointer';
   }
 
   const icCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -2887,8 +2956,29 @@ function renderPhase() {
     const st = i < curIdx ? 'pl-done' : i === curIdx ? 'pl-cur' : 'pl-next';
     const node = i < curIdx ? icCheck : i === curIdx ? icDot : '';
     const here = i === curIdx ? `<span class="pl-here">${t('phYouAreHere')}</span>` : '';
-    return `<div class="pl-row ${st}"><div class="pl-node">${node}</div><div class="pl-card"><div class="pl-top"><span class="pl-name">${p.label}${here}</span><span class="pl-range">${p.range}</span></div><div class="pl-text">${p.text}</div></div></div>`;
+    return `<div class="pl-row ${st}" onclick="openPhaseDetail(${i})" role="button" tabindex="0"><div class="pl-node">${node}</div><div class="pl-card"><div class="pl-top"><span class="pl-name">${p.label}${here}</span><span class="pl-range">${p.range}</span></div><div class="pl-text">${p.text}</div><div class="pl-more">${t('phReadMore')}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div></div></div>`;
   }).join('');
+}
+
+// Full phase breakdown — opened by tapping a phase in the timeline (or the hero).
+function openPhaseDetail(i) {
+  const p = PHASES[i];
+  if(!p || !p.d) return;
+  const ov = document.getElementById('phase-detail');
+  const n = calcStreak();
+  const isCurrent = !!S.startDate && n >= p.min && n <= p.max;
+  const body = document.getElementById('pd-body');
+  const section = (key, txt) => `<div class="pd-sec"><div class="pd-sec-h">${t(key)}</div><div class="pd-sec-b">${txt}</div></div>`;
+  body.innerHTML =
+    `<div class="pd-range">${p.range}${isCurrent ? ' · <span style="color:var(--ac2)">'+t('phYouAreHere')+'</span>' : ''}</div>` +
+    `<div class="pd-name">${p.label}</div>` +
+    `<div class="pd-lede">${p.text}</div>` +
+    section('phdBody', p.d.body) +
+    section('phdMind', p.d.mind) +
+    section('phdHard', p.d.hard) +
+    `<div class="pd-sec"><div class="pd-sec-h">${t('phdTips')}</div><ul class="pd-tips">${p.d.tips.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  document.getElementById('pd-scroll').scrollTop = 0;
+  ov.style.display = 'flex';
 }
 
 // ===================== STORIES =====================
@@ -4117,6 +4207,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('reset-cancel').addEventListener('click', function() {
     resetOverlay.style.display = 'none';
   });
+
+  // Phase detail sheet close (button + backdrop)
+  const pdOverlay = document.getElementById('phase-detail');
+  document.getElementById('pd-close').addEventListener('click', function(){ pdOverlay.style.display = 'none'; });
+  pdOverlay.addEventListener('click', function(e){ if(e.target === pdOverlay) pdOverlay.style.display = 'none'; });
   resetOverlay.addEventListener('click', function(e) {
     if(e.target === resetOverlay) resetOverlay.style.display = 'none';
   });
