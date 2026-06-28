@@ -305,6 +305,17 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .safety svg{flex-shrink:0;margin-top:1px;opacity:.9;}
 .pose-stage{background:radial-gradient(ellipse at 50% 44%,rgba(108,92,231,0.14),transparent 68%);border:.5px solid rgba(168,156,236,0.12);border-radius:14px;margin:6px 0 14px;padding:8px 4px 4px;}
 .pose-stage svg{width:100%;height:auto;display:block;}
+/* ===== Meditation library ===== */
+.med-card{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:linear-gradient(160deg,rgba(22,18,42,0.95),rgba(13,12,22,0.98));border:.5px solid rgba(255,255,255,0.08);border-radius:16px;padding:14px;margin-bottom:10px;cursor:pointer;font-family:'Inter',sans-serif;-webkit-appearance:none;box-shadow:0 4px 18px rgba(0,0,0,0.35);transition:border-color .2s,transform .08s;}
+.med-card:active{transform:scale(0.99);border-color:rgba(168,156,236,0.5);}
+.med-card-ico{flex-shrink:0;width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(135deg,rgba(108,92,231,0.28),rgba(72,52,200,0.10));border:.5px solid rgba(168,156,236,0.30);}
+.med-card-h{flex:1;min-width:0;}
+.med-card-title{font-size:15px;font-weight:700;color:var(--tx);letter-spacing:-.01em;}
+.med-card-sub{font-size:11.5px;color:var(--ac2);opacity:.85;margin-top:2px;}
+.med-card-desc{font-size:11.5px;color:var(--ts);line-height:1.5;margin-top:5px;}
+.med-card-meta{font-size:10.5px;font-weight:600;color:var(--ac2);margin-top:7px;letter-spacing:.02em;}
+.med-card-go{flex-shrink:0;color:var(--ac2);opacity:.55;}
+.med-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--ac2);font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;padding:2px;margin-bottom:12px;opacity:.85;}
 .med-step{margin-bottom:14px;padding-bottom:14px;border-bottom:.5px solid var(--bd);}
 .med-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
 .med-step-title{font-size:11px;font-weight:700;color:var(--ac);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
@@ -1075,28 +1086,61 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
     </div>
     <div id="tr-meditation" style="display:none">
-      <div class="card"><div class="lbl">Guided Transmutation Meditation</div><p style="font-size:13px;color:var(--ts);line-height:1.6;margin-bottom:0">Find a quiet space. Sit comfortably with your spine straight. Put your phone down and close your eyes once the session begins. The meditation will guide you step by step with pauses.</p></div>
-
-      <div style="background:linear-gradient(135deg,#1A0A2A,#0A1A2A);border:.5px solid #6644FF;border-radius:14px;padding:14px 16px;margin-bottom:12px;">
-        <div style="display:flex;align-items:flex-start;gap:10px;">
-          <div style="flex-shrink:0;width:36px;height:36px;border-radius:10px;background:rgba(108,92,231,0.2);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></div>
-          <div>
-            <div style="font-size:13px;font-weight:600;color:#C8A8FF;margin-bottom:5px;">Voice guidance</div>
-            <div style="font-size:12px;color:#9977CC;line-height:1.6;">This meditation is guided by your device's built-in voice. For the best experience on Android, go to <strong style="color:#C8A8FF;">Settings → Accessibility → Text-to-speech</strong> and select <strong style="color:#C8A8FF;">Google Text-to-speech</strong> as your engine. Then tap Begin below.</div>
-            <div style="margin-top:10px;display:flex;align-items:center;gap:6px;">
-              <div style="width:6px;height:6px;border-radius:50%;background:#5DCAA5;flex-shrink:0;"></div>
-              <span style="font-size:11px;color:#7DCAA0;">Free · No signup · Cached after first use · No credits</span>
-            </div>
-          </div>
+      <!-- LIBRARY -->
+      <div id="med-library">
+        <div class="card" style="background:linear-gradient(150deg,rgba(26,10,58,0.6),rgba(13,13,20,0.9));border-color:rgba(123,79,255,0.35)">
+          <div class="lbl" style="color:var(--ac2)">Guided meditations</div>
+          <p style="font-size:13px;color:var(--ts);line-height:1.65;margin-bottom:0">Sit somewhere quiet with your spine tall. Pick a session below — a calm voice and breathing guide will lead you, with gentle pauses to rest in. <span style="color:var(--ac2)">🎧 Headphones recommended.</span></p>
         </div>
+        <button class="med-card" onclick="medStart('transmutation')">
+          <div class="med-card-ico">✨</div>
+          <div class="med-card-h">
+            <div class="med-card-title">Energy Transmutation</div>
+            <div class="med-card-sub">Raise the charge up the spine</div>
+            <div class="med-card-desc">The core retention practice — gather the sexual energy and draw it upward into focus, drive and calm.</div>
+            <div class="med-card-meta">~15 min · 5 phases</div>
+          </div>
+          <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+        <button class="med-card" onclick="medStart('breath')">
+          <div class="med-card-ico">🌬️</div>
+          <div class="med-card-h">
+            <div class="med-card-title">Breath Focus</div>
+            <div class="med-card-sub">Simple concentration on the breath</div>
+            <div class="med-card-desc">Anchor a restless mind on the natural breath. The simplest meditation — and the foundation of them all.</div>
+            <div class="med-card-meta">~6 min · 3 phases</div>
+          </div>
+          <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+        <button class="med-card" onclick="medStart('orbit')">
+          <div class="med-card-ico">🔄</div>
+          <div class="med-card-h">
+            <div class="med-card-title">Microcosmic Orbit</div>
+            <div class="med-card-sub">Circulate the energy in a loop</div>
+            <div class="med-card-desc">A Taoist circuit — guide the energy down the front and up the spine in one continuous, sealing orbit.</div>
+            <div class="med-card-meta">~9 min · 4 phases</div>
+          </div>
+          <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
+        <button class="med-card" onclick="medStart('scan')">
+          <div class="med-card-ico">🌙</div>
+          <div class="med-card-h">
+            <div class="med-card-title">Body Scan &amp; Stillness</div>
+            <div class="med-card-sub">Release tension, head to toe</div>
+            <div class="med-card-desc">Soften the whole body part by part and rest in deep stillness. A grounding wind-down for the evening.</div>
+            <div class="med-card-meta">~9 min · 3 phases</div>
+          </div>
+          <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        </button>
       </div>
 
       <!-- MEDITATION PLAYER -->
-      <div id="med-player" style="background:linear-gradient(160deg,#0A0520,#1A0838,#0A0520);border:.5px solid #6644FF;border-radius:16px;padding:20px;margin-bottom:12px;">
+      <div id="med-player" style="display:none;background:linear-gradient(160deg,#0A0520,#1A0838,#0A0520);border:.5px solid #6644FF;border-radius:16px;padding:20px;margin-bottom:12px;">
+        <button class="med-back" id="med-back"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>All meditations</button>
         <!-- Phase display -->
         <div style="text-align:center;margin-bottom:18px;">
-          <div style="margin-bottom:8px;display:flex;justify-content:center;" id="med-phase-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M7 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M5 20c0-2.5 1.8-4.5 3.5-5.5"/><path d="M19 20c0-2.5-1.8-4.5-3.5-5.5"/><path d="M5 20h14"/></svg></div>
-          <div style="font-size:13px;font-weight:600;color:#C8A8FF;margin-bottom:4px" id="med-phase-name">Energy Transmutation Meditation</div>
+          <div style="margin-bottom:8px;font-size:30px;line-height:1" id="med-phase-icon">✨</div>
+          <div style="font-size:13px;font-weight:600;color:#C8A8FF;margin-bottom:4px" id="med-phase-name">Energy Transmutation</div>
           <div style="font-size:11px;color:#7755AA" id="med-duration">~15 minutes · 5 phases</div>
         </div>
 
@@ -1116,11 +1160,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <div style="display:flex;justify-content:center;gap:8px;margin:14px 0;" id="med-dots"></div>
 
         <!-- Controls -->
-        <div class="btn-row" style="gap:8px;margin-top:4px;">
-          <button id="med-btn" style="flex:2;padding:13px;background:#6644FF;color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">▶ Begin</button>
-          <button id="med-stop" style="flex:1;padding:13px;background:rgba(255,255,255,0.08);color:#9977EE;border:.5px solid #6644FF;border-radius:12px;font-size:13px;font-weight:500;cursor:pointer;font-family:Inter,sans-serif;">■ Stop</button>
-        </div>
-        <div style="text-align:center;margin-top:10px;font-size:11px;color:#554488" id="med-status">Tap Begin when you are ready</div>
+        <button id="med-btn" style="width:100%;padding:14px;background:#6644FF;color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">End session</button>
+        <div style="text-align:center;margin-top:10px;font-size:11px;color:#554488" id="med-status">Settling in…</div>
       </div>
     </div>
     <div id="tr-poses" style="display:none">
@@ -3163,6 +3204,8 @@ function renderStory() {
 
 // ===================== TRANSMUTATION =====================
 function switchTr(name) {
+  // Don't let a meditation keep playing in the background after leaving it.
+  if(name !== 'meditation' && typeof medRunning !== 'undefined' && medRunning) medStop();
   ['pranayama','meditation','poses'].forEach(n => {
     const el = document.getElementById('tr-'+n);
     if(el) el.style.display = n === name ? 'block' : 'none';
@@ -3485,7 +3528,7 @@ function medSetText(text) {
 function medUpdateDots(phaseIdx) {
   const container = document.getElementById('med-dots');
   if(!container) return;
-  container.innerHTML = MED_PHASES.map((_, i) =>
+  container.innerHTML = medActivePhases.map((_, i) =>
     `<div class="med-dot${i === phaseIdx ? ' on' : i < phaseIdx ? ' done' : ''}"></div>`
   ).join('');
 }
@@ -3496,7 +3539,7 @@ function medUpdateHeader(phase) {
   const dur = document.getElementById('med-duration');
   if(icon) icon.textContent = phase.icon;
   if(name) { name.textContent = phase.name; name.style.color = phase.color; }
-  if(dur) dur.textContent = 'Phase ' + (medPhaseIdx + 1) + ' of ' + MED_PHASES.length;
+  if(dur) dur.textContent = 'Phase ' + (medPhaseIdx + 1) + ' of ' + medActivePhases.length;
 }
 
 // ---- Enhanced Web Speech Voice ----
@@ -3620,6 +3663,118 @@ const MED_AUDIO_KEYS = {
   ]
 };
 
+// ---- Additional guided meditations ----
+// New scripts run on the on-device fallback voice until premium audio is
+// generated for them (see audio/generate.py). Audio keys are pre-wired so the
+// clips light up automatically once the matching MP3s exist in /audio.
+const MED_BREATH = [
+  { icon:'🌱', name:'Settle', color:'#5DCAA5', steps:[
+    {text:'Settle into a comfortable seat... spine tall... shoulders soft...', pause:6000},
+    {text:'Let your eyes gently close.', pause:4000},
+    {text:'Take one slow breath in through the nose...', pause:3500, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And a long breath out...', pause:5000, breath:'exhale', breathLabel:'EXHALE', breathDur:8},
+    {text:'Again, breathe in...', pause:3500, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And out... letting the body settle.', pause:5500, breath:'exhale', breathLabel:'EXHALE', breathDur:8},
+  ]},
+  { icon:'🌬️', name:'Follow the Breath', color:'#80E8FF', steps:[
+    {text:'Now let the breath return to its own natural rhythm... no need to control it.', pause:7000},
+    {text:'Rest your attention where you feel the breath most clearly... the tip of the nose... or the rise and fall of the belly.', pause:9000},
+    {text:'Feel this breath in...', pause:4000, breath:'inhale', breathLabel:'IN', breathDur:4},
+    {text:'And this breath out...', pause:5000, breath:'exhale', breathLabel:'OUT', breathDur:5},
+    {text:'If it helps, silently count each out-breath... one...', pause:5000},
+    {text:'Two... three... up to ten... then begin again at one.', pause:9000},
+    {text:'When you notice the mind has wandered — and it will — gently, without judgement, return to the breath.', pause:10000},
+    {text:'There is nowhere to be but here... with this one breath.', pause:11000},
+    {text:'Keep following the breath on your own...', pause:15000},
+  ]},
+  { icon:'🌙', name:'Return', color:'#8899FF', steps:[
+    {text:'Gently let go of the counting... and simply sit.', pause:6000},
+    {text:'Notice how the body feels now... a little quieter... a little clearer.', pause:8000},
+    {text:'Take one deeper breath in...', pause:3500, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And release.', pause:5000, breath:'exhale', breathLabel:'EXHALE', breathDur:6},
+    {text:'When you are ready, let your eyes open. Carry this steadiness with you.', pause:9000},
+  ]},
+];
+
+const MED_ORBIT = [
+  { icon:'🌱', name:'Gather', color:'#5DCAA5', steps:[
+    {text:'Sit tall and close your eyes... rest the tip of your tongue lightly on the roof of your mouth, just behind the teeth. This bridges the circuit.', pause:9000},
+    {text:'Take a few slow breaths down into the lower belly.', pause:6000},
+    {text:'Breathe in...', pause:3500, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And out... feeling a warmth gather a few inches below your navel.', pause:6000, breath:'exhale', breathLabel:'EXHALE', breathDur:6},
+    {text:'This warm centre is your lower dantian — the reservoir of your energy.', pause:8000},
+  ]},
+  { icon:'⬆️', name:'Up the Spine', color:'#FFD700', steps:[
+    {text:'On the next inhale... draw that warmth down to the base of the spine... then begin to lift it...', pause:4000, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'Up along the spine... the lower back... between the shoulder blades...', pause:8000},
+    {text:'Continue up the back of the neck... to the crown of your head.', pause:8000},
+    {text:'Let it pause and glow at the crown.', pause:6000},
+  ]},
+  { icon:'🔄', name:'The Orbit', color:'#C4BCFF', steps:[
+    {text:'Now as you exhale... let the energy flow down the front of the body...', pause:4000, breath:'exhale', breathLabel:'EXHALE', breathDur:6},
+    {text:'Down through the forehead... the throat... the chest...', pause:8000},
+    {text:'Down through the belly... and back to the warm centre below the navel.', pause:8000},
+    {text:'That is one full orbit. Let it settle for a moment.', pause:6000},
+    {text:'Now continue on your own... up the spine as you breathe in...', pause:5000, breath:'inhale', breathLabel:'IN', breathDur:4},
+    {text:'Down the front as you breathe out...', pause:6000, breath:'exhale', breathLabel:'OUT', breathDur:6},
+    {text:'Round and round... a smooth, unbroken circle of energy.', pause:14000},
+  ]},
+  { icon:'🌙', name:'Store', color:'#8899FF', steps:[
+    {text:'Let the orbit slow... and bring the energy to rest in the centre below your navel.', pause:8000},
+    {text:'Gently place a hand there if you wish... sealing the energy in. Let it be stored, not spent.', pause:9000},
+    {text:'Take a slow breath in...', pause:3500, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And out.', pause:5000, breath:'exhale', breathLabel:'EXHALE', breathDur:6},
+    {text:'When you are ready, open your eyes — carrying this charged stillness into your day.', pause:9000},
+  ]},
+];
+
+const MED_SCAN = [
+  { icon:'🌱', name:'Settle', color:'#5DCAA5', steps:[
+    {text:'Lie down or sit comfortably... and let your eyes close.', pause:6000},
+    {text:'Take a slow breath in...', pause:3500, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And a long breath out... letting your whole body grow heavier.', pause:6000, breath:'exhale', breathLabel:'EXHALE', breathDur:8},
+    {text:'There is nothing to do now but notice... and soften.', pause:7000},
+  ]},
+  { icon:'🌊', name:'The Scan', color:'#80E8FF', steps:[
+    {text:'Bring your attention to your feet... feel them... and let them soften completely.', pause:9000},
+    {text:'Move up to your lower legs... your knees... your thighs... releasing each one.', pause:10000},
+    {text:'Soften the hips... and the whole base of the body.', pause:8000},
+    {text:'Let the belly relax... and the lower back release.', pause:9000},
+    {text:'Soften the chest... and feel the breath move it gently.', pause:8000},
+    {text:'Release the shoulders... let them drop away from the ears.', pause:8000},
+    {text:'Soften the arms... all the way down to the hands and fingers.', pause:9000},
+    {text:'Relax the neck... the jaw... the muscles around the eyes... the forehead.', pause:10000},
+    {text:'And let the crown of the head soften too.', pause:7000},
+  ]},
+  { icon:'🌙', name:'Stillness', color:'#8899FF', steps:[
+    {text:'Now feel the whole body at once... heavy... warm... completely at rest.', pause:10000},
+    {text:'Rest here in the stillness... nothing to fix... nothing to chase.', pause:12000},
+    {text:'Stay as long as you like... and when you are ready, gently deepen the breath...', pause:9000, breath:'inhale', breathLabel:'INHALE', breathDur:4},
+    {text:'And slowly let your eyes open... carrying this calm with you.', pause:9000},
+  ]},
+];
+
+// Build matching audio-key maps (prefix + phase/step index) for the new sessions.
+function _audioMap(prefix, phases) {
+  return {
+    welcome: prefix + '_welcome',
+    phases: phases.map((_, i) => prefix + '_phase_' + (i + 1)),
+    steps: phases.map((ph, i) => ph.steps.map((_, j) => prefix + '_p' + (i + 1) + '_s' + String(j + 1).padStart(2, '0'))),
+  };
+}
+
+const MED_LIBRARY = [
+  { id:'transmutation', title:'Energy Transmutation', icon:'✨', dur:'~15 minutes · 5 phases', phases:MED_PHASES, audio:MED_AUDIO_KEYS },
+  { id:'breath',        title:'Breath Focus',        icon:'🌬️', dur:'~6 minutes · 3 phases',  phases:MED_BREATH, audio:_audioMap('breath', MED_BREATH) },
+  { id:'orbit',         title:'Microcosmic Orbit',   icon:'🔄', dur:'~9 minutes · 4 phases',  phases:MED_ORBIT,  audio:_audioMap('orbit',  MED_ORBIT) },
+  { id:'scan',          title:'Body Scan & Stillness',icon:'🌙', dur:'~9 minutes · 3 phases', phases:MED_SCAN,   audio:_audioMap('scan',   MED_SCAN) },
+];
+
+// The session currently loaded into the player.
+let medActiveMeta = MED_LIBRARY[0];
+let medActivePhases = MED_PHASES;
+let medActiveAudio = MED_AUDIO_KEYS;
+
 function medSpeak(text, onDone, audioKey) {
   if(medStopFlag) { if(onDone) onDone(); return; }
   medSetText(text);
@@ -3637,25 +3792,25 @@ function medSpeak(text, onDone, audioKey) {
 }
 
 function medRunStep(phaseIdx, stepIdx) {
-  if(medStopFlag || phaseIdx >= MED_PHASES.length) {
+  if(medStopFlag || phaseIdx >= medActivePhases.length) {
     medFinish(); return;
   }
-  const phase = MED_PHASES[phaseIdx];
+  const phase = medActivePhases[phaseIdx];
   if(stepIdx >= phase.steps.length) {
     medPhaseIdx = phaseIdx + 1;
     medStepIdx = 0;
-    if(medPhaseIdx < MED_PHASES.length) {
+    if(medPhaseIdx < medActivePhases.length) {
       medBowl();
       medUpdateDots(medPhaseIdx);
-      medUpdateHeader(MED_PHASES[medPhaseIdx]);
+      medUpdateHeader(medActivePhases[medPhaseIdx]);
       // Announce phase transition
-      const phaseName = MED_PHASES[medPhaseIdx].name;
+      const phaseName = medActivePhases[medPhaseIdx].name;
       const t = setTimeout(() => {
         if(medStopFlag) return;
         medSpeak(phaseName + '...', () => {
           const t2 = setTimeout(() => { if(!medStopFlag) medRunStep(medPhaseIdx, 0); }, 1500);
           medTimers.push(t2);
-        }, MED_AUDIO_KEYS.phases[medPhaseIdx]);
+        }, medActiveAudio && medActiveAudio.phases ? medActiveAudio.phases[medPhaseIdx] : null);
       }, 1500);
       medTimers.push(t);
     } else {
@@ -3674,7 +3829,7 @@ function medRunStep(phaseIdx, stepIdx) {
   if(status) status.textContent = 'Phase ' + (phaseIdx + 1) + ' · Step ' + (stepIdx + 1) + ' of ' + phase.steps.length;
 
   // Speak the step text, then wait the pause, then go to next step
-  const stepAudioKey = (MED_AUDIO_KEYS.steps[phaseIdx] || [])[stepIdx] || null;
+  const stepAudioKey = (medActiveAudio && medActiveAudio.steps && medActiveAudio.steps[phaseIdx] || [])[stepIdx] || null;
   medSpeak(step.text, () => {
     if(medStopFlag) return;
     // After speaking, hold the silence (pause) before next step
@@ -3686,18 +3841,31 @@ function medRunStep(phaseIdx, stepIdx) {
   }, stepAudioKey);
 }
 
-function medStart() {
+function medStart(medId) {
   if(medRunning) return;
+  const meta = MED_LIBRARY.find(m => m.id === medId) || medActiveMeta || MED_LIBRARY[0];
+  medActiveMeta = meta;
+  medActivePhases = meta.phases;
+  medActiveAudio = meta.audio;
   medRunning = true; medStopFlag = false;
   medPhaseIdx = 0; medStepIdx = 0;
+
+  // Swap the library for the player.
+  const lib = document.getElementById('med-library');
+  const player = document.getElementById('med-player');
+  if(lib) lib.style.display = 'none';
+  if(player) player.style.display = '';
+  const sc = document.getElementById('scroll'); if(sc) sc.scrollTop = 0;
   const btn = document.getElementById('med-btn');
-  if(btn) btn.textContent = '⏸ Running...';
+  if(btn) btn.textContent = 'End session';
+  const bl = document.getElementById('breath-label'); if(bl) bl.innerHTML = '…';
+  const status = document.getElementById('med-status'); if(status) status.textContent = 'Settling in…';
 
   loadVoices();
   medBowl();
   softTone(174, 8, 0.04);
   medUpdateDots(0);
-  medUpdateHeader(MED_PHASES[0]);
+  medUpdateHeader(medActivePhases[0]);
   setTimeout(() => medAmbient(), 3000);
 
   // Opening intro with voice then begin
@@ -3707,11 +3875,12 @@ function medStart() {
       if(medStopFlag) return;
       const t2 = setTimeout(() => { if(!medStopFlag) medRunStep(0, 0); }, 2000);
       medTimers.push(t2);
-    }, MED_AUDIO_KEYS.welcome);
+    }, medActiveAudio && medActiveAudio.welcome);
   }, 1500);
   medTimers.push(t);
 }
 
+// Tear down the running session and return to the library.
 function medStop() {
   medStopFlag = true; medRunning = false;
   medClearTimers();
@@ -3719,22 +3888,16 @@ function medStop() {
   try { if(elCurrentAudio) { elCurrentAudio.pause(); elCurrentAudio = null; } } catch(e){}
   try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
   try { if(medCtx) { medCtx.close(); medCtx = null; } } catch(e){}
-  const btn = document.getElementById('med-btn');
-  if(btn) btn.textContent = '▶ Begin';
-  const icon = document.getElementById('med-phase-icon');
-  const name = document.getElementById('med-phase-name');
-  const dur = document.getElementById('med-duration');
-  const txt = document.getElementById('med-text');
-  const status = document.getElementById('med-status');
-  if(icon) icon.textContent = '🧘';
-  if(name) { name.textContent = 'Energy Transmutation Meditation'; name.style.color = '#C8A8FF'; }
-  if(dur) dur.textContent = '~15 minutes · 5 phases';
-  if(txt) txt.textContent = '';
-  if(status) status.textContent = 'Tap Begin when you are ready';
-  medSetBreath(null, 'BEGIN', 0);
-  document.getElementById('breath-label').innerHTML = 'TAP<br>BEGIN';
-  const dots = document.getElementById('med-dots');
-  if(dots) dots.innerHTML = '';
+  const lib = document.getElementById('med-library');
+  const player = document.getElementById('med-player');
+  if(player) player.style.display = 'none';
+  if(lib) lib.style.display = '';
+  const txt = document.getElementById('med-text'); if(txt) txt.textContent = '';
+  const status = document.getElementById('med-status'); if(status) status.textContent = 'Settling in…';
+  const dots = document.getElementById('med-dots'); if(dots) dots.innerHTML = '';
+  const btn = document.getElementById('med-btn'); if(btn) btn.textContent = 'End session';
+  medSetBreath(null, '', 0);
+  const bl = document.getElementById('breath-label'); if(bl) bl.innerHTML = '…';
 }
 
 function medFinish() {
@@ -3743,7 +3906,7 @@ function medFinish() {
   try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
   try { if(medCtx) { medCtx.close(); medCtx = null; } } catch(e){}
   const btn = document.getElementById('med-btn');
-  if(btn) btn.textContent = '▶ Begin again';
+  if(btn) btn.textContent = 'Begin again';
   const status = document.getElementById('med-status');
   if(status) status.textContent = 'Session complete. Well done.';
   medSetBreath(null, '🙏', 0);
@@ -4383,9 +4546,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ---- MEDITATION ----
   document.getElementById('med-btn').addEventListener('click', function() {
-    if(medRunning) { medStop(); } else { medStart(); }
+    if(medRunning) { medStop(); } else { medStart(medActiveMeta.id); }
   });
-  document.getElementById('med-stop').addEventListener('click', medStop);
+  document.getElementById('med-back').addEventListener('click', medStop);
 
   // ---- MILESTONE ----
   // ---- URGE SURF ----
@@ -4954,6 +5117,15 @@ function _backDismiss() {
       if(uwin) uwin.style.display = 'none';
       return true;
     }
+  }
+
+  // 7b. Meditation player -> back to the meditation library
+  // (the player uses display '' when shown, which _visible() excludes — test it directly)
+  const medPlayer = document.getElementById('med-player');
+  const onTransmute = document.getElementById('s-transmute') && document.getElementById('s-transmute').classList.contains('on');
+  if(onTransmute && medPlayer && medPlayer.style.display !== 'none') {
+    medStop();
+    return true;
   }
 
   // 8. Weekly review -> daily check-in form
