@@ -3841,6 +3841,28 @@ function medRunStep(phaseIdx, stepIdx) {
   }, stepAudioKey);
 }
 
+// ---- Screen Wake Lock ----
+// Keep the screen on during a meditation so the phone doesn't lock and freeze
+// the timed step sequence (Android throttles timers when the screen is off).
+let medWakeLock = null;
+async function medAcquireWakeLock() {
+  try {
+    if('wakeLock' in navigator) {
+      medWakeLock = await navigator.wakeLock.request('screen');
+      // The lock is auto-released if the page is hidden; we re-acquire on return.
+      medWakeLock.addEventListener('release', () => { medWakeLock = null; });
+    }
+  } catch(e) { medWakeLock = null; }
+}
+function medReleaseWakeLock() {
+  try { if(medWakeLock) { medWakeLock.release(); } } catch(e) {}
+  medWakeLock = null;
+}
+// If the app is backgrounded then reopened mid-session, re-grab the lock.
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible' && medRunning && !medWakeLock) medAcquireWakeLock();
+});
+
 function medStart(medId) {
   if(medRunning) return;
   const meta = MED_LIBRARY.find(m => m.id === medId) || medActiveMeta || MED_LIBRARY[0];
@@ -3849,6 +3871,7 @@ function medStart(medId) {
   medActiveAudio = meta.audio;
   medRunning = true; medStopFlag = false;
   medPhaseIdx = 0; medStepIdx = 0;
+  medAcquireWakeLock();
 
   // Swap the library for the player.
   const lib = document.getElementById('med-library');
@@ -3883,6 +3906,7 @@ function medStart(medId) {
 // Tear down the running session and return to the library.
 function medStop() {
   medStopFlag = true; medRunning = false;
+  medReleaseWakeLock();
   medClearTimers();
   try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
   try { if(elCurrentAudio) { elCurrentAudio.pause(); elCurrentAudio = null; } } catch(e){}
@@ -3902,6 +3926,7 @@ function medStop() {
 
 function medFinish() {
   medRunning = false;
+  medReleaseWakeLock();
   medClearTimers();
   try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
   try { if(medCtx) { medCtx.close(); medCtx = null; } } catch(e){}
