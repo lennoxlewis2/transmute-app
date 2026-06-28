@@ -46,10 +46,10 @@ OUT = os.path.dirname(os.path.abspath(__file__))
 #   en-GB-Neural2-B / -D    – solid, widely available neural voices
 # Studio/Chirp give the warmest "guided meditation" delivery; Neural2 is a safe
 # fallback if Studio isn't enabled on your project.
-DEFAULT_VOICE = 'en-GB-Studio-B'
+DEFAULT_VOICE = 'en-GB-Wavenet-D'  # warm, deep British male — chosen for a grounded, relaxing feel
 LANGUAGE_CODE = 'en-GB'
-SPEAKING_RATE = 0.84   # slow + calm for meditation (1.0 = normal)
-PITCH = -1.0           # very slightly lower, grounding
+SPEAKING_RATE = 0.76   # slow + calm for meditation (1.0 = normal)
+PITCH = -5.5           # noticeably lower/deeper, for a grounding delivery
 
 WELCOME = 'Welcome... Find a comfortable position... and gently close your eyes...'
 
