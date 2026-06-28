@@ -36,11 +36,7 @@
   ],
   "routes": [
     { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/.well-known/assetlinks.json", "dest": "/.well-known/assetlinks.json" },
-    { "src": "/manifest.json", "dest": "/manifest.json" },
-    { "src": "/sw.js", "dest": "/sw.js" },
-    { "src": "/icon-192.png", "dest": "/icon-192.png" },
-    { "src": "/icon-512.png", "dest": "/icon-512.png" },
+    { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
