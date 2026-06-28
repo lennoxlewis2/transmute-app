@@ -46,8 +46,6 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .streak-left{flex-shrink:0;text-align:center;min-width:120px;}
 .aura-wrap{position:relative;width:150px;height:150px;margin:0 auto 6px;cursor:pointer;transition:transform .15s ease;-webkit-tap-highlight-color:transparent;}
 .aura-wrap:active{transform:scale(0.96);}
-.aura-tap{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:3px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ac2);opacity:.65;pointer-events:none;}
-.aura-tap svg{width:9px;height:9px;}
 .aura-svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
 .aura-bg{fill:none;stroke:rgba(255,255,255,0.05);stroke-width:3;}
 .aura-bg2{fill:none;stroke:rgba(255,255,255,0.03);stroke-width:2;}
@@ -757,7 +755,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <div class="snum" id="snum">0</div>
               <div class="sday">days</div>
             </div>
-            <div class="aura-tap"><span id="aura-tap-lbl">Your phase</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
           <div class="ph-badge bd0" id="pbadge" role="button" tabindex="0" aria-label="View phase guidance" onclick="goTab('phases')">Day 0 · Begin</div>
         </div>
@@ -2040,7 +2037,6 @@ function applyLang() {
   if(pickBtn) pickBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ' + t('pickDate');
   const resetBtn = document.getElementById('reset-btn');
   if(resetBtn) resetBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>' + t('reset');
-  set('aura-tap-lbl', t('yourPhase'));
   // New retrospective screens — static headers
   set('hist-title', t('histTitle'));
   set('hist-sub', t('histSub'));
