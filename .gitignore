@@ -1,0 +1,9 @@
+# Python build artifacts (from audio/generate.py)
+__pycache__/
+*.pyc
+
+# Local audio test output
+audio/test.mp3
+
+# Project export archives
+*.zip
