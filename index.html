@@ -579,6 +579,10 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pw-footer{position:sticky;bottom:0;padding:16px 24px max(20px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(8,6,21,1) 70%,transparent);width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;}
   .pw-btn{width:100%;max-width:340px;padding:17px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;border:none;border-radius:16px;font-size:16px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;-webkit-appearance:none;box-shadow:0 6px 24px rgba(255,165,0,0.4);display:flex;align-items:center;justify-content:center;gap:8px;}
   .pw-price{font-size:12px;color:rgba(255,255,255,0.3);}
+  .pw-freenote{font-size:12px;color:rgba(255,255,255,0.42);max-width:330px;line-height:1.5;text-align:center;}
+  .pw-links{display:flex;align-items:center;gap:8px;margin-top:1px;}
+  .pw-links button{background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:4px 2px;-webkit-appearance:none;}
+  .pw-links .dot{color:rgba(255,255,255,0.22);}
   .pw-restore{background:transparent;border:none;color:rgba(255,255,255,0.25);font-size:12px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:4px;}
 
   .tabs{touch-action:none;user-select:none;-webkit-user-select:none;}
@@ -5426,7 +5430,12 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     <button class="pw-btn" id="pw-unlock-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span id="pw-cta-label">Start yearly · £24.99</span></button>
     <button class="pw-free" onclick="uStartBreath()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></svg>Just need to breathe? Open the free breathing tool</button>
     <div class="pw-price" id="pw-cta-sub">Billed £24.99/year · cancel anytime</div>
-    <button class="pw-restore" id="pw-restore-btn">Already a member? Restore access</button>
+    <div class="pw-freenote">The core app stays free — your streak, check-ins and daily breathing. Membership just unlocks the extras.</div>
+    <div class="pw-links">
+      <button type="button" onclick="_hidePaywall()">Maybe later</button>
+      <span class="dot">·</span>
+      <button type="button" id="pw-restore-btn">Already a member? Restore</button>
+    </div>
   </div>
 </div>
 
