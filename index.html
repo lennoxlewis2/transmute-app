@@ -3307,6 +3307,39 @@ function checkDailyReminder() {
   } catch(e) {}
 }
 
+// ---- Free-trial renewal reminder ----
+// Fires a one-time "your free trial ends tomorrow" notice ~24h before the first
+// charge, with the price and how to cancel — required disclosure and it cuts
+// surprise-charge refunds. Trial metadata is written on a subscription purchase
+// (see the paywall script). NOTE: this is best-effort/client-side — it only
+// fires if the app is opened during the trial's final day. The reliable version
+// (fires even when the app is closed) needs RevenueCat renewal webhooks -> push;
+// wire that when billing is set up.
+function _trialReminderDue(now) {
+  now = now || Date.now();
+  const start = parseInt(localStorage.getItem('sub_trial_start') || '0', 10);
+  if(!start) return false;                                  // no active trial
+  if(localStorage.getItem('sub_renew_notified') === '1') return false; // already reminded
+  const days = parseInt(localStorage.getItem('sub_trial_days') || '7', 10);
+  const end = start + days * 86400000;
+  const remindFrom = end - 86400000;                        // 24h before the charge
+  return now >= remindFrom && now < end;
+}
+
+function checkTrialReminder() {
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  if(!_trialReminderDue()) return;
+  localStorage.setItem('sub_renew_notified', '1');
+  const price = localStorage.getItem('sub_price') || '';
+  const period = localStorage.getItem('sub_plan') === 'monthly' ? 'month' : 'year';
+  try {
+    new Notification('Transmute', {
+      body: 'Your free trial ends tomorrow' + (price ? '. You’ll be charged £' + price + '/' + period : '') + ' unless you cancel in Google Play.',
+      icon: '/icon-192.png'
+    });
+  } catch(e) {}
+}
+
 // ===================== SETTINGS =====================
 function openSettings() {
   document.getElementById('s-overlay').style.display = 'block';
@@ -4659,6 +4692,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Daily reminder check (fires if after 6pm and not yet logged)
   checkDailyReminder();
+  // Free-trial renewal reminder (fires ~24h before the first charge)
+  checkTrialReminder();
 
   document.getElementById('sos-btn').addEventListener('click', uStart);
 
@@ -5507,6 +5542,14 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
       if (service.acknowledge) { try { await service.acknowledge(result.details.token); } catch(e){} }
       await result.complete('success');
       localStorage.setItem('uw_unlocked', '1');
+      // Record the trial so we can remind ~24h before the first charge.
+      if (plan.sub) {
+        localStorage.setItem('sub_trial_start', String(Date.now()));
+        localStorage.setItem('sub_trial_days', '7');
+        localStorage.setItem('sub_plan', selected);
+        localStorage.setItem('sub_price', plan.price);
+        localStorage.removeItem('sub_renew_notified');
+      }
       _hidePaywall();
       goTab('urge');
     } catch(e) {
