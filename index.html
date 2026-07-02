@@ -2733,13 +2733,55 @@ function setQuickCheckinSub() {
   }
 }
 
-// ===================== TRIAL =====================
+// ===================== MEMBERSHIP / ENTITLEMENT =====================
+// Single source of truth for what's unlocked. Gate every premium feature through
+// hasPremium() / requireMembership() — never read the localStorage flag directly,
+// so when real billing flips the entitlement the whole premium layer unlocks at once.
+//
+//   isMember()        the user has a paid membership (subscription or lifetime).
+//                     uw_unlocked is set the moment a purchase — or a Google Play
+//                     free-trial — starts, so a trialing subscriber counts as a member.
+//   inIntroTrial()    the no-signup taster: everyone gets full premium free for the
+//                     first TRIAL_DAYS from first open, no card required.
+//   hasPremium()      what feature gates check: member OR still inside the taster.
+//   requireMembership(feature)  guard for a gated action — returns true if allowed,
+//                     otherwise opens the paywall and returns false.
 const TRIAL_DAYS = 7;
 if(!localStorage.getItem('first_open')) localStorage.setItem('first_open', Date.now());
+
+// The premium layer — what the membership unlocks. To gate a new feature, add a
+// key here and call requireMembership('key') at its entry point.
+const PREMIUM_FEATURES = {
+  urgeWave:    'Urge Wave — the full real-time urge toolkit',
+  meditations: 'The complete meditation library, plus a new session every month',
+  insights:    'Predictive insights — your triggers and danger windows',
+  workouts:    'Workout and discipline programs'
+};
+
+function isMember() {
+  return !!localStorage.getItem('uw_unlocked');
+}
+function introTrialMsLeft() {
+  const start = parseInt(localStorage.getItem('first_open') || Date.now(), 10);
+  return (start + TRIAL_DAYS * 86400000) - Date.now();
+}
+function inIntroTrial() {
+  return introTrialMsLeft() > 0;
+}
+function hasPremium() {
+  return isMember() || inIntroTrial();
+}
+// Back-compat alias — existing call sites used _trialExpired().
 function _trialExpired() {
-  if(localStorage.getItem('uw_unlocked')) return false;
-  const ms = Date.now() - parseInt(localStorage.getItem('first_open') || Date.now());
-  return ms > TRIAL_DAYS * 86400000;
+  return !hasPremium();
+}
+// Guard any premium action. Returns true if allowed; otherwise shows the paywall
+// (optionally themed to the feature that triggered it) and returns false.
+function requireMembership(feature) {
+  if(hasPremium()) return true;
+  if(window._showPaywall) window._showPaywall(feature);
+  else { const pw = document.getElementById('uw-paywall'); if(pw) pw.classList.remove('hidden'); }
+  return false;
 }
 function _showPaywall() {
   document.getElementById('uw-paywall').classList.remove('hidden');
@@ -4045,9 +4087,9 @@ let uStartLevel = 0.62;   // the user's own reported intensity, anchors the curv
 // Self-reporting it is itself a known urge-curbing step, and it makes the whole
 // model *theirs* — the number that then falls is the one they just set.
 function uStart() {
-  // Full Urge Wave (live wave + intensity + all tools) is the paid product.
+  // Full Urge Wave (live wave + intensity + all tools) is a premium feature.
   // The breathing tool stays free — see uStartBreath().
-  if(_trialExpired()) { if(window._showPaywall) window._showPaywall(); else document.getElementById('uw-paywall').classList.remove('hidden'); return; }
+  if(!requireMembership('urgeWave')) return;
   document.getElementById('urge-surf').classList.remove('breath-only');
   document.getElementById('urge-home').style.display = 'none';
   document.getElementById('urge-surf').style.display = 'none';
