@@ -316,6 +316,11 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .med-card-desc{font-size:13px;color:var(--ts);line-height:1.5;margin-top:5px;}
 .med-card-meta{font-size:11px;font-weight:600;color:var(--ac2);margin-top:7px;letter-spacing:.02em;}
 .med-card-go{flex-shrink:0;color:var(--ac2);opacity:.55;}
+.med-lock{display:none;align-items:center;gap:4px;flex-shrink:0;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#FFD700;background:rgba(255,215,0,0.12);border:.5px solid rgba(255,215,0,0.35);padding:5px 9px;border-radius:20px;}
+.med-lock svg{display:block;}
+.med-card.med-locked .med-card-go{display:none;}
+.med-card.med-locked .med-lock{display:inline-flex;}
+.med-card.med-locked .med-card-ico{opacity:.55;}
 .med-back{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--ac2);font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;padding:2px;margin-bottom:12px;opacity:.85;}
 .med-step{margin-bottom:14px;padding-bottom:14px;border-bottom:.5px solid var(--bd);}
 .med-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
@@ -1110,7 +1115,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <div class="lbl" style="color:var(--ac2)">Guided meditations</div>
           <p style="font-size:13px;color:var(--ts);line-height:1.65;margin-bottom:0">Sit somewhere quiet with your spine tall. Pick a session below. A calm voice and breathing guide will lead you, with gentle pauses to rest in. <span style="color:var(--ac2)">🎧 Headphones recommended.</span></p>
         </div>
-        <button class="med-card" onclick="medStart('transmutation')">
+        <button class="med-card" data-med="transmutation" onclick="medStart('transmutation')">
           <div class="med-card-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.7 5.1a2 2 0 0 0 1.2 1.2L20 11l-5.1 1.7a2 2 0 0 0-1.2 1.2L12 19l-1.7-5.1a2 2 0 0 0-1.2-1.2L4 11l5.1-1.7a2 2 0 0 0 1.2-1.2z"/></svg></div>
           <div class="med-card-h">
             <div class="med-card-title">Energy Transmutation</div>
@@ -1120,7 +1125,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           </div>
           <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
-        <button class="med-card" onclick="medStart('breath')">
+        <button class="med-card" data-med="breath" onclick="medStart('breath')">
           <div class="med-card-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8"/></svg></div>
           <div class="med-card-h">
             <div class="med-card-title">Breath Focus</div>
@@ -1130,7 +1135,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           </div>
           <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
-        <button class="med-card" onclick="medStart('orbit')">
+        <button class="med-card" data-med="orbit" onclick="medStart('orbit')">
           <div class="med-card-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11a9 9 0 0 1 15-5.5L21 8"/><path d="M21 4v4h-4"/><path d="M21 13a9 9 0 0 1-15 5.5L3 16"/><path d="M3 20v-4h4"/></svg></div>
           <div class="med-card-h">
             <div class="med-card-title">Microcosmic Orbit</div>
@@ -1140,7 +1145,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           </div>
           <svg class="med-card-go" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
         </button>
-        <button class="med-card" onclick="medStart('scan')">
+        <button class="med-card" data-med="scan" onclick="medStart('scan')">
           <div class="med-card-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#C8A8FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3z"/></svg></div>
           <div class="med-card-h">
             <div class="med-card-title">Body Scan &amp; Stillness</div>
@@ -3270,6 +3275,7 @@ function renderStory() {
 function switchTr(name) {
   // Don't let a meditation keep playing in the background after leaving it.
   if(name !== 'meditation' && typeof medRunning !== 'undefined' && medRunning) medStop();
+  if(name === 'meditation') medUpdateLocks();
   ['pranayama','meditation','poses'].forEach(n => {
     const el = document.getElementById('tr-'+n);
     if(el) el.style.display = n === name ? 'block' : 'none';
@@ -3882,11 +3888,28 @@ function _audioMap(prefix, phases) {
 }
 
 const MED_LIBRARY = [
-  { id:'transmutation', title:'Energy Transmutation', icon:'✨', dur:'~15 minutes · 5 phases', phases:MED_PHASES, audio:MED_AUDIO_KEYS },
+  { id:'transmutation', title:'Energy Transmutation', icon:'✨', dur:'~15 minutes · 5 phases', phases:MED_PHASES, audio:MED_AUDIO_KEYS, free:true },
   { id:'breath',        title:'Breath Focus',        icon:'🌬️', dur:'~6 minutes · 3 phases',  phases:MED_BREATH, audio:_audioMap('breath', MED_BREATH) },
   { id:'orbit',         title:'Microcosmic Orbit',   icon:'🔄', dur:'~9 minutes · 4 phases',  phases:MED_ORBIT,  audio:_audioMap('orbit',  MED_ORBIT) },
   { id:'scan',          title:'Body Scan & Stillness',icon:'🌙', dur:'~9 minutes · 3 phases', phases:MED_SCAN,   audio:_audioMap('scan',   MED_SCAN) },
 ];
+
+// Show a "Members" lock on the premium sessions when the user isn't entitled.
+// Purely visual — medStart() is the actual gate. The free flagship never locks.
+function medUpdateLocks() {
+  const locked = !hasPremium();
+  document.querySelectorAll('#med-library .med-card[data-med]').forEach(card => {
+    const meta = MED_LIBRARY.find(m => m.id === card.getAttribute('data-med'));
+    const isLocked = locked && meta && !meta.free;
+    if(isLocked && !card.querySelector('.med-lock')) {
+      const b = document.createElement('span');
+      b.className = 'med-lock';
+      b.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Members';
+      card.appendChild(b);
+    }
+    card.classList.toggle('med-locked', isLocked);
+  });
+}
 
 // The session currently loaded into the player.
 let medActiveMeta = MED_LIBRARY[0];
@@ -3984,6 +4007,8 @@ document.addEventListener('visibilitychange', () => {
 function medStart(medId) {
   if(medRunning) return;
   const meta = MED_LIBRARY.find(m => m.id === medId) || medActiveMeta || MED_LIBRARY[0];
+  // Energy Transmutation is the free flagship; the rest of the library is premium.
+  if(!meta.free && !requireMembership('meditations')) return;
   medActiveMeta = meta;
   medActivePhases = meta.phases;
   medActiveAudio = meta.audio;
