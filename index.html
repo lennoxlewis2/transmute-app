@@ -557,6 +557,19 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pw-perk{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.8);}
   .pw-perk-ic{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--ac4);}
   .pw-perk-ic svg{display:block;}
+  .pw-sub{font-size:14px;color:rgba(255,255,255,0.58);margin-bottom:20px;line-height:1.55;max-width:300px;}
+  .pw-plans{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px;margin-bottom:14px;}
+  .pw-plan{position:relative;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:15px 16px;cursor:pointer;text-align:left;-webkit-appearance:none;font-family:'Plus Jakarta Sans',sans-serif;transition:border-color .15s,background .15s;}
+  .pw-plan.sel{border-color:#FFD700;background:rgba(255,215,0,0.08);}
+  .pw-plan-check{width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+  .pw-plan.sel .pw-plan-check{border-color:#FFD700;background:#FFD700;}
+  .pw-plan-check svg{opacity:0;transition:opacity .15s;}
+  .pw-plan.sel .pw-plan-check svg{opacity:1;}
+  .pw-plan-main{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
+  .pw-plan-l{font-size:15px;font-weight:700;color:white;}
+  .pw-plan-desc{font-size:12px;color:rgba(255,255,255,0.5);}
+  .pw-plan-price{font-size:15px;font-weight:800;color:white;text-align:right;flex-shrink:0;}
+  .pw-plan-tag{position:absolute;top:-9px;left:15px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
   .pw-badge svg{display:block;}
   .pw-btn svg{display:block;}
   .pw-free{background:rgba(255,255,255,0.06);border:.5px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:11px 16px;border-radius:12px;width:100%;max-width:340px;display:flex;align-items:center;justify-content:center;gap:7px;-webkit-appearance:none;}
@@ -5384,28 +5397,36 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     <div class="pw-streak-warning" id="pw-streak-warning">
       <div class="pw-streak-num" id="pw-streak-num">0</div>
       <div class="pw-streak-label">days built</div>
-      <div class="pw-streak-msg">Keep the momentum going. You've earned this.</div>
+      <div class="pw-streak-msg">Don't hand it back to the urge. Everything you need to hold the line is one step away.</div>
     </div>
 
-    <div class="pw-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Locked</div>
-    <div class="pw-title">You know it works.<br>Keep it.</div>
+    <div class="pw-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.9H21l-5.3 4 2 6.8L12 15.6 6.3 19.7l2-6.8-5.3-4h6.6z"/></svg>Transmute Membership</div>
+    <div class="pw-title">You know it works.<br>Go all in.</div>
+    <div class="pw-sub">One membership unlocks every tool built to keep you on the path, and everything new as it lands.</div>
 
     <div class="pw-perks">
-      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity=".45"/></svg></span>Ride any urge with guided breath in real time</div>
-      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 3h6"/><path d="M12 3v2"/></svg></span>Watch the intensity rise, fall and pass</div>
-      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="5" r="2"/><path d="M7 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M5 20c0-2.5 1.8-4.5 3.5-5.5"/><path d="M19 20c0-2.5-1.8-4.5-3.5-5.5"/><path d="M5 20h14"/></svg></span>Grounding tools that bring you back instantly</div>
-      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z"/><path d="M12 10c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="currentColor" opacity=".3"/></svg></span>Every urge you surf makes you stronger</div>
-      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/></svg></span>Unlimited access, forever · one price</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity=".45"/></svg></span><b>Urge Wave</b> — ride out any urge in real time</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M7 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><path d="M5 20c0-3 2-5 4-6"/><path d="M19 20c0-3-2-5-4-6"/><path d="M5 20h14"/></svg></span>The full meditation library, plus a new session every month</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3 3L21 7"/></svg></span>Insights that learn your triggers and danger windows</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z"/><path d="M12 10c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="currentColor" opacity=".3"/></svg></span>Grounding tools and affirmations for the hard moments</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7v10M18 7v10M4 9.5v5M20 9.5v5M6 12h12"/></svg></span>New workout and discipline programs as they drop</div>
+      <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"/><path d="M16 6a3 3 0 0 1 0 6"/><path d="M21 20c0-2.5-1.5-4.2-4-4.9"/></svg></span>Stand with the men who chose mastery over impulse</div>
     </div>
 
-    <div style="height:120px;"></div>
+    <div class="pw-plans" id="pw-plans">
+      <button class="pw-plan sel" data-plan="annual"><span class="pw-plan-tag">Best value</span><span class="pw-plan-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a1000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="pw-plan-main"><span class="pw-plan-l">Yearly</span><span class="pw-plan-desc">Just £2.08/mo · save 48%</span></span><span class="pw-plan-price">£24.99</span></button>
+      <button class="pw-plan" data-plan="monthly"><span class="pw-plan-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a1000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="pw-plan-main"><span class="pw-plan-l">Monthly</span><span class="pw-plan-desc">Billed monthly · cancel anytime</span></span><span class="pw-plan-price">£3.99</span></button>
+      <button class="pw-plan" data-plan="lifetime"><span class="pw-plan-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a1000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="pw-plan-main"><span class="pw-plan-l">Lifetime</span><span class="pw-plan-desc">Pay once · yours forever</span></span><span class="pw-plan-price">£39.99</span></button>
+    </div>
+
+    <div style="height:150px;"></div>
   </div>
 
   <div class="pw-footer">
-    <button class="pw-btn" id="pw-unlock-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.5-1.5"/></svg>Unlock Urge Wave · £2.99</button>
+    <button class="pw-btn" id="pw-unlock-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><span id="pw-cta-label">Start yearly · £24.99</span></button>
     <button class="pw-free" onclick="uStartBreath()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/></svg>Just need to breathe? Open the free breathing tool</button>
-    <div class="pw-price">One-time · No subscription · Yours forever</div>
-    <button class="pw-restore" id="pw-restore-btn">Already paid? Restore access</button>
+    <div class="pw-price" id="pw-cta-sub">Billed £24.99/year · cancel anytime</div>
+    <button class="pw-restore" id="pw-restore-btn">Already a member? Restore access</button>
   </div>
 </div>
 
@@ -5413,8 +5434,31 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
 (function(){
   var unlockBtn = document.getElementById('pw-unlock-btn');
   var restoreBtn = document.getElementById('pw-restore-btn');
-  // Must match the product ID you create in Google Play Console
-  var SKU = 'urge_wave_pro';
+  var plansEl = document.getElementById('pw-plans');
+  var ctaLabel = document.getElementById('pw-cta-label');
+  var ctaSub = document.getElementById('pw-cta-sub');
+
+  // Product IDs to create in Google Play Console: two subscriptions + one one-time.
+  var PLANS = {
+    annual:   { sku:'transmute_annual',   price:'24.99', sub:true,  cta:'Start yearly · £24.99',    note:'Billed £24.99/year · cancel anytime' },
+    monthly:  { sku:'transmute_monthly',  price:'3.99',  sub:true,  cta:'Start monthly · £3.99',    note:'Billed £3.99/month · cancel anytime' },
+    lifetime: { sku:'transmute_lifetime', price:'39.99', sub:false, cta:'Unlock lifetime · £39.99', note:'One payment · yours forever' }
+  };
+  var ALL_SKUS = ['transmute_annual','transmute_monthly','transmute_lifetime'];
+  var selected = 'annual';
+
+  function selectPlan(p) {
+    if(!PLANS[p]) return;
+    selected = p;
+    if(plansEl) [].forEach.call(plansEl.querySelectorAll('.pw-plan'), function(b){
+      b.classList.toggle('sel', b.getAttribute('data-plan') === p);
+    });
+    if(ctaLabel) ctaLabel.textContent = PLANS[p].cta;
+    if(ctaSub) ctaSub.textContent = PLANS[p].note;
+  }
+  if(plansEl) [].forEach.call(plansEl.querySelectorAll('.pw-plan'), function(b){
+    b.addEventListener('click', function(){ selectPlan(b.getAttribute('data-plan')); });
+  });
 
   window._showPaywall = function() {
     var streakEl = document.getElementById('pw-streak-num');
@@ -5424,6 +5468,7 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
       var warn = document.getElementById('pw-streak-warning');
       if(warn) warn.style.display = days > 0 ? '' : 'none';
     }
+    selectPlan('annual');
     document.getElementById('uw-paywall').classList.remove('hidden');
   };
 
@@ -5432,23 +5477,25 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
   }
 
   async function purchaseGooglePlay() {
+    var plan = PLANS[selected];
     try {
       var service = await window.getDigitalGoodsService('https://play.google.com/billing');
-      var details = await service.getDetails([SKU]);
+      var details = await service.getDetails([plan.sku]);
       if (!details || !details.length) {
-        alert('Product not available. Please try again later.');
+        alert('Plan not available right now. Please try again later.');
         return;
       }
       var request = new PaymentRequest(
-        [{ supportedMethods: 'https://play.google.com/billing', data: { sku: SKU } }],
-        { total: { label: 'Urge Wave', amount: { currency: 'GBP', value: '2.99' } } }
+        [{ supportedMethods: 'https://play.google.com/billing', data: { sku: plan.sku } }],
+        { total: { label: 'Transmute Membership', amount: { currency: 'GBP', value: plan.price } } }
       );
       if (!(await request.canMakePayment())) {
         alert('Google Play Billing is not available on this device.');
         return;
       }
       var result = await request.show();
-      await service.consume(result.details.token);
+      // Membership is a persistent entitlement — acknowledge, don't consume.
+      if (service.acknowledge) { try { await service.acknowledge(result.details.token); } catch(e){} }
       await result.complete('success');
       localStorage.setItem('uw_unlocked', '1');
       _hidePaywall();
@@ -5462,16 +5509,16 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     try {
       var service = await window.getDigitalGoodsService('https://play.google.com/billing');
       var purchases = await service.listPurchases();
-      var owned = purchases.find(function(p) { return p.itemId === SKU; });
+      var owned = purchases.find(function(p) { return ALL_SKUS.indexOf(p.itemId) !== -1; });
       if (owned) {
         localStorage.setItem('uw_unlocked', '1');
         _hidePaywall();
         goTab('urge');
       } else {
-        alert('No active purchase found. Contact support if you believe this is an error.');
+        alert('No active membership found. Contact support if you believe this is an error.');
       }
     } catch(e) {
-      alert('Could not verify purchase. Check your connection and try again.');
+      alert('Could not verify your membership. Check your connection and try again.');
     }
   }
 
@@ -5479,7 +5526,7 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     if (isTWA()) {
       purchaseGooglePlay();
     } else {
-      alert('Purchase Urge Wave through the Transmute app on Google Play.');
+      alert('Join the membership through the Transmute app on Google Play.');
     }
   });
 
@@ -5494,7 +5541,7 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     if (isTWA()) {
       restoreGooglePlay();
     } else {
-      if(code !== null) alert('Code not recognised. Contact support if you have already paid.');
+      if(code !== null) alert('Code not recognised. Contact support if you are already a member.');
     }
   });
 })();
