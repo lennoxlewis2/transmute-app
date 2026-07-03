@@ -237,6 +237,26 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .pd-tips li{position:relative;font-size:13.5px;color:var(--ts);line-height:1.55;padding-left:20px;margin-bottom:9px;}
 .pd-tips li:last-child{margin-bottom:0;}
 .pd-tips li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac2);}
+/* Weekly deep-dive (analytical breakdown in the sheet) */
+.wd-range{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--tt);margin-bottom:3px;}
+.wd-title{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.4px;margin-bottom:2px;}
+.wd-sub{font-size:13px;color:var(--ts);line-height:1.55;margin-bottom:6px;}
+.wd-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ac4);margin:22px 0 10px;}
+.wd-card{background:var(--bg);border:.5px solid var(--bd);border-radius:14px;padding:13px 14px;}
+.wd-grid{display:grid;grid-template-columns:36px minmax(0,1fr) 24px 24px 24px 24px;gap:9px 6px;align-items:center;}
+.wd-gh{font-size:9.5px;font-weight:800;color:var(--tt);text-transform:uppercase;text-align:center;}
+.wd-gh.l{text-align:left;}
+.wd-gd{font-size:12px;font-weight:800;color:var(--ts);}
+.wd-gm{font-size:12px;color:var(--tx);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wd-gv{font-size:12.5px;font-weight:700;color:var(--tx);text-align:center;}
+.wd-gv.hi{color:var(--cor2);}.wd-gv.lo{color:#3FC79B;}
+.wd-bars{display:flex;align-items:flex-end;gap:6px;height:66px;}
+.wd-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
+.wd-bar{width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--ac4),var(--ac));min-height:3px;}
+.wd-bar.hi{background:linear-gradient(180deg,var(--cor2),var(--cor6));}
+.wd-col-l{font-size:9.5px;font-weight:700;color:var(--tt);}
+.wd-note{font-size:12.5px;color:var(--ts);line-height:1.6;}
+.wd-note b{color:var(--tx);font-weight:700;}
 /* ---- Insights ---- */
 .in-head{margin-bottom:15px;}
 .in-head h2{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.5px;margin-bottom:2px;}
@@ -357,6 +377,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .wr-so-l svg{width:12px;height:12px;display:block;}
 .wr-standout b{color:#fff;font-weight:700;}
 .wr-fwd{font-size:14px;font-style:italic;color:rgba(255,255,255,0.82);line-height:1.65;border-top:.5px solid var(--bd);padding-top:15px;margin-top:3px;}
+.wr-more{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:15px;background:rgba(255,255,255,0.04);border:.5px solid var(--bd);border-radius:12px;padding:11px;font-size:12.5px;font-weight:700;color:var(--ac2);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;-webkit-appearance:none;}
+.wr-more svg{width:14px;height:14px;}
+.wr-more:active{transform:scale(.99);}
 .wr-weeks{display:flex;gap:7px;overflow-x:auto;margin-top:13px;padding-bottom:2px;-webkit-overflow-scrolling:touch;}
 .wr-weeks::-webkit-scrollbar{display:none;}
 .wr-week{flex-shrink:0;font-size:11px;font-weight:700;color:var(--ts);background:var(--bg);border:.5px solid var(--bd);border-radius:20px;padding:6px 12px;cursor:pointer;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;-webkit-appearance:none;}
@@ -3459,8 +3482,90 @@ function insightsWeeklyHTML() {
     <div class="wr-sect-l">This week, you</div>${winsHtml}
     ${standoutHtml}
     <div class="wr-fwd">${rep.fwd}</div>
+    <button class="wr-more" onclick="openWeekDetail(${idx})">See the full breakdown<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
     ${weeksHtml}
   </div></div>`;
+}
+
+// The analytical counterpart to the letter — opens the shared bottom sheet with
+// a data-dense breakdown of ONE week: the 7 days, averages vs last week, an
+// urge chart, and trigger/mood distributions. Where the letter is about feeling,
+// this is about the numbers behind it.
+function openWeekDetail(idx) {
+  const weeks = piWeekList();
+  if(!weeks.length) return;
+  idx = Math.min(Math.max(0, idx), weeks.length - 1);
+  document.getElementById('pd-body').innerHTML = weekDetailHTML(weeks[idx]);
+  document.getElementById('pd-scroll').scrollTop = 0;
+  document.getElementById('phase-detail').style.display = 'flex';
+}
+
+function weekDetailHTML(ws) {
+  const r1 = v => Math.round(v * 10) / 10;
+  const avg = (a,k) => a.length ? a.reduce((x,e)=>x+(e[k]||0),0)/a.length : 0;
+  const we = new Date(ws); we.setDate(we.getDate()+6); we.setHours(23,59,59,999);
+  const ps = new Date(ws); ps.setDate(ps.getDate()-7);
+  const pe = new Date(ws); pe.setDate(pe.getDate()-1); pe.setHours(23,59,59,999);
+  const daily = S.entries.filter(e => e.type === 'daily' && e.date);
+  const inW = (e,s,en) => { const t = new Date(e.date); return t >= s && t <= en; };
+  const tw = daily.filter(e => inW(e,ws,we)).sort((a,b) => new Date(a.date) - new Date(b.date));
+  const lw = daily.filter(e => inW(e,ps,pe));
+  const urges = S.entries.filter(e => e.type === 'urge' && e.date && inW(e,ws,we));
+  const SH = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const aM = ws.toLocaleDateString('en-GB',{month:'short'}), bM = we.toLocaleDateString('en-GB',{month:'short'});
+  const range = aM === bM ? `${ws.getDate()}–${we.getDate()} ${bM}` : `${ws.getDate()} ${aM} – ${we.getDate()} ${bM}`;
+
+  // --- the 7 days, as a table (urge coloured hot/cool at the extremes) ---
+  const rows = tw.map(e => {
+    const u = e.urge || 0;
+    const uCls = u >= 7 ? ' hi' : u <= 3 ? ' lo' : '';
+    return `<div class="wd-gd">${SH[new Date(e.date).getDay()]}</div><div class="wd-gm">${e.mood?escHtml(e.mood):'—'}</div><div class="wd-gv">${e.energy??'–'}</div><div class="wd-gv">${e.clarity??'–'}</div><div class="wd-gv${uCls}">${e.urge??'–'}</div><div class="wd-gv">${e.social??'–'}</div>`;
+  }).join('');
+  const daysTable = `<div class="wd-card"><div class="wd-grid"><div class="wd-gh l">Day</div><div class="wd-gh l">Mood</div><div class="wd-gh">E</div><div class="wd-gh">C</div><div class="wd-gh">U</div><div class="wd-gh">S</div>${rows}</div></div>`;
+
+  // --- averages vs last week (delta chips; urge sentiment is inverted) ---
+  const icU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 14 12 8 18 14"/></svg>';
+  const icD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 10 12 16 18 10"/></svg>';
+  const icF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="18" y2="12"/></svg>';
+  const vital = (label, k, goodHigh) => {
+    const a = avg(tw, k);
+    let chip = '';
+    if(lw.length) {
+      const d = a - avg(lw, k);
+      if(Math.abs(d) < 0.3) chip = `<span class="in-trend flat">${icF}steady</span>`;
+      else { const better = goodHigh ? d > 0 : d < 0; chip = `<span class="in-trend ${better?'up':'down'}">${d>0?icU:icD}${(d>0?'+':'')+r1(d)}</span>`; }
+    }
+    return `<div class="in-vital"><span class="in-vital-l">${label}</span><div class="in-vital-track"><div class="in-vital-fill${goodHigh?'':' cor'}" style="width:${Math.round(a*10)}%"></div></div><span class="in-vital-v">${r1(a)}</span>${chip}</div>`;
+  };
+  const vitals = `<div class="wd-card" style="padding:16px">${vital('Energy','energy',true)}${vital('Clarity','clarity',true)}${vital('Social','social',true)}${vital('Urge','urge',false)}</div>`;
+
+  // --- urge through the week (one bar per check-in) ---
+  const uMax = Math.max(10, ...tw.map(e => e.urge || 0));
+  const bars = tw.length ? `<div class="wd-card"><div class="wd-bars">${tw.map(e => { const u = e.urge || 0; const h = Math.round(u / uMax * 100); return `<div class="wd-col"><div class="wd-bar${u>=7?' hi':''}" style="height:${Math.max(3,h)}%"></div><div class="wd-col-l">${SH[new Date(e.date).getDay()]}</div></div>`; }).join('')}</div></div>` : '';
+
+  // --- trigger + mood distributions for the week ---
+  const count = (key, multi) => { const m = {}; tw.forEach(e => { const v = e[key]; if(multi) (v||[]).forEach(x => m[x]=(m[x]||0)+1); else if(v) m[v]=(m[v]||0)+1; }); return Object.entries(m).sort((a,b)=>b[1]-a[1]); };
+  const rankRows = (rows2, max, cls) => rows2.map(([name,c]) => `<div class="in-rank ${cls}"><span class="in-rank-l">${escHtml(name)}</span><div class="in-rank-track"><div class="in-rank-fill" style="width:${Math.round(c/max*100)}%"></div></div><span class="in-rank-c">${c}</span></div>`).join('');
+  const trigs = count('triggers', true), moods = count('mood', false);
+  const trigCard = trigs.length ? `<div class="wd-lbl">What pulled at you</div><div class="wd-card">${rankRows(trigs, trigs[0][1], 'trig')}</div>` : '';
+  const moodCard = moods.length ? `<div class="wd-lbl">How you showed up</div><div class="wd-card">${rankRows(moods, moods[0][1], 'mood')}</div>` : '';
+
+  // --- urges surfed detail ---
+  let surfCard = '';
+  if(urges.length) {
+    const lvl = Math.round(avg(urges, 'level'));   // stored 0–100 already
+    const tools = {}; urges.forEach(u => { if(u.tool) tools[u.tool] = (tools[u.tool]||0)+1; });
+    const toolLbl = { breath:'Breathing', timer:'Timer', affirm:'Affirmation', remind:'Your reason' };
+    const topTool = Object.entries(tools).sort((a,b)=>b[1]-a[1])[0];
+    surfCard = `<div class="wd-lbl">Urges you surfed</div><div class="wd-card"><div class="wd-note">You rode out <b>${urges.length} urge${urges.length===1?'':'s'}</b> this week${isFinite(lvl)&&lvl>0?`, at an average intensity of <b>${lvl}%</b>`:''}.${topTool?` Your go-to tool was <b>${toolLbl[topTool[0]]||topTool[0]}</b>.`:''}</div></div>`;
+  }
+
+  const summary = `Across ${tw.length} check-in${tw.length===1?'':'s'}, your urge averaged ${r1(avg(tw,'urge'))}/10 and your energy ${r1(avg(tw,'energy'))}/10.`;
+  return `<div class="wd-range">${range}</div><div class="wd-title">The full week</div><div class="wd-sub">${summary}</div>
+    <div class="wd-lbl">Your 7 days</div>${daysTable}
+    <div class="wd-lbl">Averages vs last week</div>${vitals}
+    ${bars?`<div class="wd-lbl">Urge through the week</div>${bars}`:''}
+    ${trigCard}${moodCard}${surfCard}`;
 }
 
 // Build the premium predictive panel. Three states:
