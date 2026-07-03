@@ -1820,6 +1820,11 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <textarea id="bug-txt" rows="4" placeholder="Describe the bug or error..." style="margin-bottom:8px"></textarea>
       <button class="btn" id="send-bug" style="margin-top:0">Send bug report</button>
     </div>
+    <div style="margin-bottom:20px">
+      <div class="lbl">Preview / demo</div>
+      <p id="demo-desc" style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Load a sample profile to preview the full Predictive Insights screen without weeks of logging. Your real data is saved and restored when you exit.</p>
+      <button class="btn-g" id="demo-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3 3L21 7"/></svg><span id="demo-lbl">Load demo insights</span></button>
+    </div>
     <p style="font-size:11px;color:var(--tt);text-align:center">Transmute · v3.0</p>
   </div>
 </div>
@@ -3808,6 +3813,87 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
+// ===================== DEMO / PREVIEW MODE =====================
+// Non-destructive sample profile so the full Predictive Insights screen can be
+// previewed (by us and by Play reviewers) without weeks of real logging. It
+// backs up the real state, loads a rich synthetic history, and restores it on
+// exit — the user's own data is never lost.
+const DEMO_KEYS = ['sr_v3', 'uw_unlocked', 'first_open'];
+function inDemo() { return localStorage.getItem('sr_demo') === '1'; }
+
+// Build ~60 days of varied history designed to light up every insight tier:
+// declining urges over time, a high-risk weekday, trigger/mood patterns, and
+// two past relapses so the streak forecast + cross-streak comparison unlock.
+function buildDemoEntries() {
+  const ents = [];
+  const begin = new Date(Date.now() - 60 * 86400000); begin.setHours(20,0,0,0);
+  let day = 1;
+  const relapseAt = { 20: true, 42: true };
+  for(let i = 0; i < 60; i++) {
+    const d = new Date(begin.getTime() + i * 86400000);
+    if(relapseAt[i]) { ents.push({ type:'relapse', date:d.toISOString(), day }); day = 1; continue; }
+    const dow = d.getDay();
+    let urge = 7 - (i / 60) * 4;                 // trends down over time (growth arc)
+    const bored = (i % 5 === 0);
+    const trig = bored ? ['Boredom'] : [['Stress'],['Social media'],['Tiredness'],['Procrastination']][i % 4];
+    if(bored) urge += 2;
+    if(dow === 5) urge += 2;                     // Friday runs hottest
+    urge = Math.max(1, Math.min(10, Math.round(urge)));
+    const mood = urge >= 7 ? ['Restless','Anxious','Irritable'][i % 3] : ['Focused','Calm','Powerful'][i % 3];
+    const energy = Math.max(2, Math.min(10, 10 - urge + (i % 2)));
+    ents.push({ type:'daily', date:d.toISOString(), day, mood, energy, clarity:Math.max(3, 9 - (i % 5)), urge, social:4 + (i % 5), triggers:trig, note:'' });
+    if(i % 6 === 0) ents.push({ type:'urge', date:d.toISOString(), day, level:60, secs:45, tool:'breath' });
+    day++;
+  }
+  return ents;
+}
+
+function enterDemo() {
+  const backup = {}; DEMO_KEYS.forEach(k => { backup[k] = localStorage.getItem(k); });
+  localStorage.setItem('sr_demo_backup', JSON.stringify(backup));
+  localStorage.setItem('sr_demo', '1');
+  localStorage.setItem('uw_unlocked', '1');                          // show the premium panel
+  localStorage.setItem('first_open', String(Date.now() - 60 * 86400000));
+  S.entries = buildDemoEntries();
+  S.startDate = new Date(Date.now() - 30 * 86400000).toISOString().slice(0,10);  // 30-day streak
+  S.urgesBeat = S.entries.filter(e => e.type === 'urge').length;
+  save();
+  syncDemoBtn();
+  closeSettings();
+  goTab('insights');
+  toast('Demo profile loaded — this is sample data');
+}
+
+function exitDemo() {
+  let backup = {};
+  try { backup = JSON.parse(localStorage.getItem('sr_demo_backup') || '{}'); } catch(e) {}
+  DEMO_KEYS.forEach(k => {
+    if(backup[k] === null || backup[k] === undefined) localStorage.removeItem(k);
+    else localStorage.setItem(k, backup[k]);
+  });
+  localStorage.removeItem('sr_demo');
+  localStorage.removeItem('sr_demo_backup');
+  try { S = Object.assign({}, S_DEFAULTS, JSON.parse(localStorage.getItem('sr_v3') || 'null')); } catch(e) {}
+  syncDemoBtn();
+  closeSettings();
+  updateHome();
+  goTab('home');
+  toast('Your data is back');
+}
+
+function syncDemoBtn() {
+  const lbl = document.getElementById('demo-lbl');
+  const desc = document.getElementById('demo-desc');
+  if(!lbl) return;
+  if(inDemo()) {
+    lbl.textContent = 'Exit demo · restore my data';
+    if(desc) desc.textContent = 'Demo profile active — you\'re viewing sample data. Exit to restore your real check-ins exactly as they were.';
+  } else {
+    lbl.textContent = 'Load demo insights';
+    if(desc) desc.textContent = 'Load a sample profile to preview the full Predictive Insights screen without weeks of logging. Your real data is saved and restored when you exit.';
+  }
+}
+
 // ===================== MEDITATION ENGINE =====================
 const MED_PHASES = [
   {
@@ -5036,6 +5122,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('hf-weekly').addEventListener('click', function() { renderHistory('weekly'); });
   document.getElementById('hf-urge').addEventListener('click', function() { renderHistory('urge'); });
   document.getElementById('export-btn').addEventListener('click', exportCSV);
+  const demoBtn = document.getElementById('demo-btn');
+  if(demoBtn) { syncDemoBtn(); demoBtn.addEventListener('click', () => inDemo() ? exitDemo() : enterDemo()); }
 
   // ---- STORIES ----
   document.getElementById('snext').addEventListener('click', function() {
