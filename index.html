@@ -331,6 +331,36 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .pi-lock-ov p{font-size:12.5px;color:rgba(255,255,255,0.78);line-height:1.55;max-width:255px;margin:0 auto 15px;}
 .pi-unlock{background:linear-gradient(135deg,#FFD700,#F0A800);color:#1a1200;border:none;border-radius:12px;padding:12px 26px;font-size:14px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(255,180,0,0.28);-webkit-appearance:none;}
 .pi-unlock:active{transform:scale(.98);}
+/* ---- Weekly review (the ritual — warm, personal, "for you") ---- */
+.wr-wrap{margin-bottom:22px;}
+.wr-card{background:linear-gradient(162deg,rgba(255,215,0,0.07),var(--sf) 52%);border:.5px solid rgba(255,215,0,0.22);border-radius:20px;padding:20px 18px;box-shadow:0 12px 36px rgba(0,0,0,0.42);}
+.wr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px;}
+.wr-kicker{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#FFD700;display:flex;align-items:center;gap:6px;}
+.wr-kicker svg{width:13px;height:13px;display:block;}
+.wr-range{font-size:11px;font-weight:700;color:var(--tt);letter-spacing:.02em;white-space:nowrap;}
+.wr-hi{font-size:18px;font-weight:800;line-height:1.45;color:#fff;letter-spacing:-.01em;margin-bottom:17px;}
+.wr-hi b{color:#FFE47A;font-weight:800;}
+.wr-stats{display:flex;gap:8px;margin-bottom:17px;}
+.wr-stat{flex:1;background:rgba(255,255,255,0.035);border:.5px solid var(--bd);border-radius:13px;padding:11px 6px;text-align:center;}
+.wr-stat-n{font-size:21px;font-weight:800;color:var(--tx);line-height:1;letter-spacing:-.5px;}
+.wr-stat-d{font-size:10.5px;font-weight:800;margin-top:4px;}
+.wr-stat-d.up{color:#3FC79B;}.wr-stat-d.down{color:var(--cor2);}
+.wr-stat-l{font-size:10px;color:var(--ts);font-weight:600;margin-top:4px;line-height:1.2;}
+.wr-sect-l{font-size:11px;font-weight:800;color:var(--ts);text-transform:uppercase;letter-spacing:.05em;margin:0 0 11px;}
+.wr-win{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:rgba(255,255,255,0.9);line-height:1.55;margin-bottom:11px;}
+.wr-win:last-child{margin-bottom:0;}
+.wr-win-ic{flex-shrink:0;color:#FFD700;margin-top:1px;}
+.wr-win-ic svg{width:16px;height:16px;display:block;}
+.wr-win b{color:#fff;font-weight:700;}
+.wr-standout{background:rgba(108,92,231,0.10);border:.5px solid var(--ac4);border-radius:14px;padding:13px 15px;margin:17px 0;font-size:13.5px;color:rgba(255,255,255,0.9);line-height:1.6;}
+.wr-so-l{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ac2);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.wr-so-l svg{width:12px;height:12px;display:block;}
+.wr-standout b{color:#fff;font-weight:700;}
+.wr-fwd{font-size:14px;font-style:italic;color:rgba(255,255,255,0.82);line-height:1.65;border-top:.5px solid var(--bd);padding-top:15px;margin-top:3px;}
+.wr-weeks{display:flex;gap:7px;overflow-x:auto;margin-top:13px;padding-bottom:2px;-webkit-overflow-scrolling:touch;}
+.wr-weeks::-webkit-scrollbar{display:none;}
+.wr-week{flex-shrink:0;font-size:11px;font-weight:700;color:var(--ts);background:var(--bg);border:.5px solid var(--bd);border-radius:20px;padding:6px 12px;cursor:pointer;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;-webkit-appearance:none;}
+.wr-week.on{color:#1a1200;background:linear-gradient(135deg,#FFD700,#F0A800);border-color:transparent;}
 .ph1 .ph-title{color:var(--teal8);}.ph1 .ph-text{color:var(--teal6);}
 .ph2 .ph-title{color:var(--acd);}.ph2 .ph-text{color:var(--ac);}
 .ph3 .ph-title{color:var(--amb8);}.ph3 .ph-text{color:var(--amb6);}
@@ -2869,7 +2899,7 @@ function goTab(id) {
   if(navigator.vibrate) navigator.vibrate(6);
   if(id === 'history') renderHistory('all');
   if(id === 'phases') renderPhase();
-  if(id === 'insights') renderInsights();
+  if(id === 'insights') { piWeekOffset = 0; renderInsights(); }
   if(id === 'stories') { if(!redditLoaded) { shuffle(stories); storyIdx = 0; renderStory(); loadRedditStories(); } else renderStory(); }
   if(id === 'transmute') switchTr('pranayama');
   if(id === 'checkin') {
@@ -3294,11 +3324,153 @@ function computeInsights() {
   return out;
 }
 
+// ===================== WEEKLY REVIEW (the ritual) =====================
+// A dated, personal letter the app writes to the user each week. Where the
+// predictive panel is analytical, this is EMOTIONAL — it reflects the week back
+// to them, celebrates what they did, and makes them feel seen. It's the reason
+// to come back every week (and what turns insights into a subscription-worthy
+// ritual rather than a static dashboard). Reports are a VIEW over the entry
+// history, so any past week can be re-derived on demand — no stored snapshots.
+let piWeekOffset = 0;   // 0 = most recent week with data; higher = older weeks
+
+// Monday 00:00 of the week containing d.
+function piWeekStart(d) { const x = new Date(d); x.setHours(0,0,0,0); const off = (x.getDay()+6)%7; x.setDate(x.getDate()-off); return x; }
+// Distinct weeks (Monday dates) that have at least one check-in, newest first.
+function piWeekList() {
+  const set = new Map();
+  S.entries.filter(e => e.type === 'daily' && e.date).forEach(e => { const ws = piWeekStart(new Date(e.date)); set.set(ws.getTime(), ws); });
+  return [...set.values()].sort((a,b) => b - a);
+}
+// Stable within a week, fresh across weeks — so a given week's letter never
+// changes wording, but next week reads differently.
+function piWeekPick(pool, salt, wkKey) { if(!pool.length) return ''; return pool[piHash(salt + ':' + wkKey) % pool.length]; }
+function piSetWeek(i) { piWeekOffset = i; renderInsights(); }
+
+function computeWeekReport(ws) {
+  const r1 = v => Math.round(v * 10) / 10;
+  const avg = (a,k) => a.length ? a.reduce((x,e)=>x+(e[k]||0),0)/a.length : 0;
+  const we = new Date(ws); we.setDate(we.getDate()+6); we.setHours(23,59,59,999);
+  const ps = new Date(ws); ps.setDate(ps.getDate()-7);
+  const pe = new Date(ws); pe.setDate(pe.getDate()-1); pe.setHours(23,59,59,999);
+  const daily = S.entries.filter(e => e.type === 'daily' && e.date);
+  const inW = (e,s,en) => { const t = new Date(e.date); return t >= s && t <= en; };
+  const tw = daily.filter(e => inW(e,ws,we));
+  const lw = daily.filter(e => inW(e,ps,pe));
+  const urges = S.entries.filter(e => e.type === 'urge' && e.date && inW(e,ws,we));
+  const name = (localStorage.getItem('sr_name') || '').trim().split(' ')[0];
+  const nm = name ? ', ' + name : '';
+  const wk = ws.getTime();
+  const wp = (pool,salt) => piWeekPick(pool, salt, wk);
+  const DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const isCurrent = we >= new Date();
+
+  const dUrge = (lw.length && tw.length) ? avg(lw,'urge') - avg(tw,'urge') : null;   // +ve = urges fell (good)
+  const dEnergy = (lw.length && tw.length) ? avg(tw,'energy') - avg(lw,'energy') : null; // +ve = up (good)
+  const dCount = lw.length ? tw.length - lw.length : null;
+
+  // Date range label, e.g. "23–29 Jun" or "30 Jun – 6 Jul"
+  const aM = ws.toLocaleDateString('en-GB',{month:'short'}), bM = we.toLocaleDateString('en-GB',{month:'short'});
+  const range = aM === bM ? `${ws.getDate()}–${we.getDate()} ${bM}` : `${ws.getDate()} ${aM} – ${we.getDate()} ${bM}`;
+
+  // The big warm headline — chosen by the week's dominant story.
+  let hi;
+  if(tw.length >= 5) hi = wp([`You showed up almost every day this week${nm}. That isn't willpower any more — it's becoming who you are.`, `Nearly a full week of showing up${nm}. This is the quiet, unglamorous work that actually changes a man.`], 'hiShow');
+  else if(dUrge !== null && dUrge >= 0.5) hi = wp([`A lighter week${nm}. The pull loosened its grip — and you're the reason it did.`, `This week was gentler on you${nm}, and you earned that ease. Let yourself feel it.`], 'hiLight');
+  else if(dUrge !== null && dUrge <= -0.5) hi = wp([`This week asked more of you${nm} — and you're still here, still logging, still in it. That counts for more than a perfect week ever could.`, `A heavier week${nm}. But heavy weeks don't erase you — showing up through them is exactly how you get stronger.`], 'hiHard');
+  else hi = wp([`Another week held${nm}. Weeks like this don't feel like much, but this is where the change quietly banks.`, `You kept the flame going this week${nm}. Steady is underrated — steady is what wins this.`], 'hiSteady');
+
+  // Stat tiles (this week, with a gentle vs-last-week delta where it exists).
+  // The check-in count delta is hidden for the current, still-unfinished week —
+  // comparing a partial week to a complete one would show an unfair drop. The
+  // middle tile adapts so we never lead with a hollow "0 urges ridden".
+  const stats = [
+    { n: tw.length, l: tw.length === 1 ? 'check-in' : 'check-ins', d: (!isCurrent && dCount !== null && dCount !== 0) ? { up: dCount > 0, txt: (dCount>0?'+':'') + dCount } : null },
+    urges.length ? { n: urges.length, l: urges.length === 1 ? 'urge ridden' : 'urges ridden', d: null }
+                 : { n: r1(avg(tw,'energy')), l: 'avg energy', d: (dEnergy !== null && Math.abs(dEnergy) >= 0.3) ? { up: dEnergy > 0, txt: (dEnergy>0?'+':'') + r1(dEnergy) } : null },
+    { n: r1(avg(tw,'urge')), l: 'avg urge', d: (dUrge !== null && Math.abs(dUrge) >= 0.3) ? { up: dUrge > 0, txt: (dUrge>0?'−':'+') + r1(Math.abs(dUrge)) } : null }
+  ];
+
+  // Wins — always find something true and generous to say.
+  const wins = [];
+  if(tw.length) wins.push(wp([`You checked in <b>${tw.length} ${tw.length===1?'day':'days'}</b> this week — every one a promise kept to yourself.`, `<b>${tw.length} ${tw.length===1?'check-in':'check-ins'}</b> this week. You keep turning up, and that's the whole thing.`], 'winShow'));
+  if(urges.length) wins.push(wp([`You rode out <b>${urges.length} urge${urges.length===1?'':'s'}</b> without letting a single one win.`, `<b>${urges.length} urge${urges.length===1?'':'s'}</b> came this week, and <b>${urges.length}</b> passed. You outlasted every one.`], 'winUrge'));
+  if(tw.length) { const calm = tw.slice().sort((a,b)=>(a.urge||0)-(b.urge||0))[0]; wins.push(wp([`Your steadiest day was <b>${DOW[new Date(calm.date).getDay()]}</b>${calm.mood?`, feeling ${escHtml(calm.mood)}`:''} — hold on to whatever made it work.`], 'winCalm')); }
+  if(dEnergy !== null && dEnergy >= 0.5) wins.push(`Your energy climbed <b>${r1(dEnergy)}</b> from last week — the body is paying you back.`);
+  const winsTop = wins.slice(0, 3);
+
+  // One rotating "worth seeing" moment — a different angle each week.
+  const cands = [];
+  if(dUrge !== null && dUrge >= 0.4) cands.push(`Your urges ran <b>${r1(dUrge)} lighter</b> than last week. Whatever shifted, protect it.`);
+  const tmap = {}; tw.forEach(e => (e.triggers||[]).forEach(x => { (tmap[x]=tmap[x]||[]).push(e.urge||0); }));
+  let tk = null; Object.keys(tmap).forEach(k => { if(tmap[k].length >= 2) { const a = tmap[k].reduce((x,y)=>x+y,0)/tmap[k].length; if(!tk || a > tk.a) tk = { k, a, n: tmap[k].length }; } });
+  if(tk) cands.push(`<b>${escHtml(tk.k)}</b> showed up on ${tk.n} of your days this week and pulled your urges up with it. One to watch next week.`);
+  if(tw.length) { const mmap = {}; tw.forEach(e => { if(e.mood) (mmap[e.mood]=mmap[e.mood]||[]).push(e.urge||0); }); let best = null; Object.keys(mmap).forEach(m => { const a = mmap[m].reduce((x,y)=>x+y,0)/mmap[m].length; if(best === null || a < best.a) best = { m, a }; }); if(best) cands.push(`You were most at peace when you felt <b>${escHtml(best.m)}</b> this week. Chase more of whatever put you there.`); }
+  const standout = cands.length ? cands[piHash('so:' + wk) % cands.length] : null;
+
+  const fwd = wp([`Next week doesn't need to be flawless${nm}. It just needs you to keep showing up — that's all it has ever needed.`, `Whatever next week brings${nm}, you've already proven you can meet it. One check-in at a time.`, `Carry this week's momentum forward${nm}. You're not starting over — you're building on everything you just did.`], 'fwd');
+
+  return { range, hi, stats, wins: winsTop, standout, fwd, isCurrent, streak: (isCurrent && S.startDate) ? calcStreak() : null };
+}
+
+// Renders the weekly review. Non-member → warm blurred teaser; member with
+// thin data → "your first review is on its way"; member ready → the letter.
+function insightsWeeklyHTML() {
+  const calIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+  const heartIc = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.9-10-9.5C.6 8.2 2.3 4.5 6 4.5c2 0 3.3 1.1 4 2.2.7-1.1 2-2.2 4-2.2 3.7 0 5.4 3.7 4 7C19.5 16.1 12 21 12 21z"/></svg>';
+  const eyeIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+  if(!hasPremium()) {
+    const sample = `<div class="wr-card"><div class="wr-top"><span class="wr-kicker">${calIc} Your week in review</span><span class="wr-range">this week</span></div>
+      <div class="wr-hi">A lighter week. The pull loosened its grip — and you're the reason it did.</div>
+      <div class="wr-stats"><div class="wr-stat"><div class="wr-stat-n">6</div><div class="wr-stat-l">check-ins</div></div><div class="wr-stat"><div class="wr-stat-n">4</div><div class="wr-stat-l">urges ridden</div></div><div class="wr-stat"><div class="wr-stat-n">3.2</div><div class="wr-stat-l">avg urge</div></div></div>
+      <div class="wr-win"><span class="wr-win-ic">${heartIc}</span><span>You rode out 4 urges without letting a single one win.</span></div>
+      <div class="wr-win"><span class="wr-win-ic">${heartIc}</span><span>Your steadiest day was Tuesday, feeling Focused.</span></div></div>`;
+    return `<div class="wr-wrap"><div class="pi-locked"><div class="pi-blur">${sample}</div>
+      <div class="pi-lock-ov"><div class="pi-lock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h4>Your week, written for you</h4>
+        <p>Every week, a personal review of how far you came — your wins, your patterns, and a word for the days ahead. Yours with Membership.</p>
+        <button class="pi-unlock" onclick="requireMembership('insights')">Unlock with Membership</button></div></div></div>`;
+  }
+
+  const daily = S.entries.filter(e => e.type === 'daily');
+  const weeks = piWeekList();
+  if(daily.length < 3 || !weeks.length) {
+    const pct = Math.min(100, Math.round(daily.length / 3 * 100));
+    return `<div class="wr-wrap"><div class="pi-build">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      <h4>Your first weekly review is on its way</h4>
+      <p>Log <b>${3 - daily.length} more check-in${3-daily.length===1?'':'s'}</b> and, each week from now on, the app will write you a personal review of how far you came.</p>
+      <div class="pi-prog"><div class="pi-prog-f" style="width:${pct}%"></div></div>
+      <small>${daily.length} of 3 check-ins</small></div></div>`;
+  }
+
+  const idx = Math.min(Math.max(0, piWeekOffset), weeks.length - 1);
+  const rep = computeWeekReport(weeks[idx]);
+  const statsHtml = rep.stats.map(s => `<div class="wr-stat"><div class="wr-stat-n">${s.n}</div>${s.d?`<div class="wr-stat-d ${s.d.up?'up':'down'}">${s.d.txt}</div>`:''}<div class="wr-stat-l">${s.l}</div></div>`).join('');
+  const winsHtml = rep.wins.map(w => `<div class="wr-win"><span class="wr-win-ic">${heartIc}</span><span>${w}</span></div>`).join('');
+  const standoutHtml = rep.standout ? `<div class="wr-standout"><div class="wr-so-l">${eyeIc} Worth seeing</div>${rep.standout}</div>` : '';
+  const weeksHtml = weeks.length > 1 ? `<div class="wr-weeks">${weeks.slice(0,8).map((w,i) => { const s = piWeekStart(w); const e = new Date(s); e.setDate(e.getDate()+6); const label = i === 0 ? 'This week' : `${s.getDate()} ${s.toLocaleDateString('en-GB',{month:'short'})}`; return `<button class="wr-week${i===idx?' on':''}" onclick="piSetWeek(${i})">${label}</button>`; }).join('')}</div>` : '';
+  const rangeLabel = rep.isCurrent ? (idx === 0 ? 'This week · ' + rep.range : rep.range) : rep.range;
+
+  return `<div class="wr-wrap"><div class="wr-card">
+    <div class="wr-top"><span class="wr-kicker">${calIc} Your week in review</span><span class="wr-range">${rangeLabel}</span></div>
+    <div class="wr-hi">${rep.hi}</div>
+    <div class="wr-stats">${statsHtml}</div>
+    <div class="wr-sect-l">This week, you</div>${winsHtml}
+    ${standoutHtml}
+    <div class="wr-fwd">${rep.fwd}</div>
+    ${weeksHtml}
+  </div></div>`;
+}
+
 // Build the premium predictive panel. Three states:
 //   • non-member  → a blurred sample behind an unlock CTA (the sell)
 //   • member, thin data → a "still learning" progress state
 //   • member, ready → the full computed analysis
 function insightsPredictiveHTML() {
+  // Non-members already see the weekly-review teaser above — don't stack a
+  // second lock. The predictive panel only appears once they're in.
+  if(!hasPremium()) return '';
   const lockIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
   const crownIc = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 7l4 5 4-7 4 7 4-5 2 12H0z" transform="translate(2 1)"/></svg>';
   const header = `<div class="pi-lbl"><span>Predictive insights</span><span class="pi-badge">${crownIc}Membership</span></div>`;
@@ -3366,7 +3538,7 @@ function renderInsights() {
   const daily = S.entries.filter(e => e.type === 'daily');
 
   if(daily.length < 3) {
-    el.innerHTML = insightsPredictiveHTML() + `<div class="in-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3 3L21 7"/></svg><p>${daily.length} of 3 check-ins logged</p><span>Log ${3 - daily.length} more daily check-in${3-daily.length>1?'s':''} and your patterns (energy, clarity, urges and triggers) will appear here.</span></div>`;
+    el.innerHTML = insightsWeeklyHTML() + insightsPredictiveHTML() + `<div class="in-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3 3L21 7"/></svg><p>${daily.length} of 3 check-ins logged</p><span>Log ${3 - daily.length} more daily check-in${3-daily.length>1?'s':''} and your patterns (energy, clarity, urges and triggers) will appear here.</span></div>`;
     return;
   }
 
@@ -3425,7 +3597,7 @@ function renderInsights() {
   else if(eD < -0.3) synth = `Energy has dipped below your average, often a flatline, not failure. Lean on sleep, training and sunlight; it lifts.`;
   else synth = `You're holding <b>steady</b> across the board. Consistency like this is what compounds into real change.`;
 
-  el.innerHTML = insightsPredictiveHTML() + `
+  el.innerHTML = insightsWeeklyHTML() + insightsPredictiveHTML() + `
     <div class="in-stats">
       <div class="in-stat"><div class="in-stat-n ac">${calcStreak()||(S.startDate?1:0)}</div><div class="in-stat-l">${t('insDayStreak')}</div></div>
       <div class="in-stat"><div class="in-stat-n">${daily.length}</div><div class="in-stat-l">${t('insCheckins')}</div></div>
