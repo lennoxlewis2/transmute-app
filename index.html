@@ -599,9 +599,17 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   @keyframes urfDoneIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
   .urf-done-hint{font-size:12px;color:var(--ts);text-align:center;line-height:1.6;margin-bottom:10px;}
   .urf-survived{width:100%;margin:0;padding:15px;background:linear-gradient(135deg,var(--ac),var(--acd));color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 6px 20px rgba(108,92,231,0.35);-webkit-appearance:none;}
-  .breath-ring-wrap{width:100px;height:100px;border-radius:50%;border:3px solid var(--ac);display:flex;align-items:center;justify-content:center;margin:14px auto;transition:all 3.5s ease-in-out;}
-  .breath-ring-inner{width:58px;height:58px;border-radius:50%;background:var(--acl);display:flex;align-items:center;justify-content:center;transition:all 3.5s ease-in-out;}
-  .breath-ring-lbl{font-size:11px;font-weight:600;color:var(--ac);text-align:center;line-height:1.3;}
+  /* Breathing bloom — rAF-driven orb (JS sets all geometry/colour per frame) */
+  .bre-stage{position:relative;width:230px;height:230px;margin:0 auto 4px;}
+  .bre-halo{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;background:rgba(108,92,231,0.4);filter:blur(30px);opacity:.2;pointer-events:none;will-change:transform,opacity;}
+  .bre-svg{position:relative;display:block;}
+  .bre-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+  .bre-lbl{font-size:15px;font-weight:800;color:#fff;letter-spacing:.03em;text-shadow:0 1px 12px rgba(0,0,0,0.4);}
+  .bre-count{font-size:30px;font-weight:300;color:rgba(255,255,255,0.85);line-height:1.15;min-height:36px;font-variant-numeric:tabular-nums;}
+  .bre-dots{display:flex;justify-content:center;gap:8px;margin:0 0 10px;}
+  .bre-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.12);transition:background .4s ease,box-shadow .4s ease;}
+  .bre-dots span.cur{background:rgba(168,156,236,0.45);}
+  .bre-dots span.on{background:var(--ac2);box-shadow:0 0 8px rgba(168,156,236,0.8);}
   .timer-wrap{position:relative;width:120px;height:120px;margin:0 auto 10px;}
   .timer-wrap svg{transform:rotate(-90deg);}
   .timer-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:600;color:var(--tx);}
@@ -1814,16 +1822,35 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         <!-- Shown above whichever tool is open — one clear way back to the grid -->
         <button id="utool-back" class="utool-back" onclick="uShowTool(null)" style="display:none;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Choose a different tool</button>
 
-        <!-- BREATH TOOL -->
+        <!-- BREATH TOOL — the breathing bloom -->
         <div id="utool-breath" class="utool-sec">
           <div class="card" style="text-align:center;">
-            <div class="breath-ring-wrap fx-keep" id="u-br">
-              <div class="breath-ring-inner fx-keep" id="u-bi">
-                <span class="breath-ring-lbl" id="u-bl">TAP<br>START</span>
+            <div class="bre-stage" id="bre-stage">
+              <div class="bre-halo fx-keep" id="bre-halo"></div>
+              <svg class="bre-svg" viewBox="0 0 230 230" width="230" height="230" aria-hidden="true">
+                <defs>
+                  <radialGradient id="breCoreG" cx="50%" cy="42%" r="72%">
+                    <stop offset="0%" stop-color="#D6CCFF" stop-opacity="0.9"/>
+                    <stop offset="55%" stop-color="#8F7BFF" stop-opacity="0.5"/>
+                    <stop offset="100%" stop-color="#6C5CE7" stop-opacity="0.15"/>
+                  </radialGradient>
+                </defs>
+                <circle cx="115" cy="115" r="106" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+                <circle id="bre-arc" class="fx-keep" cx="115" cy="115" r="106" fill="none" stroke="#8F7BFF" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="666" stroke-dashoffset="666" transform="rotate(-90 115 115)"/>
+                <g id="bre-parts"></g>
+                <circle id="bre-r3" class="fx-keep" cx="115" cy="115" r="90" fill="none" stroke="#8F7BFF" stroke-opacity="0.08" stroke-width="1"/>
+                <circle id="bre-r2" class="fx-keep" cx="115" cy="115" r="74" fill="none" stroke="#8F7BFF" stroke-opacity="0.14" stroke-width="1.2"/>
+                <circle id="bre-r1" class="fx-keep" cx="115" cy="115" r="58" fill="none" stroke="#8F7BFF" stroke-opacity="0.22" stroke-width="1.5"/>
+                <circle id="bre-core" class="fx-keep" cx="115" cy="115" r="40" fill="url(#breCoreG)"/>
+              </svg>
+              <div class="bre-center">
+                <div class="bre-lbl fx-keep" id="bre-lbl">Ready when you are</div>
+                <div class="bre-count fx-keep" id="bre-count"></div>
               </div>
             </div>
+            <div class="bre-dots fx-keep" id="bre-dots"><span></span><span></span><span></span><span></span></div>
             <div id="u-breath-cycle" style="font-size:12px;font-weight:700;color:var(--ac2);min-height:16px;margin-bottom:8px;letter-spacing:.02em;"></div>
-            <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Box breathing redirects energy upward and out of the urge. Follow the ring for 4 slow cycles. It ends on its own.</p>
+            <p style="font-size:13px;color:var(--ts);margin-bottom:12px;">Box breathing redirects energy upward and out of the urge. Breathe with the orb — in as it blooms, out as it releases. It ends on its own after 4 cycles.</p>
             <button class="urge-sos-btn" id="u-breath-btn" style="background:var(--ac);margin-bottom:0;padding:13px;font-size:14px;">Start breathing</button>
           </div>
         </div>
@@ -5509,16 +5536,165 @@ function uStartIntensity() {
   uIntInterval = setInterval(tick, 120);
 }
 
+// ---- Breathing bloom engine ----
+// One rAF loop drives everything: core orb radius, three echo rings, blurred
+// halo, drifting particle field (drawn inward on the inhale, released on the
+// exhale), per-phase progress arc, live countdown and cycle dots. Colour
+// cross-fades between phases (cool blue in, purple hold, teal release).
+// uBreathInterval stays the running flag — applyLang and the toggle rely on it.
+const U_BRE_PH = [
+  {lbl:'Breathe in', dur:4, a:0, b:1, col:[143,184,255]},
+  {lbl:'Hold',       dur:4, a:1, b:1, col:[169,140,255]},
+  {lbl:'Let it go',  dur:6, a:1, b:0, col:[127,224,192]},
+  {lbl:'Rest',       dur:2, a:0, b:0, col:[124,124,170]}
+];
+const U_BRE_CYCLES = 4;
+const U_BRE_CYCLE_SECS = U_BRE_PH.reduce((s,p)=>s+p.dur,0);
+const U_BRE_ARC = 2 * Math.PI * 106;
+let uBreathRAF = null, uBreathPartsState = [];
+
+function uBreathEls() {
+  return {
+    core: document.getElementById('bre-core'),
+    r1: document.getElementById('bre-r1'), r2: document.getElementById('bre-r2'), r3: document.getElementById('bre-r3'),
+    arc: document.getElementById('bre-arc'), halo: document.getElementById('bre-halo'),
+    lbl: document.getElementById('bre-lbl'), cnt: document.getElementById('bre-count'),
+    dots: document.querySelectorAll('#bre-dots span')
+  };
+}
+
+function uBreathSeedParts() {
+  const g = document.getElementById('bre-parts');
+  if(!g || g.childElementCount) return;
+  uBreathPartsState = [];
+  for(let i = 0; i < 16; i++) {
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('r', (1.2 + Math.random() * 1.4).toFixed(1));
+    c.setAttribute('fill', '#CFC4FF');
+    c.setAttribute('fill-opacity', '0');
+    c.setAttribute('class', 'fx-keep');
+    g.appendChild(c);
+    uBreathPartsState.push({ang: Math.random() * Math.PI * 2, spd: (0.10 + Math.random() * 0.15) * (i % 2 ? 1 : -1), off: Math.random() * 10, el: c});
+  }
+}
+
+function uBreathRun() {
+  uBreathSeedParts();
+  const E = uBreathEls();
+  if(!E.core) return;
+  const t0 = performance.now();
+  let last = t0, lastPh = -1, lastCyc = -1;
+  let col = U_BRE_PH[3].col.slice();
+  const cycEl = document.getElementById('u-breath-cycle');
+  function frame(now) {
+    if(!uBreathInterval) return;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const e = (now - t0) / 1000;
+    if(e >= U_BRE_CYCLE_SECS * U_BRE_CYCLES) { uBreathFinish(E, cycEl); return; }
+    const cyc = Math.floor(e / U_BRE_CYCLE_SECS);
+    let w = e % U_BRE_CYCLE_SECS, phi = 0;
+    while(w >= U_BRE_PH[phi].dur) { w -= U_BRE_PH[phi].dur; phi++; }
+    const ph = U_BRE_PH[phi];
+    const p = w / ph.dur;
+    const ease = 0.5 - 0.5 * Math.cos(Math.PI * p);
+    let L = ph.a + (ph.b - ph.a) * ease;
+    // gentle shimmer while holding, so the orb never feels frozen
+    if(ph.a === ph.b) L = Math.max(0, Math.min(1, L + (ph.a > 0.5 ? -1 : 1) * 0.02 * (0.5 - 0.5 * Math.cos(e * 2.4))));
+    if(phi !== lastPh || cyc !== lastCyc) {
+      lastPh = phi; lastCyc = cyc;
+      E.lbl.textContent = ph.lbl;
+      if(cycEl) cycEl.textContent = 'Cycle ' + (cyc + 1) + ' of ' + U_BRE_CYCLES;
+      E.dots.forEach((d, i) => { d.classList.toggle('on', i < cyc); d.classList.toggle('cur', i === cyc); });
+      if(navigator.vibrate) {
+        if(phi === 0) navigator.vibrate(35);
+        else if(phi === 2) navigator.vibrate([20,30,20]);
+      }
+    }
+    E.cnt.textContent = Math.ceil(ph.dur - w);
+    // colour cross-fade toward the phase colour
+    for(let i = 0; i < 3; i++) col[i] += (ph.col[i] - col[i]) * Math.min(1, dt * 2.5);
+    const cRgb = 'rgb(' + col.map(Math.round).join(',') + ')';
+    // geometry
+    const coreR = 36 + 24 * L;
+    E.core.setAttribute('r', coreR.toFixed(1));
+    E.r1.setAttribute('r', (coreR + 14 + 4 * L).toFixed(1));
+    E.r2.setAttribute('r', (coreR + 27 + 7 * L).toFixed(1));
+    E.r3.setAttribute('r', (coreR + 36 + 8 * L).toFixed(1));
+    E.r1.setAttribute('stroke-opacity', (0.12 + 0.20 * L).toFixed(2));
+    E.r2.setAttribute('stroke-opacity', (0.08 + 0.14 * L).toFixed(2));
+    E.r3.setAttribute('stroke-opacity', (0.05 + 0.09 * L).toFixed(2));
+    E.r1.setAttribute('stroke', cRgb); E.r2.setAttribute('stroke', cRgb); E.r3.setAttribute('stroke', cRgb);
+    E.arc.setAttribute('stroke', cRgb);
+    E.arc.setAttribute('stroke-dashoffset', (U_BRE_ARC * (1 - p)).toFixed(1));
+    E.halo.style.opacity = (0.15 + 0.40 * L).toFixed(2);
+    E.halo.style.transform = 'scale(' + (0.75 + 0.5 * L).toFixed(3) + ')';
+    E.halo.style.background = 'rgba(' + col.map(Math.round).join(',') + ',0.5)';
+    // particle field: slow orbit, drawn in on the inhale, released on the exhale
+    const pop = 0.10 + 0.42 * L;
+    for(const s of uBreathPartsState) {
+      s.ang += s.spd * dt;
+      const dist = coreR + 12 + (1 - L) * 32 + s.off;
+      s.el.setAttribute('cx', (115 + Math.cos(s.ang) * dist).toFixed(1));
+      s.el.setAttribute('cy', (115 + Math.sin(s.ang) * dist).toFixed(1));
+      s.el.setAttribute('fill-opacity', pop.toFixed(2));
+    }
+    uBreathRAF = requestAnimationFrame(frame);
+  }
+  uBreathRAF = requestAnimationFrame(frame);
+}
+
+function uBreathFinish(E, cycEl) {
+  uBreathInterval = null;
+  uBreathRAF = null;
+  const teal = '#5DCAA5';
+  E.lbl.textContent = 'Well done';
+  E.cnt.textContent = '';
+  E.dots.forEach(d => { d.classList.remove('cur'); d.classList.add('on'); });
+  E.arc.setAttribute('stroke', teal);
+  E.arc.setAttribute('stroke-dashoffset', '0');
+  [E.r1, E.r2, E.r3].forEach(r => r.setAttribute('stroke', teal));
+  E.core.setAttribute('r', '40');
+  E.r1.setAttribute('r', '54'); E.r2.setAttribute('r', '67'); E.r3.setAttribute('r', '80');
+  E.halo.style.background = 'rgba(93,202,165,0.45)';
+  E.halo.style.opacity = '0.35';
+  E.halo.style.transform = 'scale(1)';
+  uBreathPartsState.forEach(s => s.el.setAttribute('fill-opacity', '0'));
+  if(cycEl) cycEl.textContent = '4 cycles done. Notice how the urge has settled.';
+  const btn = document.getElementById('u-breath-btn');
+  if(btn) btn.textContent = 'Breathe again';
+  if(navigator.vibrate) navigator.vibrate([60,40,60]);
+}
+
+function uBreathResetVisual() {
+  const lbl = document.getElementById('bre-lbl');
+  if(!lbl) return;
+  lbl.textContent = 'Ready when you are';
+  document.getElementById('bre-count').textContent = '';
+  const arc = document.getElementById('bre-arc');
+  arc.setAttribute('stroke', '#8F7BFF');
+  arc.setAttribute('stroke-dashoffset', String(Math.round(U_BRE_ARC)));
+  const base = {'bre-core':[40,null], 'bre-r1':[58,'0.22'], 'bre-r2':[74,'0.14'], 'bre-r3':[90,'0.08']};
+  Object.keys(base).forEach(id => {
+    const el = document.getElementById(id);
+    el.setAttribute('r', base[id][0]);
+    if(base[id][1]) { el.setAttribute('stroke-opacity', base[id][1]); el.setAttribute('stroke', '#8F7BFF'); }
+  });
+  const halo = document.getElementById('bre-halo');
+  halo.style.opacity = '0.2'; halo.style.transform = 'scale(1)'; halo.style.background = 'rgba(108,92,231,0.4)';
+  document.querySelectorAll('#bre-dots span').forEach(d => d.classList.remove('on','cur'));
+  document.querySelectorAll('#bre-parts circle').forEach(c => c.setAttribute('fill-opacity', '0'));
+  const cyc = document.getElementById('u-breath-cycle');
+  if(cyc) cyc.textContent = '';
+  const btn = document.getElementById('u-breath-btn');
+  if(btn) btn.textContent = 'Start breathing';
+}
+
 function uStopBreath() {
-  if(uBreathInterval) clearTimeout(uBreathInterval);
-  uBreathInterval=null;
-  const br=document.getElementById('u-br'), bi=document.getElementById('u-bi'), bl=document.getElementById('u-bl');
-  const cyc=document.getElementById('u-breath-cycle'), btn=document.getElementById('u-breath-btn');
-  if(br){br.style.transition='all .5s ease';br.style.transform='scale(1)';br.style.borderColor='';}
-  if(bi){bi.style.transition='all .5s ease';bi.style.transform='scale(1)';bi.style.background='';}
-  if(bl) bl.innerHTML='TAP<br>START';
-  if(cyc) cyc.textContent='';
-  if(btn) btn.textContent='Start breathing';
+  if(uBreathRAF) cancelAnimationFrame(uBreathRAF);
+  uBreathRAF = null;
+  if(typeof uBreathInterval === 'number') clearTimeout(uBreathInterval);
+  uBreathInterval = null;
+  uBreathResetVisual();
 }
 
 function uShowTool(name) {
@@ -5660,16 +5836,7 @@ function uReset() {
   if(tnum) tnum.textContent='5:00';
   const tbtn=document.getElementById('u-timer-btn');
   if(tbtn) tbtn.textContent='Start the countdown';
-  const bbtn=document.getElementById('u-breath-btn');
-  if(bbtn) bbtn.textContent='Start breathing';
-  const br=document.getElementById('u-br');
-  if(br){br.style.transform='';br.style.transition='';}
-  const bi=document.getElementById('u-bi');
-  if(bi){bi.style.transform='';bi.style.background='';}
-  const bl=document.getElementById('u-bl');
-  if(bl) bl.innerHTML='TAP<br>START';
-  const cyc=document.getElementById('u-breath-cycle');
-  if(cyc) cyc.textContent='';
+  uBreathResetVisual();
 }
 
 
@@ -5971,48 +6138,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.getElementById('sos-btn').addEventListener('click', uStart);
 
-  // Breath tool
+  // Breath tool — toggle the breathing bloom (engine lives in uBreathRun)
   document.getElementById('u-breath-btn').addEventListener('click', function() {
     if(uBreathInterval) { uStopBreath(); return; }
-    this.textContent='Stop';
-    const phases=[
-      {lbl:'INHALE',dur:4,rs:'scale(1.22)',is:'scale(1.35)',ib:'rgba(127,119,221,0.35)',bc:'var(--ac)'},
-      {lbl:'HOLD',dur:4,rs:'scale(1.22)',is:'scale(1.35)',ib:'rgba(127,119,221,0.5)',bc:'#9977EE'},
-      {lbl:'EXHALE',dur:6,rs:'scale(1)',is:'scale(1)',ib:'rgba(127,119,221,0.1)',bc:'var(--ac2)'},
-      {lbl:'HOLD',dur:2,rs:'scale(1)',is:'scale(1)',ib:'rgba(127,119,221,0.08)',bc:'var(--bd)'},
-    ];
-    const TOTAL_CYCLES=4;
-    let pi=0;
-    function next(){
-      if(!uBreathInterval) return; // stopped
-      const br=document.getElementById('u-br'), bi=document.getElementById('u-bi'), bl=document.getElementById('u-bl'), cyc=document.getElementById('u-breath-cycle');
-      if(!br) return;
-      // finished all cycles — end on its own, calmly
-      if(pi >= phases.length*TOTAL_CYCLES){
-        uBreathInterval=null;
-        br.style.transition='all .8s ease'; br.style.transform='scale(1)'; br.style.borderColor='var(--teal4)';
-        bi.style.transition='all .8s ease'; bi.style.transform='scale(1)'; bi.style.background='rgba(29,158,117,0.2)';
-        bl.innerHTML='WELL<br>DONE';
-        if(cyc) cyc.textContent='4 cycles done. Notice how the urge has settled.';
-        document.getElementById('u-breath-btn').textContent='Breathe again';
-        if(navigator.vibrate) navigator.vibrate([60,40,60]);
-        return;
-      }
-      const p=phases[pi%phases.length];
-      br.style.transition='all '+p.dur+'s ease-in-out'; br.style.transform=p.rs; br.style.borderColor=p.bc;
-      bi.style.transition='all '+p.dur+'s ease-in-out'; bi.style.transform=p.is; bi.style.background=p.ib;
-      bl.textContent=p.lbl;
-      if(cyc && pi%phases.length===0) cyc.textContent='Cycle '+(Math.floor(pi/phases.length)+1)+' of '+TOTAL_CYCLES;
-      // gentle eyes-closed haptic cue on the two active phases
-      if(navigator.vibrate){
-        if(p.lbl==='INHALE') navigator.vibrate(35);
-        else if(p.lbl==='EXHALE') navigator.vibrate([20,30,20]);
-      }
-      pi++;
-      uBreathInterval=setTimeout(next, p.dur*1000);
-    }
-    uBreathInterval=true; // mark as running before first call
-    next();
+    uBreathInterval = true;
+    this.textContent = 'Stop';
+    uBreathRun();
   });
 
   // Timer tool
