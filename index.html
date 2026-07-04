@@ -616,6 +616,15 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws-start-opt span{font-size:12.5px;color:rgba(255,255,255,0.5);line-height:1.45;}
   .ws-start-days{display:none;margin-top:2px;}
   .ws-start-days.show{display:block;}
+  .ws-commit-card{width:100%;max-width:340px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:15px 17px;margin:2px 0 22px;text-align:left;}
+  .ws-commit-row{font-size:13.5px;color:rgba(255,255,255,0.55);line-height:1.5;}
+  .ws-commit-row + .ws-commit-row{margin-top:9px;padding-top:9px;border-top:.5px solid rgba(255,255,255,0.08);}
+  .ws-commit-row b{color:#fff;font-weight:700;}
+  .ws-hold{position:relative;width:100%;max-width:340px;height:60px;border-radius:16px;border:1px solid rgba(196,188,255,0.4);background:rgba(108,92,231,0.14);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;overflow:hidden;-webkit-appearance:none;-webkit-user-select:none;user-select:none;touch-action:none;}
+  .ws-hold-fill{position:absolute;top:0;left:0;bottom:0;width:0;background:linear-gradient(135deg,var(--ac),var(--acd));z-index:0;}
+  .ws-hold-label{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;height:100%;}
+  .ws-hold.done{border-color:transparent;}
+  .ws-hold-hint{font-size:12px;color:rgba(255,255,255,0.35);margin-top:12px;}
   /* Relapse pattern chart (History) — show the user WHEN their streaks break */
   .rp-card{background:var(--sf);border:.5px solid var(--bd);border-radius:16px;padding:16px;}
   .rp-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:7px;display:flex;align-items:center;gap:7px;}
@@ -934,6 +943,22 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
     </div>
 
+    <!-- SLIDE 10: The commitment (press & hold ritual) -->
+    <div class="ws-slide">
+      <div class="ws-icon">
+        <svg width="86" height="86" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(108,92,231,0.9)) drop-shadow(0 0 8px rgba(196,188,255,0.5));animation:flamePulse 1.9s ease-in-out infinite;">
+          <path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="url(#wsA10)"/>
+          <path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="white" opacity=".9"/>
+          <defs><linearGradient id="wsA10" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="50%" stop-color="#C4BCFF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="ws-title" id="ws-commit-title">This is your<br>line in the sand.</div>
+      <div class="ws-sub" style="margin-bottom:16px;">Not a resolution you'll forget by Friday — a decision. Make it with your whole chest.</div>
+      <div class="ws-commit-card" id="ws-commit-card"></div>
+      <button class="ws-hold" id="ws-hold"><div class="ws-hold-fill" id="ws-hold-fill"></div><div class="ws-hold-label" id="ws-hold-label">Press &amp; hold to commit</div></button>
+      <div class="ws-hold-hint">Hold until it fills.</div>
+    </div>
+
     <!-- SLIDE 5: Install CTA -->
     <div class="ws-slide">
       <div class="ws-icon">
@@ -948,7 +973,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           </defs>
         </svg>
       </div>
-      <div class="ws-title">Ready to<br>start?</div>
+      <div class="ws-title" id="ws-final-title">Day 1<br>starts now.</div>
       <div class="ws-sub" style="margin-bottom:28px;">Free to use. No account. Works offline. Your data stays on your device.</div>
       <div id="ws-android" style="width:100%;display:flex;flex-direction:column;align-items:center;">
         <button class="ws-btn" id="ws-install" style="max-width:340px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></svg>Add to Home Screen</button>
@@ -968,6 +993,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <div class="ws-footer">
     <div class="ws-dots" id="ws-dots">
       <div class="ws-dot on"></div>
+      <div class="ws-dot"></div>
       <div class="ws-dot"></div>
       <div class="ws-dot"></div>
       <div class="ws-dot"></div>
@@ -5726,16 +5752,45 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  var totalSlides = 10;
+  var totalSlides = 11;
+  var COMMIT_SLIDE = 9;   // the press-and-hold commitment screen
   var curSlide = 0;
   var slides = document.getElementById('ws-slides');
   var dots = document.querySelectorAll('.ws-dot');
   var nextBtn = document.getElementById('ws-next');
 
+  // Pull the user's own words back into the commitment + final screens.
+  function personalise(n) {
+    var name = '';
+    var ni = document.getElementById('ws-name-input');
+    if(ni && ni.value.trim()) name = ni.value.trim().split(' ')[0];
+    if(n === COMMIT_SLIDE) {
+      var title = document.getElementById('ws-commit-title');
+      if(title) title.innerHTML = name ? (name + ' —<br>this is your line<br>in the sand.') : 'This is your<br>line in the sand.';
+      var card = document.getElementById('ws-commit-card');
+      if(card) {
+        var rows = [];
+        var goals = [].map.call(document.querySelectorAll('#ws-goals .ws-goal.on'), function(b){ return b.getAttribute('data-goal'); });
+        if(goals.length) rows.push('<div class="ws-commit-row">You\'re doing this for <b>' + goals.join(', ').toLowerCase() + '</b>.</div>');
+        var why = document.getElementById('ws-why-input');
+        if(why && why.value.trim()) rows.push('<div class="ws-commit-row">Your reason: <b>' + why.value.trim().replace(/[<>]/g,'') + '</b></div>');
+        card.innerHTML = rows.join('') || '<div class="ws-commit-row">From here, every day is a rep. You just have to start.</div>';
+      }
+    }
+    if(n === totalSlides - 1) {
+      var ft = document.getElementById('ws-final-title');
+      if(ft) ft.innerHTML = name ? ('You\'re in,<br>' + name + '.') : 'Day 1<br>starts now.';
+    }
+  }
+
   function goToSlide(n) {
     curSlide = n;
     slides.style.transform = 'translateX(-' + (n * 100) + 'vw)';
     dots.forEach(function(d, i) { d.classList.toggle('on', i === n); });
+    personalise(n);
+    // On the commitment screen the ONLY way forward is the press-and-hold ritual —
+    // hide the Next button so it can't be tapped past. (Skip still exits onboarding.)
+    nextBtn.style.display = (n === COMMIT_SLIDE) ? 'none' : '';
     if(n === totalSlides - 1) {
       nextBtn.textContent = 'Let\'s go ✓';
       nextBtn.onclick = _hideWS;
@@ -5744,6 +5799,33 @@ document.addEventListener('DOMContentLoaded', function() {
       nextBtn.onclick = function() { goToSlide(curSlide + 1); };
     }
   }
+
+  // Press-and-hold commitment — fills over ~1.6s, then advances with a haptic thud.
+  (function(){
+    var btn = document.getElementById('ws-hold');
+    if(!btn) return;
+    var fill = document.getElementById('ws-hold-fill');
+    var label = document.getElementById('ws-hold-label');
+    var HOLD_MS = 1600, start = 0, timer = null, done = false, lastBuzz = 0;
+    function tick() {
+      var p = Math.min(1, (Date.now() - start) / HOLD_MS);
+      fill.style.width = (p * 100) + '%';
+      if(navigator.vibrate && Date.now() - lastBuzz > 90 && p < 1) { navigator.vibrate(5); lastBuzz = Date.now(); }
+      if(p >= 1) {
+        clearInterval(timer); timer = null; done = true;
+        btn.classList.add('done');
+        label.textContent = 'Committed ✓';
+        if(navigator.vibrate) navigator.vibrate([25, 40, 70]);
+        setTimeout(function(){ goToSlide(curSlide + 1); }, 460);
+      }
+    }
+    function begin(e) { if(done || timer) return; if(e && e.preventDefault) e.preventDefault(); start = Date.now(); if(navigator.vibrate) navigator.vibrate(10); timer = setInterval(tick, 33); }
+    function end() { if(done || !timer) return; clearInterval(timer); timer = null; fill.style.width = '0'; }
+    btn.addEventListener('pointerdown', begin);
+    btn.addEventListener('pointerup', end);
+    btn.addEventListener('pointerleave', end);
+    btn.addEventListener('pointercancel', end);
+  })();
 
   nextBtn.onclick = function() { goToSlide(curSlide + 1); };
 
