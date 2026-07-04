@@ -237,6 +237,67 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .pd-tips li{position:relative;font-size:13.5px;color:var(--ts);line-height:1.55;padding-left:20px;margin-bottom:9px;}
 .pd-tips li:last-child{margin-bottom:0;}
 .pd-tips li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac2);}
+/* Rewiring score — the pill inside the streak ring + the breakdown sheet */
+.rw-line{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:10px;font-weight:700;color:var(--ac2);letter-spacing:.02em;background:rgba(108,92,231,0.13);border:.5px solid rgba(108,92,231,0.32);padding:2.5px 9px;border-radius:11px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
+.rw-line:active{transform:scale(0.94);}
+.rw-line svg{display:block;flex-shrink:0;}
+.rw-card{background:var(--sf);border:.5px solid var(--ac4);border-radius:20px;padding:24px 20px 22px;width:88%;max-width:350px;box-shadow:0 18px 60px rgba(0,0,0,.55);}
+.rw-tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ac2);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.rw-big{font-size:46px;font-weight:800;color:var(--tx);letter-spacing:-1.5px;line-height:1;}
+.rw-big small{font-size:20px;font-weight:800;color:var(--ts);letter-spacing:-.5px;}
+.rw-lede{font-size:12.5px;color:var(--ts);line-height:1.6;margin:8px 0 18px;}
+.rw-row{margin-bottom:13px;}
+.rw-row:last-child{margin-bottom:0;}
+.rw-row-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.rw-row-l{font-size:12px;font-weight:600;color:var(--tx);}
+.rw-row-v{font-size:11px;font-weight:700;color:var(--ac2);}
+.rw-track{height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+.rw-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--acd),var(--ac2));transition:width .5s cubic-bezier(.4,0,.2,1);}
+.rw-note{font-size:11px;color:var(--tt);line-height:1.55;margin-top:16px;padding-top:13px;border-top:.5px solid var(--bd);}
+/* The Path — home entry card */
+.pth-card{background:linear-gradient(140deg,#160B34,#0E0A1E 55%,#0A1220);border:.5px solid var(--ac4);border-radius:var(--r3);padding:0;overflow:hidden;cursor:pointer;margin-bottom:12px;-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
+.pth-card:active{transform:scale(0.985);}
+.pth-card-in{padding:15px 17px 14px;}
+.pth-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.pth-card-tag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ac2);display:flex;align-items:center;gap:6px;}
+.pth-card-tag svg{flex-shrink:0;}
+.pth-card-n{font-size:10.5px;font-weight:700;color:var(--tt);}
+.pth-card-t{font-size:15px;font-weight:700;color:#fff;line-height:1.35;margin-bottom:3px;}
+.pth-card-s{font-size:11.5px;color:var(--ts);display:flex;align-items:center;gap:5px;}
+.pth-card-bar{height:3px;background:rgba(255,255,255,0.06);}
+.pth-card-fill{height:100%;background:linear-gradient(90deg,var(--acd),var(--ac2));}
+/* The Path — section */
+.pth-today{background:linear-gradient(150deg,var(--acd),var(--sf) 70%);border:.5px solid var(--ac2);border-radius:18px;padding:17px 18px;margin:14px 0 6px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
+.pth-today:active{transform:scale(0.985);}
+.pth-today.done{background:var(--sf);border-color:var(--bd);cursor:default;}
+.pth-today-tag{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ac2);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.pth-today-t{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.2px;line-height:1.35;margin-bottom:6px;}
+.pth-today-s{font-size:12px;color:rgba(255,255,255,0.62);display:flex;align-items:center;gap:6px;}
+.pw-h{display:flex;align-items:baseline;gap:8px;margin:22px 0 10px;}
+.pw-h-n{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--tt);white-space:nowrap;}
+.pw-h-t{font-size:13.5px;font-weight:700;color:var(--ts);}
+.pth-row{display:flex;align-items:center;gap:11px;background:var(--sf);border:.5px solid var(--bd);border-radius:12px;padding:10px 13px;margin-bottom:7px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
+.pth-row:active{transform:scale(0.985);}
+.pth-row.cur{border-color:var(--ac2);background:linear-gradient(150deg,rgba(72,52,200,0.35),var(--sf));}
+.pth-row.lk{opacity:.5;cursor:default;}
+.pth-row.lk:active{transform:none;}
+.pth-num{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--tt);background:rgba(255,255,255,0.05);border:.5px solid var(--bd);}
+.pth-row.dn .pth-num{background:rgba(93,202,165,0.14);border-color:rgba(93,202,165,0.4);color:#5DCAA5;}
+.pth-row.cur .pth-num{background:rgba(108,92,231,0.25);border-color:var(--ac2);color:var(--ac2);}
+.pth-num svg{display:block;}
+.pth-row-t{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--tx);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pth-row.lk .pth-row-t{color:var(--ts);}
+.pth-row-m{font-size:10.5px;font-weight:700;color:var(--tt);flex-shrink:0;display:flex;align-items:center;gap:4px;}
+/* The Path — lesson reader (bottom sheet, same skeleton as phase detail) */
+.plr-week{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ac4);margin-bottom:4px;}
+.plr-title{font-size:24px;font-weight:800;color:var(--tx);letter-spacing:-.5px;line-height:1.25;margin-bottom:14px;}
+.plr-body{font-size:14.5px;color:rgba(240,240,250,0.88);line-height:1.75;}
+.plr-body p{margin-bottom:14px;}
+.plr-act{background:rgba(108,92,231,0.1);border:.5px solid rgba(108,92,231,0.35);border-radius:14px;padding:14px 15px;margin-top:6px;}
+.plr-act-h{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ac2);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.plr-act-b{font-size:13.5px;color:var(--tx);line-height:1.6;font-weight:500;}
+.plr-btn{width:100%;margin-top:18px;padding:15px;background:linear-gradient(135deg,var(--ac),var(--acd));color:#fff;border:none;border-radius:14px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 6px 20px rgba(108,92,231,0.35);display:flex;align-items:center;justify-content:center;gap:8px;}
+.plr-done-line{margin-top:18px;text-align:center;font-size:12.5px;font-weight:700;color:#5DCAA5;display:flex;align-items:center;justify-content:center;gap:6px;}
 /* Weekly deep-dive (analytical breakdown in the sheet) */
 .wd-range{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--tt);margin-bottom:3px;}
 .wd-title{font-size:22px;font-weight:800;color:var(--tx);letter-spacing:-.4px;margin-bottom:2px;}
@@ -1039,6 +1100,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <div class="flame-wrap" id="fw"><svg id="fsv" viewBox="0 0 24 24" fill="none"></svg></div>
               <div class="snum" id="snum">0</div>
               <div class="sday">days</div>
+              <div class="rw-line" id="rw-line" style="display:none;" role="button" tabindex="0" aria-label="Rewiring score breakdown" onclick="event.stopPropagation();openRwDetail()"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span id="rw-val">0% rewired</span></div>
             </div>
           </div>
           <div class="ph-badge bd0" id="pbadge" role="button" tabindex="0" aria-label="View phase guidance" onclick="goTab('phases')">Day 0 · Begin</div>
@@ -1144,6 +1206,19 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <button class="qmood-btn" data-mood="Low" onclick="event.stopPropagation();quickMood(this)"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M15 15.5a4 4 0 0 0-6 0"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg></span><span>Low</span></button>
         </div>
       </div>
+    </div>
+
+    <!-- THE PATH — daily lesson entry card -->
+    <div class="pth-card" id="path-card" role="button" tabindex="0" aria-label="Open The Path" onclick="goTab('path')">
+      <div class="pth-card-in">
+        <div class="pth-card-top">
+          <div class="pth-card-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M5 9l7-7 7 7"/><path d="M12 6v16"/><path d="M8 18l4 4 4-4"/></svg>The Path</div>
+          <div class="pth-card-n" id="pth-card-n">Lesson 1 of 90</div>
+        </div>
+        <div class="pth-card-t" id="pth-card-t">Begin the 90-day path</div>
+        <div class="pth-card-s" id="pth-card-s"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span id="pth-card-s-txt">2 minutes a day · one lesson at a time</span></div>
+      </div>
+      <div class="pth-card-bar"><div class="pth-card-fill" id="pth-card-fill" style="width:0%"></div></div>
     </div>
 
     <div id="wprompt" style="display:none;">
@@ -1257,6 +1332,14 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div id="ph-current" class="ph-hero"></div>
     <div class="ph-tl-lbl" id="ph-tl-lbl-el">The full journey</div>
     <div id="ph-list"></div>
+  </div>
+
+  <!-- THE PATH — 90-day lesson program -->
+  <div id="s-path" class="sec">
+    <button class="subback" onclick="goTab('home')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button>
+    <div id="path-hero" class="ph-hero"></div>
+    <div id="path-today"></div>
+    <div id="path-list"></div>
   </div>
 
   <!-- TRANSMUTATION -->
@@ -2026,6 +2109,25 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   </div>
 </div>
 
+<!-- PATH LESSON READER — bottom sheet, same skeleton as phase detail -->
+<div class="pd-overlay" id="path-reader" onclick="if(event.target===this)this.style.display='none'">
+  <div class="pd-sheet">
+    <button class="pd-close" aria-label="Close" onclick="document.getElementById('path-reader').style.display='none'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="pd-scroll" id="plr-scroll"><div id="plr-body"></div></div>
+  </div>
+</div>
+
+<!-- REWIRING SCORE — breakdown sheet (opened from the pill inside the streak ring) -->
+<div class="ms-overlay" id="rw-overlay" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="rw-card">
+    <div class="rw-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Rewiring score</div>
+    <div class="rw-big" id="rw-big">0<small>/100</small></div>
+    <div class="rw-lede">How far your brain has rewired — built from four habits, not just the streak. It climbs as you show up, and a slip never takes all of it back.</div>
+    <div id="rw-bars"></div>
+    <div class="rw-note">Streak fills half the score. The rest — check-ins, urges beaten and Path lessons — is progress that stays with you even if the streak resets.</div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2674,11 +2776,122 @@ const STORIES = [
   {title:"365 days. Here is my honest, unembellished account.",flair:"1 Year",up:8912,days:365,body:"I won't pretend every day was profound. Some days were ordinary. Some days were hard. Around day 200 it stopped being a practice and started being a non-issue, like not smoking when you've quit for years. What I can say honestly at 365: I am more focused, more disciplined, more socially at ease, more creative, and more content than at any point in my adult life. I simply know the man I am now would not trade back."}
 ];
 
+// ===================== THE PATH — 90-DAY PROGRAM =====================
+// One 2-minute lesson per day. Progress is by lessons completed (max one per
+// calendar day), NOT by streak day — so a relapse never resets the Path.
+// Week 1 (lessons 1-7) is free forever; lesson 8+ is premium.
+const PATH_WEEKS = [
+  {t:"Foundation", s:"Understand exactly what you're doing and why it works."},
+  {t:"The rewiring brain", s:"What's physically happening in your head right now."},
+  {t:"Energy and the body", s:"Turn retention into physical momentum."},
+  {t:"Environment design", s:"Make relapse hard and discipline easy."},
+  {t:"Transmutation into work", s:"Redirect the charge into building things."},
+  {t:"Social power", s:"Presence, voice, and eye contact — the visible changes."},
+  {t:"The still mind", s:"Meditation and the art of watching urges pass."},
+  {t:"Relapse-proofing", s:"The chaser effect, danger windows, and battle plans."},
+  {t:"Discipline as identity", s:"Stop using willpower. Become the man instead."},
+  {t:"Relationships and attraction", s:"Connection from fullness, not from hunger."},
+  {t:"Purpose and building", s:"The energy needs a mission. Give it one."},
+  {t:"Quiet mastery", s:"When the practice stops being a fight."},
+  {t:"The new baseline", s:"Day 90 and everything after it."}
+];
+const PATH_LESSONS = [
+  {t:"This is not about quitting something", b:"Most men arrive here thinking this is subtraction — giving something up, white-knuckling through denial. Wrong frame, and it's why most fail. Retention is redirection. The drive you're holding is the most concentrated energy your body produces; every empire, symphony and startup was built by someone channelling hunger into work. For the next 90 days you're not quitting anything. You're taking the strongest current in your body and pointing it at your own life. That reframe alone doubles your odds.", a:"Say it once, out loud: I'm not giving something up. I'm taking something back."},
+  {t:"Know your enemy: the dopamine loop", b:"Ultra-stimulating content trains your brain to expect massive reward for zero effort. Each session carves the groove deeper: cue, craving, release, shame, repeat. Over time the things that should feel good — training, conversation, ambition — feel grey by comparison, because your reward baseline is blown out. Retention works because it lets that baseline reset. The first weeks feel flat precisely because your brain is recalibrating what reward means. That flatness is not failure. It's the repair work happening.", a:"Notice one ordinary thing today that felt slightly better than usual. That's the baseline moving."},
+  {t:"The anatomy of an urge", b:"An urge is not a command. It's a wave: it rises, peaks, and — if you don't feed it — collapses, usually inside ten minutes. Most relapses happen because men treat the peak as permanent and negotiate with it. You never have to beat the whole day; you only have to outlast one wave, and waves always break. From today, when an urge hits, your only job is to change your state for ten minutes: cold water, push-ups, leave the room. Then reassess. The SOS tab exists for exactly this.", a:"Open the SOS tab once today, calm, just to learn the tool before you need it."},
+  {t:"Why your last streak died", b:"Think back honestly. The last time you slipped, it almost certainly wasn't a random ambush — it was a repeatable setup. Late at night. Alone. Phone in bed. Stressed, bored or sleepless. Relapse has a recipe, and yours is specific. Men who fail treat every slip as a mystery; men who make it treat every slip as data. You already have the intel from your own history. Tonight you'll use it.", a:"Write one sentence in today's check-in note: my recipe is ___ + ___ + ___."},
+  {t:"The 90-second rule", b:"Neuroscience has a gift for you: the chemical surge of an emotion — including a craving — floods and clears the bloodstream in roughly 90 seconds. Anything after that is you re-triggering it with thought. So the fight is smaller than it feels. When the wave hits, breathe slowly and count 90 seconds without acting or fantasising. You're not suppressing the feeling; you're letting the chemistry finish. What remains after 90 seconds is just a thought, and thoughts can be watched.", a:"Practise one 90-second slow-breathing hold today, urge or no urge."},
+  {t:"Energy is the whole game", b:"Here's the hypothesis this entire practice rests on: sexual energy is metabolically expensive, and what you don't spend, your system reinvests. Whether you frame that as hormones, dopamine sensitivity or ancient transmutation doesn't matter — the reported effects converge: more drive, sharper focus, steadier mood, hunger to build. You'll feel the charge building in week one. Untrained, it turns into restlessness and irritability. Trained — through work, training and breath — it becomes fuel. This app's Transmute tab is the training ground.", a:"Do one round of pranayama breathing in the Transmute tab today."},
+  {t:"The decision", b:"There's a difference between trying and deciding. Trying keeps the exit door open — I'll see how it goes. Deciding closes it, and something in you relaxes once the debate is over. Today, end week one by making it formal. Ninety lessons, one per day, no matter what happens with the streak itself. Even if you slip, you show up here the next morning and take the lesson. The streak measures days. The Path measures the man. Both matter, but only one of them can't be taken from you.", a:"Complete today's check-in and set a daily reminder time you'll actually keep."},
+  {t:"Your brain is plastic — in both directions", b:"Every time you repeat a behaviour, the wiring behind it thickens; every time you deny it, the wiring thins. This is neuroplasticity and it's ruthless in both directions. The pathways carved by years of the habit don't vanish — but starved of activation, they weaken month by month, while the pathways you're building now (urge → breathe → redirect) strengthen with each rep. You are literally re-cabling the machine that is you. Around week six most men report the automatic pull has visibly faded. That's not poetry. That's tissue.", a:"When an urge appears today, run the new circuit once: breathe, stand up, move rooms."},
+  {t:"The flatline is a healing sign", b:"Somewhere between week one and month two, many men hit the flatline: libido gone, mood grey, motivation flat, and a sly voice whispering that the practice broke you and one relapse would prove you're still alive. Understand what's happening: your reward system has withdrawn from an artificial superstimulus and is recalibrating to normal life. The silence is the sound of repair. The flatline ends — usually in days to a few weeks — and what follows is the energy men rave about. Don't test yourself out of it.", a:"If you're flat today, log it honestly in your check-in — flatlines tracked are flatlines survived."},
+  {t:"Withdrawal is real. Treat it like withdrawal.", b:"Irritability, insomnia, brain fog, mood swings, restless energy — the early weeks can genuinely feel like coming off a substance, because functionally you are. The mistake is interpreting withdrawal symptoms as evidence the practice is harming you. Read them as the opposite: the stronger the withdrawal, the deeper the dependency was, and the more this was needed. Handle it like any detox: sleep more than usual, train hard, eat real food, go easy on caffeine, and don't make big life decisions in week two.", a:"Tonight, get to bed 30 minutes earlier than usual. Recovery happens asleep."},
+  {t:"Triggers live in the brain, not the world", b:"A trigger isn't the image, the app, or the lonely hour — it's the association your brain built between that cue and reward. Cues fire cravings automatically, before conscious thought. That's why willpower at the moment of trigger is the weakest possible defence: you're fighting a reflex. The winning move is earlier — spotting the cue chain at link one. Scrolling → boredom → one risky app → gone. Break the chain at scrolling and there's nothing to fight at all.", a:"Identify your single most common first link — the innocent action that starts the chain."},
+  {t:"Strange dreams and night releases", b:"As your brain rebalances, two things may happen at night: vivid, sometimes explicit dreams, and occasional nocturnal releases. Neither is relapse. A release in your sleep is your body's plumbing, not your character; it involves no choice, no habit reinforcement, and no reason for shame. Don't reset your streak over it and don't chase techniques to prevent it. Note it, shower, move on. The dreams fade as the rewiring settles. What matters is only ever what you do while awake.", a:"Decide now, in advance: night releases don't touch the streak. Settled."},
+  {t:"The two-week wall", b:"Around days 10 to 16 sits the most common graveyard of streaks. The novelty has worn off, the big benefits haven't fully arrived, withdrawal is loud, and your brain — sensing the habit is genuinely threatened — escalates. Cravings get cleverer. They come disguised as logic: you've proven the point, moderation is healthier, just this once as a reward. Recognise the voice. It isn't you; it's the old circuitry making its strongest bid for survival. Every man who reached day 90 walked through this exact corridor.", a:"Read one story in the Stories tab from someone past day 60. Borrow their eyes."},
+  {t:"Patience is a weapon", b:"Your brain spent years learning the old pattern; it will not unlearn it in a fortnight. Studies on habit formation put meaningful rewiring at two to three months — which is exactly why this path is 90 days and not 21. Impatience is a relapse strategy: it demands proof, gets partial proof, and calls the experiment failed. Zoom out. You don't dig up a seed every three days to check the roots. You water it on schedule and let biology do what biology does. Showing up here daily is the watering.", a:"Note your single clearest improvement since day one, however small. That's the root system."},
+  {t:"Sleep is your anabolic window", b:"Nothing amplifies retention like sleep, and nothing sabotages it like exhaustion. Poor sleep tanks testosterone, spikes cortisol, weakens the prefrontal brakes you use against urges — most relapses happen tired, late, in bed with a phone. Deep sleep is when your endocrine system actually banks the hormonal benefits you're cultivating. Treat sleep like training: same time nightly, cool dark room, no screens in the last 30 minutes. The phone charges outside the bedroom. That one rule alone has saved more streaks than any affirmation ever written.", a:"Tonight: phone charges outside the bedroom. Buy an alarm clock if you must."},
+  {t:"Cold water, warm discipline", b:"The cold shower is the perfect training partner for retention, for three reasons. One: it's a controlled dose of doing the hard thing, rehearsing the exact muscle you use against urges. Two: cold exposure triggers a large, lasting dopamine rise — one of the few clean sources of the chemical you're rebalancing. Three: it kills an urge mid-wave better than almost anything; the body cannot maintain arousal through cold shock. Start with 30 seconds at the end of your normal shower. Breathe slow, shoulders down, exhale long.", a:"End today's shower with 30 seconds of full cold. Count the seconds out loud."},
+  {t:"Lift heavy things", b:"The restlessness you feel is charge with nowhere to go — so give it somewhere. Resistance training is the most direct transmutation channel there is: it converts arousal-adjacent energy into muscle, raises testosterone naturally, burns off the agitation that makes urges louder, and rebuilds identity rep by rep. You don't need a perfect programme. Push-ups, squats and a pull-up bar beat a gym membership you don't use. On urge-heavy days, train that day. The wave and the workout are made of the same voltage.", a:"Do one set of push-ups to failure today — right now if you can."},
+  {t:"Eat like you mean it", b:"Your body is running a hormonal renovation; feed the workers. Chronic junk food keeps you in the same dopamine loop you're escaping — engineered hyperpalatable hits followed by crashes and cravings that cross-trigger the other habit. You don't need a monk's diet. Cover the basics: protein at every meal, real food over packets, water before caffeine, and don't let yourself get ravenously hungry — hunger and horniness share a control room, and both make terrible decisions. The discipline transfers in both directions.", a:"Make today's first meal protein-heavy and unprocessed. One meal, done well."},
+  {t:"Testosterone: the honest picture", b:"You'll see wild claims about retention and testosterone. Here's the honest version: the famous study found a testosterone spike around day seven of abstinence, and beyond that the hormonal data is thin and mixed. But fixating on serum levels misses the real mechanism — behaviour. Men on retention sleep better, train harder, eat cleaner and stand taller, and all four of those reliably raise testosterone and its effects. The practice doesn't just tweak a hormone. It rebuilds the whole lifestyle that hormone responds to.", a:"Pick the weakest of the four — sleep, training, food, posture — and give it extra attention today."},
+  {t:"Posture is stored energy", b:"Watch a man in the grip of the habit: curled around a screen, shoulders forward, chest closed, eyes down. Now reverse it. Standing tall isn't cosmetic — posture feeds back into hormones, mood and confidence, and other people read it in milliseconds. The energy you're retaining wants to express itself somewhere; let it express as bearing. Crown of the head up, shoulders back and down, slow breath low in the belly. You'll notice you feel different within a minute. So will everyone else within a week.", a:"Set three posture checkpoints today: every doorway you walk through, reset your spine."},
+  {t:"Walk it off", b:"The most underrated tool in your kit costs nothing: a brisk walk, outside, phone in pocket. Walking discharges restless energy without draining you, daylight anchors your circadian rhythm and mood, and the bilateral rhythm of it is quietly meditative — most men find urges simply can't survive a 20-minute walk. It's also where your best thinking will start happening as the fog lifts. When the evening feels dangerous, don't sit in the danger. Put on shoes. The door handle is the decision; everything after it is easy.", a:"Take one 20-minute walk today without your phone in your hand."},
+  {t:"You are your environment", b:"Willpower is a battery; environment is the charger. Research on self-control keeps landing on the same insult: the people who look the most disciplined simply face fewer temptations, because they designed their surroundings that way. You now have one week of environment surgery ahead. The principle behind all of it: add friction to the old habit, remove friction from the new ones. Every tap, login and doorway between you and a trigger is a soldier that fights for you at 11pm when you have nothing left.", a:"List the three places relapse actually happens for you. Be specific: room, device, hour."},
+  {t:"Your phone is the battlefield", b:"Be honest: the war is mostly fought on a 6-inch screen, mostly in a browser with private mode open. So fortify it. Delete the apps where your triggers live or bury them in a folder off the home screen. Turn off private browsing if your platform allows it. Log out of anything risky — a password prompt is a 10-second cooling-off period, and 10 seconds is often enough. Greyscale mode after 9pm makes the whole device boring. None of this is weakness. Armies build walls precisely because they know their own gates.", a:"Do one fortification right now: delete, log out, or greyscale. Before finishing this lesson."},
+  {t:"Blockers: the honest case", b:"A content blocker will not save a man who wants to fall — you know seven ways around every filter ever built. Install one anyway. Not as a wall, but as a speed bump: its job is to interrupt autopilot, to make the choice conscious. Most relapses aren't decisions; they're drifts. Anything that forces one clear moment of I am choosing this gives the new circuitry a chance to vote. Pair the blocker with an accountability layer if you can — friction plus witnesses beats friction alone.", a:"Install or re-enable a blocker today. Give the unlock code to someone you trust, or lock it randomly."},
+  {t:"The bedroom is for sleeping", b:"One room decides most streaks. The classic relapse is horizontal: in bed, late, screen glowing, half-asleep judgement making quarter-awake decisions. Rewrite the room's rules. The bed is for sleep — nothing with a screen happens in it. If you can't sleep, get up and read in a chair until drowsy; don't lie there marinating in restlessness with the world's most dangerous vending machine at arm's reach. Within two weeks the bed itself stops being a trigger and starts being what it should be: recovery.", a:"Tonight, no screen touches the bed. Charge the phone across the room or outside it."},
+  {t:"Boredom is a trigger wearing a disguise", b:"Check your history: how many slips began not with lust but with nothing to do? Boredom is dopamine hunger, and your brain knows exactly which lever pays out fastest. You can't delete boredom, but you can pre-load its response. Make a boredom menu — five things you can start within 60 seconds: a walk, push-ups, a specific book, a project task, a shower. Pin it where you'll see it. When the empty evening yawns open, you don't want to be making decisions. You want to be following a script you wrote when you were strong.", a:"Write your five-item boredom menu now and put it somewhere visible."},
+  {t:"Own the last hour", b:"The final hour before sleep is when defences are lowest and most wars are lost — tired prefrontal cortex, dark room, nobody watching. So script it. A repeatable wind-down: screens off or greyscale, tomorrow's one big task written down, a few pages of a real book, lights out at the same time. It sounds boring. That's the point — boring is safe at 11pm. The men who make it to day 90 aren't stronger at midnight than you; they've just arranged never to need strength at midnight.", a:"Write your three-step last-hour script and run it tonight exactly once."},
+  {t:"Friction audit: make the good things easy", b:"Environment design has two blades and you've only swung one. Now cut friction from the good habits. Trainers by the door. The book on the pillow. The meditation app on the home screen where the deleted one used to live. Water bottle filled the night before. The gym bag packed. Each removed step is a percentage point of compliance, and percentage points compound over 90 days. Discipline isn't gritting your teeth constantly — it's rigging the game so the right move is also the lazy move.", a:"Rig one good habit tonight: lay out tomorrow's trainers, book or gym bag before bed."},
+  {t:"What transmutation actually means", b:"Napoleon Hill studied hundreds of exceptional men and reported a pattern: most hit their stride when they learned to redirect sexual energy into their work. Strip the mysticism and the mechanism is plain: desire is drive — raw, general-purpose motivation. Spent on a screen, it vanishes in minutes. Held, it accumulates as pressure, and pressure can be pointed. That restlessness you feel by day three? That's not a problem to relieve. That's capital. This week you learn to invest it. The rule is simple: when the charge rises, you build.", a:"Choose your one channel — the skill, business or body of work your energy pours into. Name it."},
+  {t:"Deep work: where the energy goes", b:"Retention hands you sharper focus; deep work is where you spend it. One block, 90 minutes, one task that matters, zero inputs — phone in another room, tabs closed, door shut. The first 15 minutes will itch; that's the withdrawal from novelty, and it passes exactly like an urge does. What's on the other side is the state where careers are made: full absorption, fast progress, and the deep satisfaction that actually competes with cheap dopamine. Men don't relapse on days they've done 90 minutes of real work. There's nothing to escape from.", a:"Book tomorrow's 90-minute deep work block now — calendar, task, phone location."},
+  {t:"Ride the morning surge", b:"Testosterone peaks in the morning, and on retention many men wake up with an engine already running. That first hour is the most valuable real estate in your day — and the most commonly wasted, handed straight to a scrolling feed that spends your focus on other people's lives. Claim it. Before any input — no phone, no news, no messages — produce something for 30 minutes: write, train, study, build. Output before input. You'll find the morning charge, channelled, sets the tone for every hour that follows it.", a:"Tomorrow: thirty minutes of output before the first scroll. Phone stays down until it's done."},
+  {t:"Create more than you consume", b:"The habit you're leaving is the purest form of consumption — pixels in, nothing out. Its opposite isn't abstinence; it's creation. Every day contains a running scoreboard: hours spent consuming versus hours spent making. You don't need the ratio to flip overnight. You need it to move. One paragraph written beats three hours of watching writers. One rep done beats an evening of fitness videos. The retained energy wants to become something. Your only job is to hand it raw material every single day, even in embarrassingly small amounts.", a:"Make one small thing today — a page, a sketch, a commit, a meal from scratch. Anything with your name on it."},
+  {t:"The restlessness protocol", b:"By now you know the feeling: a crawling, agitated charge, usually in the evening — too much voltage, no assigned circuit. Untrained men interpret it as an urge and feed it. Trained men recognise it as unallocated energy and route it. Build your routing table now: physical (push-ups, walk, cold shower), mental (the project, a hard book), social (call someone, leave the house). When the restlessness hits, you pick from the table within 60 seconds — no deliberating on the couch. Deliberation at low voltage is where the old circuit wins.", a:"Write your three-route table — physical, mental, social — and screenshot it."},
+  {t:"Momentum is the real streak", b:"The day counter measures abstinence. Momentum measures life. And momentum is built from small wins stacked daily: the workout done, the block of work finished, the promise to yourself kept. Small wins release clean dopamine — the same currency the old habit paid in counterfeit. String enough of them together and you stop needing the fake stuff, not through discipline but through genuine lack of interest. This is the endgame hiding inside every lesson so far: build a day so full of real wins that the old escape has nothing to offer it.", a:"Name today's three wins before they happen. Tonight, check in and count how many landed."},
+  {t:"Keep the ledger", b:"Once a week from now on, run the books. Two columns. Energy invested: workouts, deep work hours, lessons, urges beaten, pages read, conversations had. Energy leaked: doomscrolling hours, near-misses, late nights, empty consumption. No shame, no spin — just the honest accounts of a man auditing his own operation. The weekly review in this app is your ledger. What gets measured gets managed; what gets ignored gets worse in the dark. You're five weeks in. From here, you run this like a business.", a:"Do this week's review tonight, or schedule the exact time it happens this week."},
+  {t:"Eyes forward", b:"First visible change most men report: eye contact stops being effortful. There's a reason — shame breaks gaze, and you're carrying less of it every week. Now train it deliberately. Today, hold comfortable eye contact a half-second longer than usual with everyone you speak to. Not staring — settled. Eyes that don't flinch tell every nervous system in the room that you're safe, present and unhurried, and people respond to that before a word is exchanged. The energy you've been banking has to radiate somewhere. Let it radiate here first.", a:"Hold relaxed eye contact through one full conversation today."},
+  {t:"Slow down the voice", b:"Listen to a nervous man: fast, high, trailing up at the ends, words tumbling out before they're weighed. Rushed speech is leaked energy. Retained energy speaks differently — slower, lower, with pauses it isn't afraid of. You don't need voice coaching; you need permission to take your time. Today, halve your speaking pace in one conversation. Let a silence sit for a beat before you answer. Notice that nobody interrupts the pause — they lean into it. The man who isn't rushing is the man everyone assumes is in charge.", a:"In one conversation today, speak deliberately slower and let one silence breathe."},
+  {t:"Presence is the gift", b:"Here's what changes socially when the fog lifts: you can actually listen. Not rehearsing your reply, not half-lost in fantasy or shame-loops — just fully receiving another human being. It's rarer than talent and people feel it instantly. Today, give one person the full beam: phone away, body turned, asking the second question — the one that follows up on their answer instead of pivoting to you. Watch what it does to them. Connection was never about being interesting. It's about being undistracted, and you're becoming the least distracted man in the room.", a:"Give one person ten fully undistracted minutes today. Ask the second question."},
+  {t:"Fast from validation", b:"The old habit had a social twin: harvesting approval — likes, replies, the little hits of being noticed. Same slot machine, different lever. This week, run a validation fast alongside the retention. Post nothing for validation. Fish for no compliments. Check no metrics. Do at least one good thing completely in secret. The discomfort you'll feel is the same withdrawal, and the payoff is the same rewiring: approval becomes something you enjoy rather than something you need. A man who needs nothing from the room owns the room.", a:"Do one genuinely good thing today that nobody will ever find out about."},
+  {t:"What charisma actually is", b:"Strip away the mystery and charisma is mostly this: visible energy plus visible comfort. The energy you have — six weeks of it, banked and humming. The comfort is what you've been training: eyes that hold, a voice that doesn't rush, presence that doesn't grasp. Notice what's missing from the formula: looks, wit, status. Those amplify charisma; they don't create it. What creates it is a nervous system that feels fully alive and fully at ease at the same time — which is a precise description of what retention, training and stillness are building in you.", a:"Walk into one room today energised and unhurried on purpose. That combination is the skill."},
+  {t:"Social courage: do the rep", b:"Confidence isn't a mood you wait for; it's a muscle with its own progressive overload. The rep is any social action slightly outside comfort: the question asked in the meeting, the hello to the stranger, the opinion stated plainly, the no delivered without a paragraph of apology. One rep daily. Size doesn't matter — consistency does, exactly like the gym. Retention gives you the horsepower; these reps build the drivetrain. Six months of daily social courage reshapes a life more than any book on confidence ever written.", a:"Do today's rep: one small social action you'd normally swerve."},
+  {t:"Say the true thing", b:"The habit thrived in secrecy, and secrecy is a tax on every interaction — part of you always managing the hidden ledger. As you clean up, practise its opposite: small, consistent honesty. Say the slightly uncomfortable true thing instead of the smooth thing. Admit you don't know. Let your no be no without decoration. This isn't about confessing your history to strangers; it's about closing the gap between the inner man and the outer one. Every truth spoken narrows it. When the gap hits zero, that's integrity — and it reads as power.", a:"Once today, replace the polished answer with the true one."},
+  {t:"Why the still mind wins", b:"Every skill so far — outlasting waves, redirecting energy, holding presence — runs on one underlying capacity: the ability to observe an impulse without obeying it. Meditation is the direct training of exactly that. Nothing mystical required: sitting quietly, watching the breath, noticing when the mind bolts, walking it back. Each walk-back is one rep for the observing muscle. Brain imaging shows this practice thickening the same prefrontal control regions your urges try to storm. Ten minutes daily. It's the highest-leverage rep in this entire programme.", a:"Sit for five minutes today watching only the breath. The Transmute tab will guide you."},
+  {t:"The breath is the handbrake", b:"Arousal, panic and craving all ride the sympathetic nervous system — and breath is the one lever on that system you can pull consciously. Slow exhale-heavy breathing (in four, out eight) mechanically downshifts your state: heart rate drops, the surge quietens, the cockpit lights come back on. This is why breathwork sits inside the SOS tools. But don't save it for battles. Practise it calm, daily, until it's grooved — the handbrake needs to be muscle memory before the hill, not discovered on it.", a:"Run ten slow four-in, eight-out breaths right now. Notice the downshift."},
+  {t:"Sit with an urge on purpose", b:"Today's practice is advanced but transformative: next urge, don't fight and don't feed. Sit down, close the eyes, and study it like a scientist. Where does it live in the body — chest, stomach, skin? Is it heat, pressure, hollowness? Does it pulse or hold steady? Something remarkable happens under direct observation: the urge can't sustain itself. It needs your fantasy-loop to keep the fire fed, and attention on raw sensation starves it. You'll watch it peak, waver and dissolve, and after you've seen that once, urges never carry the same authority again.", a:"Next urge: two minutes of curious observation before any tool. Study it to death."},
+  {t:"Name it to tame it", b:"Neuroscience calls it affect labelling: putting a feeling into words measurably dials down the amygdala's response to it. The application is almost embarrassingly simple. When the wave rises, say what's happening, plainly: an urge is here. I'm restless. I'm lonely tonight. Silent or spoken, the act of labelling moves you from inside the feeling to beside it — from the character to the narrator. The narrator has choices the character doesn't. You've been building this observer for weeks in the sits. Labelling is how you summon him in three words, anywhere.", a:"Label every strong feeling today in three words or fewer, as it happens."},
+  {t:"The daily sit becomes non-negotiable", b:"You've tasted the tools; now fix the habit. Ten minutes, same time daily, breath as anchor — that's the whole prescription. The mind will offer excellent reasons to skip: too busy, too restless, doing it later. Notice those are the same voice that argues for relapse, wearing a nicer suit. The sit isn't for the calm days; it's the rehearsal that makes the chaotic days survivable. Guided sessions live in the Transmute tab. Attach it to an anchor you already keep — after the shower, before the first coffee — and let the chain carry it.", a:"Anchor your sit: pick its permanent slot and do the first official one today."},
+  {t:"Stillness off the cushion", b:"The sit is training; life is the event. Carry stillness into motion today: one meal eaten with no screen, actually tasting. One walk where you hear the street instead of a podcast. One queue stood in without reaching for the phone — thirty seconds of raw, uncushioned boredom. These micro-stillnesses matter because urges are born in the gaps you compulsively fill. A man comfortable in his own empty moments has removed the vacuum the habit used to rush into. Boredom, faced calmly enough times, retires from the trigger list.", a:"Eat one meal today with zero inputs. Just the food and you."},
+  {t:"Gratitude is dopamine maintenance", b:"This one sounds soft and works like iron. The recovering reward system has a bias: it scans for what's missing — that's what craving is. Gratitude practice retrains the scanner toward what's present, and studies link it to measurably higher baseline dopamine and mood. The protocol: three specific things, written, nightly. Not generic — specific. The way the third set felt. The friend who called back. Forty-two days of showing up here. You're not pretending life is perfect; you're teaching a healing brain where to point its lens. Reward what is, and wanting quietens.", a:"Tonight's check-in note: three specific things from today. Start the habit now."},
+  {t:"The chaser effect", b:"Know this before you ever need it: after a slip, the brain doesn't relax — it doubles down. The circuit just got repaid after weeks of starvation and it screams for another hit while the gate is open. This is the chaser effect, and it's why one slip so often becomes a three-day spiral that flattens a two-month streak. The defence is knowing the mechanism: the post-slip craving is chemically louder than a normal urge and it lies harder. If you ever slip, the war isn't lost that night. It's decided in the 48 hours after — against the chaser.", a:"Memorise the rule: the slip isn't the danger. The 48 hours after it are."},
+  {t:"HALT: the four horsemen", b:"Recovery programmes have used this checklist for decades because it works. Before a craving is a craving, it's usually a state: Hungry, Angry, Lonely or Tired. Each one drains the exact resources you use to choose well, then the old habit steps forward dressed as relief. From today, when an urge announces itself, run HALT first. Hungry? Eat real food. Angry? Move, don't marinate. Lonely? Reach out to an actual human. Tired? The answer is sleep, not screens. Half your urges aren't about desire at all. They're unmet maintenance, misfiled.", a:"Next urge, run HALT before any other tool. Fix the state, then reassess."},
+  {t:"The edge is the relapse", b:"Here's the truth nobody wants: the relapse doesn't happen when you think it does. It happens at the peek — the just checking, the one search, the scroll through the feed you know is spring-loaded. By the time the obvious line is crossed, the decision is minutes old. Arousal narrows cognition; every second on the edge shrinks the part of you that chooses. So move the tripwire back. The rule isn't don't fall off the cliff. The rule is the cliff path is closed. Guard the first click like it's the last one, because functionally it is.", a:"Define your personal first click — the innocent-looking action that counts as the line. Write it down."},
+  {t:"Read your own danger map", b:"You've been feeding this app data for weeks — check-ins, moods, urges, times. It's been listening. Your Insights screen now knows things about you: which weekday bites hardest, what hour the urges spike, which moods precede the close calls. Most men fight blind; you have reconnaissance. Tonight, study your own map. Find your highest-risk day and window. Then — this is the part that matters — plan something incompatible with relapse into that exact slot: training, a call, being out of the house. Don't defend the danger window. Delete it.", a:"Open Insights, find your riskiest day and hour, and book something into that slot this week."},
+  {t:"If-then: decide before the battle", b:"Psychologists call them implementation intentions, and the effect sizes are absurd for something this simple. Instead of vague resolve — I'll be strong — you pre-load specific triggers with specific responses: IF it's 11pm and I'm scrolling in bed, THEN the phone goes on the kitchen counter and I read. IF an urge hits after a stressful call, THEN 20 push-ups before any screen. Decisions made calmly in advance don't have to be made desperately in the moment; you just execute the script. Write three tonight, for your three most common setups. This is armour you forge in peacetime.", a:"Write three if-then plans for your top three relapse setups. Word them exactly."},
+  {t:"A slip is not a fall", b:"Let's rehearse something you may never need. If a slip ever happens, the most dangerous moment is the story you tell in the next ten minutes. The old story — I've ruined everything, might as well continue — is the chaser effect writing your lines. The true story: dozens of clean days built real rewiring, and none of it evaporates in one night. Data from every recovery field says the same thing: people who treat a lapse as information recover in days; people who treat it as identity spiral for months. One bad chapter. The book is still yours.", a:"Write your two-line post-slip script now, while you're strong. You'll hopefully never read it."},
+  {t:"The get-up protocol", b:"Complete the armour. If a slip happens, the protocol is: One — stop immediately; the chaser wants a binge, deny it the sequel. Two — no shame spiral; shame is fuel for round two, not penance. Three — shower, dress, leave the house for 20 minutes; break the scene physically. Four — that same day, log it honestly in this app and read what preceded it. Five — next morning, take the day's lesson as if nothing happened, because the Path doesn't reset. Streaks measure days; the Path measures the man. Falls happen to climbers. Climbers get up.", a:"Read the five steps twice. Sealed. Now back to building — this week is done."},
+  {t:"Identity eats willpower for breakfast", b:"Seven weeks in, it's time to upgrade the engine. Willpower says I'm resisting; identity says I don't do that — and the second one doesn't tire. Research on habit change keeps finding the same thing: lasting change follows identity shift, not effort spikes. The smoker who quits says I'm trying to stop; the ex-smoker says I don't smoke. Feel the difference in your body. You've now got weeks of evidence for a new identity: a man who trains, sits, builds, and doesn't leak his power into a screen. Stop resisting like a dieter. Start declining like a man who simply isn't that guy anymore.", a:"Write the sentence: I'm a man who ___. Fill it with what seven weeks proved."},
+  {t:"Every action is a vote", b:"Identity isn't declared; it's tallied. Every action casts a vote for a version of you — the workout votes, the cold shower votes, the lesson you're reading right now votes. So does the doomscroll. No single vote decides the election, which cuts both ways: one slip doesn't make you the old man, and one good day doesn't make you the new one. The majority does. Your check-ins, your urges beaten, your lessons — this app is literally your ballot box, and you've been stuffing it for weeks. Today, just notice the votes as you cast them. Then cast good ones.", a:"Count tonight: how many votes did the new man get today? Make it a majority."},
+  {t:"The keystone habit", b:"Some habits are dominoes: knock them over and they take others with them. Retention is proving to be yours — notice how sleep, training, focus and honesty all started moving when it did. Now install one more keystone deliberately. Pick the single habit that, done daily, makes everything else likelier: for most men it's the workout, the morning deep-work block, or the sit. Protect it like the streak itself — same time, non-negotiable, tracked. Two keystones interlocked are stronger than twenty resolutions. You're not collecting habits anymore. You're building an arch.", a:"Name your second keystone and give it a fixed daily slot starting tomorrow."},
+  {t:"Raise the standard", b:"There's a moment in every long streak where avoiding the bad stops being the mission — and demanding the good begins. You're there. Audit your standards today, the invisible lines that define what you tolerate from yourself: the snooze button, the half-effort in the gym, the yes you didn't mean, the work you know is beneath your ability. Retention taught you the method — pick a line, hold it daily, let the identity catch up. Now aim it wider. A standard isn't a goal; you don't achieve it once. It's a floor you refuse to live below.", a:"Pick one tolerated mediocrity and raise its floor today. Permanently."},
+  {t:"Self-respect is compound interest", b:"Here's the quiet mechanism under everything you've felt change: every promise you keep to yourself pays interest. Each kept promise makes the next one easier to believe, because the promiser has a track record now. This is why the first week felt like war and week eight feels like routine — you're not stronger, you're more credible to yourself. Guard that credibility like capital. Never make yourself a promise carelessly, and never break one casually. The man who trusts his own word doesn't need motivation. He has something better: a reputation with himself.", a:"Make yourself one small promise this morning and keep it by tonight. Feel the deposit land."},
+  {t:"Do one hard thing before noon", b:"Discipline generalises. The brain region that overrides do the easy thing strengthens with use and doesn't care which domain trained it — the cold shower strengthens the urge-refusal, the urge refused strengthens the hard conversation. So systematise it: one deliberately hard thing before noon, every day. The heavy set. The task you're dreading, done first. The cold water. Front-loading one clean victory changes the day's chemistry — you walk into every subsequent choice as a man who's already won once today. Hard mornings make easy evenings. Easy mornings make dangerous ones.", a:"Tomorrow before noon: one thing you'd normally defer. Do it first, not last."},
+  {t:"The quiet promise", b:"End this week with a ritual. Tonight, alone, no phone, make yourself one promise about who you are from here — not about streaks or numbers, but about conduct. I don't lie to myself anymore. I finish what I start. I don't trade my mornings for feeds. One sentence, spoken out loud, once. No announcement, no post, no accountability partner — the whole point is that its only witness is the man who has to keep it. The promises made in private are the ones that build the private man. And the private man is the one who decides everything.", a:"Tonight: one sentence, out loud, alone. Choose it carefully — you're going to keep it."},
+  {t:"Connection from fullness", b:"Time to talk about people — and one distinction that changes everything: connecting from hunger versus connecting from fullness. Hunger approaches people as sources — of validation, attention, relief — and people smell it instantly; it repels the very warmth it seeks. Fullness approaches with energy to give: attention, humour, steadiness. You've spent nine weeks filling the tank — training, building, keeping promises. That's why interactions have started feeling different. This week is about relationships, and every lesson rests on this: you're no longer asking the room to complete you. You arrive complete, with surplus.", a:"In one interaction today, focus purely on what you can give it: energy, attention, a laugh."},
+  {t:"Presence is the new attraction", b:"Ask women what's rare in men and the answers cluster: he actually listens. He's not performing. He's comfortable with himself. Notice these are exactly what you've trained — undistracted attention, a settled nervous system, nothing to prove. The old habit quietly sabotaged all three: it fragmented attention, loaded interactions with hidden agendas, and drained the calm confidence that comes from kept promises. You don't need lines or tactics. The work you've already done is the attraction strategy. Your only job socially is to show up as the man the last nine weeks built, fully present.", a:"Today, in every interaction: agenda down, attention up. Presence is the whole move."},
+  {t:"See people, not screens", b:"Years of hyper-stimulating content train a distortion: people — especially attractive people — start rendering as imagery rather than humans. It happens beneath awareness and it poisons real connection, because some part of you is consuming rather than meeting. The rewiring reverses this, and you can accelerate it deliberately: practise seeing the person. The barista has a life, worries, a favourite song. The woman on the train is tired from something real. This isn't moral homework — it's perceptual repair. The men who report the deepest change at day 90 all describe this: people became people again.", a:"Three times today, silently note one real, human thing about a stranger."},
+  {t:"Standards are attractive. Neediness is not.", b:"A strange gift of retention: when you stop needing any particular outcome from an interaction, your standards return. You can notice whether you actually enjoy someone's company — not just whether they might approve of you. Bring this to dating and friendship alike: ask am I drawn to this person's character, humour, values? rather than will they have me? The man with a full life and clear standards is selective without being cold, warm without being desperate. That combination — high warmth, high standards — is rare enough that people mistake it for magnetism. It's just fullness plus honesty.", a:"Write your three non-negotiables in the people closest to you. Compare them to reality."},
+  {t:"Love is not validation with better branding", b:"Learn the difference before it costs you: validation-seeking dressed as romance is still the slot machine — the anxious checking, the mood that rides on reply speed, the performing. Real connection has a different signature: calm interest, honest disclosure at a matched pace, and a self that stays intact whether or not the other person responds. If pursuit ever spikes the exact anxious-compulsive circuitry you've spent ten weeks calming, that's diagnostic — you're chasing a hit, not a human. The standard from here: relationships that feel like the sits, not like the scrolling.", a:"Check honestly: does any current pursuit feel like the old loop? Name it if so."},
+  {t:"Lead where you already stand", b:"Leadership isn't a rank; it's a behaviour available in any room. It looks like: deciding when the group dithers over where to eat. Saying the uncomfortable thing kindly. Being the first to apologise, the first to help carry, the steady one when plans collapse. You have surplus energy and a trained nervous system — spend some on the people around you. Notice how the retention identity extends naturally here: a man who governs himself becomes trustworthy to govern anything else. Start embarrassingly small. Groups are starving for anyone willing to simply decide.", a:"Make one group decision today that everyone was politely avoiding."},
+  {t:"Strength that can open", b:"Last relationship lesson, and it's the counterweight: the goal was never armour. A man can be disciplined, self-contained — and still capable of saying I was wrong, I'm struggling this week, I need help with this. That's not leakage; that's voluntary openness from a position of strength, and it's what separates the genuinely solid from the merely defended. The habit you left was, at root, a way of not feeling things. Don't replace it with a more respectable numbness of stoic performance. Feel it all. Choose your responses. That combination is the whole point.", a:"Share one true, unpolished thing with someone you trust this week. From strength, not need."},
+  {t:"The void needs a mission", b:"Week eleven begins with a warning from every man who's walked this road: the energy you've reclaimed doesn't tolerate a vacuum. Hours, drive, focus — they're back, and if you don't assign them, something will: new distractions, old ones in new clothes, or plain restlessness curdling into relapse. The men who keep this for life all share one trait — the practice became for something. A business. A body of work. A family. A calling. This week you aim the cannon. Not someday-dreams: a mission with edges, one you could explain in two sentences and start advancing this month.", a:"Draft your two-sentence mission tonight. Rough is fine. Written is required."},
+  {t:"Goals with teeth", b:"A mission without milestones is a mood. Break yours down today: one 12-month outcome, one 90-day target that obviously advances it, and one action this week that a stranger could verify happened. The specificity matters neurochemically — vague intentions give the reward system nothing to fire on; concrete targets, hit, produce exactly the clean dopamine you've been retraining your brain to run on. This is transmutation's final form: desire, retained, structured into checkpoints, spent on a life. You've proven you can hold energy for eleven weeks. Now prove you can aim it for twelve months.", a:"Write the trio: 12-month outcome, 90-day target, this week's verifiable action."},
+  {t:"Fall in love with the craft", b:"Outcomes are set; now the deeper shift. Men who sustain great output aren't gritting toward finish lines — they've fallen in love with the doing: the writing, the coding, the training, the building itself. This is learnable, and retention makes you unusually ready for it: with the reward baseline reset, subtle satisfactions register again. The pleasure of a problem yielding. Craft is where your surplus becomes joy instead of duty. One hour today, work on your mission for the texture of the work itself — no clock-watching, no outcome-checking. That's the mode where mastery, and contentment, both live.", a:"One hour on the craft today, savouring the work itself. No progress-checking allowed."},
+  {t:"Boredom is fuel now", b:"Revisit an old enemy with new eyes. Early on, boredom was your most dangerous trigger — the vacuum the habit rushed to fill. Twelve weeks of rewiring later, it's becoming something else: fuel. A restless, under-stimulated brain with a healthy baseline doesn't crave escape — it generates. Ideas surface on the phoneless walk. Solutions arrive in the shower. This is why you protect empty moments now instead of fearing them: they're where your best material comes from. The habit consumed your boredom. The mission runs on it. Same input, opposite machine.", a:"Schedule 20 minutes of deliberate, inputless boredom today. Bring a notebook for what surfaces."},
+  {t:"Build in public or build in silence — but build", b:"A checkpoint on output. It's been six weeks since the ledger lesson; audit what physically exists now that didn't at day one. Pages, muscle, code, savings, a cleaner room, repaired relationships — the inventory of a man converting energy into matter. If the list is thin, no shame: today's the correction, one brick, laid before midnight. If it's fat, raise the ceiling — you're operating below capacity, and you now know it. The habit left nothing behind but lost hours. The practice must leave artifacts. That's the difference, and it must stay visible.", a:"Write your built-since-day-one inventory tonight. Then lay one more brick."},
+  {t:"Spend some of it on others", b:"Here's a use for the surplus that pays strange dividends: service. Help someone this week with no angle — a skill shared, an hour given, a door opened for a man three months behind you on this exact road. Two reasons. First, purpose that includes other people is more relapse-proof than purpose that's only self-improvement; you show up on days you'd let yourself down because someone else counts on it. Second, nothing confirms the identity shift like being useful — takers relapse into taking; builders build. Some of what you've banked belongs in circulation.", a:"Commit one concrete act of service this week. Book it now."},
+  {t:"Think in decades", b:"Close the mission week by zooming all the way out. The habit's timescale was minutes — hit, relief, repeat. Retention stretched you to days, then weeks. Now install the final upgrade: decades. Ask the long question tonight: if I hold this trajectory — the training, the craft, the standards, the mission — where does the compounding land me at 40, 50, 60? Really see him: his health, his work, his people. That man is not a fantasy; he's the arithmetic of your current habits. You've spent twelve weeks proving you can delay gratification. Thinking in decades is just delayed gratification with vision.", a:"Write one paragraph from the man ten years down this trajectory. Let him thank you."},
+  {t:"When counting stops mattering", b:"Something shifts around now that nobody warns you about: the counter fades. Early on, the number was everything — day 8, day 20, each digit a trophy. Lately you may notice whole days pass without thinking about streaks, urges, or any of it. Don't mistake this for losing your edge. It's the opposite — it's what mastery feels like from the inside: quiet. The behaviour has moved from effortful to automatic, from identity-project to plain identity. A non-smoker doesn't count days not smoking. You're becoming a man for whom this is simply true. The number was scaffolding. The building stands.", a:"Notice today how little the counter pulls at you. That quiet is the achievement."},
+  {t:"The plateau is the path", b:"Week thirteen's honest lesson: the dramatic gains flatten. The energy surges, the fog lifting, the week-by-week transformation — that steep curve belongs to repair, and the repair is largely done. What remains is maintenance-level improvement: slower, subtler, permanent. Men who don't expect this get restless and go hunting for the next dramatic protocol, the next transformation high — which is, notice, the old dopamine pattern wearing a self-improvement costume. Let it be boring. The plateau isn't where progress stops; it's where progress moves in, unpacks, and becomes who you are. Guard the boring excellence.", a:"Name one boring, working routine you'll deliberately NOT optimise or replace this month."},
+  {t:"Lower the shield, keep the sword", b:"Audit time: somewhere in ninety days of discipline, some men over-correct — all structure, no softness; contempt for their former self, judgment for men still struggling; joy postponed indefinitely for the mission. Check yourself for it today. The former self deserves compassion — he was doing his best with a hijacked brain. Struggling men deserve a hand, not a sneer; you were them in the spring. And joy isn't a reward for day 90 — laughter, play, rest are part of the maintenance, not a breach of it. Hard on standards, soft on humans. Including the one in the mirror.", a:"Find one over-tightened bolt — judgment, joylessness, rigidity — and loosen it today."},
+  {t:"Teach one man", b:"The strongest way to seal knowledge is to hand it on. Somewhere in your circle is a man quietly losing the fight you've nearly won — you can usually tell: the exhaustion, the flinchy phone habits, the deadness behind the eyes you once saw shaving. You don't need to preach; evangelism repels. Just be findable. Mention your practice plainly if the moment opens. Share what worked, minus the sermon. One honest sentence from a man who's done it outweighs every influencer thread ever written. You needed a lamp on the road once. Ninety days made you one. Shine quietly.", a:"Identify your man. Create one low-pressure opening this week — a walk, a message, a pint."},
+  {t:"The ordinary day is the victory", b:"Today, notice something hiding in plain sight: the ordinary day. You woke without shame. Worked with a clear head. Trained, ate, spoke honestly, felt what you felt, and tonight you'll sleep without secrets. No fireworks — just a day fully lived by a man fully present. THIS is what you were actually fighting for. Not superpowers, not magnetism — those were recruitment posters. The prize was always this: unremarkable, unanxious, self-respecting dailiness, repeated for decades. The old life sold intensity and delivered emptiness. This one sells nothing. It just quietly delivers everything.", a:"At three random moments today, pause and register: this ordinary moment is the win."},
+  {t:"Gratitude for the fight itself", b:"Near the end now, so here's the strangest truth of the whole road: one day you'll be grateful for the struggle. Not for the wasted years — for the fight out of them. The habit forced you to study your own mind like few men ever do. It taught you urge anatomy, environment design, identity mechanics, stillness — a curriculum no easy life would have assigned. Men handed discipline cheap rarely keep it; you forged yours in a real war, and it will hold under loads that break inherited strength. The scar tissue is load-bearing. Honour the war. It built the walls.", a:"Write one sentence of unironic thanks for what the struggle taught you."},
+  {t:"Look back at day one", b:"Five lessons left. Today, turn around and look down the mountain. Open your History tab and read your earliest check-ins — the mood, the energy scores, the notes written by that man. Sit with how far the distance actually is: the urges that ruled him, the fog he thought was permanent, the promises he didn't yet believe he could keep. You carry proof now that transformation is real and that YOU specifically can execute it — which means every other locked door in your life just became a matter of method and days. That's the transferable asset. The streak was just the first application.", a:"Read your first week of check-ins in History today. All of them."},
+  {t:"What actually changed: your inventory", b:"Time to write the document you'll keep. Not this app's numbers — your own words. Three headings. Body: sleep, energy, training, the physical ledger. Mind: focus, mood, the volume of the old voice now. Life: work produced, money, people, standards raised. Under each, only what's concretely true for you — no borrowed testimony, no exaggeration; the honest record is the powerful one. This document has one future purpose: there may come a distant night when a clever voice suggests it was all placebo. You'll read this instead of arguing. Written evidence, from the man who lived it.", a:"Write the three-heading inventory tonight. Save it where future-you will find it."},
+  {t:"The man in the mirror", b:"A quieter exercise today. Stand at the mirror — the same one that watched the old life — and look yourself in the eyes for one full minute. No affirmations, no flexing. Just look at the man who did ninety days of this: every cold shower, every wave outlasted, every lesson taken, every private promise kept. Most men can't hold their own gaze because of the gap between who they are and who they claim to be. Feel how small that gap is now. This is what integrity physically feels like. Whatever happens in the decades ahead, you know how this feels now. You'll want it back if you ever lose it.", a:"One minute, eyes on eyes, tonight. Let it be uncomfortable, then let it settle."},
+  {t:"The watchman stays", b:"One warning to carry out of here, given straight: the old circuitry is dormant, not deleted. Neural pathways starved for ninety days go quiet, but a bad month two years from now — grief, isolation, a run of brutal stress — can find them again if you meet it unarmed. This isn't a reason for fear; it's a reason for respect. The men who keep this for decades share one habit: they never declare final victory, they just keep the watch light. The sits continue. The phone rules stand. The ledger runs. Vigilance without paranoia — a locked door, not a bunker.", a:"Name your most likely future weak point — the situation that could reopen the old road. Plan its guard now."},
+  {t:"Beyond 90: write your own code", b:"The programme ends; the practice doesn't. Today you draft the code you'll live by from day 91 — because drifting out of structure is how six-month men become cautionary tales. Keep it short, yours, and written: the non-negotiables (the sit, the training, the phone rules that saved you), your relapse protocol (it stays, like a fire extinguisher — owned, never planned to use), your review rhythm (the weekly ledger continues), and your line on the habit itself. You've run on borrowed structure for ninety days and proven it works. Now you're the author. Write the constitution.", a:"Draft your day-91 code tonight: non-negotiables, protocol, review rhythm. One page maximum."},
+  {t:"Letter to the man at day zero", b:"Penultimate lesson, one assignment: write a letter to a man on his day zero — the fear, the doubt, the fog, all of it fresh for him. Tell him what's actually coming: which week hurts, when it lifts, what the flatline means, what's waiting at sixty days that he won't believe from where he sits. Tell him the one thing you most needed to hear at the start. Write it for him — but you know who it's really for. If you ever face a day zero again, these words from a man at the summit will be worth more than every quote ever posted. And if you never need it — someone else will.", a:"Write the letter tonight. Keep it. Perhaps one day, give it away."},
+  {t:"Day 90: the beginning", b:"Ninety lessons. Look at what they were actually teaching, start to finish: not how to avoid a screen — how to hold energy, design environments, govern a mind, keep promises, aim a life. The retention was the training weight; the strength was always meant for everything else. So here's the final lesson, and it's short. This was never a 90-day challenge. It was an apprenticeship in self-command, and apprenticeships end one way: the apprentice takes over the workshop. The Path ends here. The building doesn't. You know the way now — it's the one you walk every day, quietly, for the rest of your life. Go build.", a:"Mark the day: one hard thing, one act of service, one hour on the mission. Then celebrate like a king."}
+];
 // ===================== STATE =====================
 // Merge saved state over the defaults so a partial or older saved shape can never
 // leave a required field (entries/reviews) undefined — a missing array would throw
 // in updateHome() during init and kill all event binding, freezing the whole app.
-const S_DEFAULTS = {startDate:null,best:0,entries:[],reviews:[],mood:null};
+const S_DEFAULTS = {startDate:null,best:0,entries:[],reviews:[],mood:null,path:[]};
 let S = Object.assign({}, S_DEFAULTS, JSON.parse(localStorage.getItem('sr_v3') || 'null'));
 if(S.streak !== undefined && !S.startDate && S.streak > 0) {
   const d = new Date(); d.setDate(d.getDate() - S.streak);
@@ -2927,12 +3140,20 @@ function updateHome() {
   const isDay0 = (n === 0 && !S.startDate);
   const d0El = document.getElementById('day0-card');
   if(d0El) d0El.style.display = isDay0 ? 'block' : 'none';
-  const showWhenStarted = ['quick-checkin-card','home-btn-row','latest-card'];
+  const showWhenStarted = ['quick-checkin-card','home-btn-row','latest-card','path-card'];
   showWhenStarted.forEach(id => {
     const el = document.getElementById(id);
     if(el) el.style.display = isDay0 ? 'none' : (id === 'home-btn-row' ? 'flex' : 'block');
   });
   document.querySelectorAll('#s-home .m-grid').forEach(g => { g.style.display = isDay0 ? 'none' : 'grid'; });
+
+  // Rewiring score pill inside the streak ring (hidden until the journey starts)
+  const rwEl = document.getElementById('rw-line');
+  if(rwEl) {
+    rwEl.style.display = isDay0 ? 'none' : 'inline-flex';
+    if(!isDay0) document.getElementById('rw-val').textContent = rewiringScore().total + '% rewired';
+  }
+  updatePathCard();
 
   // Single home prompt: the quick check-in card carries the streak reminder
   // itself (calm by day, gently time-aware in the evening), so there's no
@@ -3036,6 +3257,7 @@ function goTab(id) {
   if(navigator.vibrate) navigator.vibrate(6);
   if(id === 'history') renderHistory('all');
   if(id === 'phases') renderPhase();
+  if(id === 'path') renderPath();
   if(id === 'insights') { piWeekOffset = 0; renderInsights(); }
   if(id === 'stories') { if(!redditLoaded) { shuffle(stories); storyIdx = 0; renderStory(); loadRedditStories(); } else renderStory(); }
   if(id === 'transmute') switchTr('pranayama');
@@ -3960,6 +4182,160 @@ function openPhaseDetail(i) {
     `<div class="pd-sec"><div class="pd-sec-h">${t('phdTips')}</div><ul class="pd-tips">${p.d.tips.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
   document.getElementById('pd-scroll').scrollTop = 0;
   ov.style.display = 'flex';
+}
+
+// ===================== THE PATH =====================
+// Progress = lessons completed, max one per calendar day. Deliberately NOT
+// tied to the streak day, so a relapse never wipes Path progress — the Path
+// measures showing up, and showing up survives a reset.
+const PATH_FREE_LESSONS = 7;   // week 1 free forever; lesson 8+ is premium
+
+function pathDone() { return (S.path || []).length; }
+function pathTodayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function pathDoneToday() {
+  const p = S.path || [];
+  return p.length > 0 && p[p.length-1] === pathTodayStr();
+}
+
+const PATH_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7-7 7 7"/><path d="M12 6v16"/><path d="M8 18l4 4 4-4"/></svg>';
+const PATH_IC_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const PATH_IC_LOCK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+
+function renderPath() {
+  const done = pathDone();
+  const total = PATH_LESSONS.length;
+  const finished = done >= total;
+  const curW = Math.min(Math.floor((finished ? total - 1 : done) / 7), PATH_WEEKS.length - 1);
+  const wk = PATH_WEEKS[curW];
+  const pct = Math.max(2, Math.round(done / total * 100));
+
+  // Hero — reuses the phase-hero design language
+  const hero = document.getElementById('path-hero');
+  const prog = `<div class="ph-prog-lbl"><span class="l">${finished ? 'All 90 lessons complete' : done + ' of ' + total + ' lessons complete'}</span><span class="r">${finished ? 'The Path is yours' : 'Week ' + (curW+1) + ' of 13'}</span></div><div class="ph-prog-track"><div class="ph-prog-fill" style="width:${finished ? 100 : pct}%"></div></div>`;
+  hero.innerHTML = `<div class="ph-hero-tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7-7 7 7"/><path d="M12 6v16"/><path d="M8 18l4 4 4-4"/></svg> The Path</div><div class="ph-hero-name">${finished ? 'The new baseline' : 'Week ' + (curW+1) + ': ' + wk.t}</div><div class="ph-hero-day">One lesson a day · 2 minutes · 90 days</div><div class="ph-hero-text" style="margin-bottom:15px">${finished ? 'Ninety lessons, taken one day at a time. Revisit any of them whenever you need the reminder.' : wk.s}</div>${prog}`;
+
+  // Today card
+  const today = document.getElementById('path-today');
+  if(finished) {
+    today.innerHTML = `<div class="pth-today done"><div class="pth-today-tag" style="color:#5DCAA5">${PATH_IC_CHECK.replace('<svg','<svg width="12" height="12"')} Complete</div><div class="pth-today-t">You walked the whole Path</div><div class="pth-today-s">Every lesson below stays open. Teach one man what you know.</div></div>`;
+  } else if(pathDoneToday()) {
+    today.innerHTML = `<div class="pth-today done"><div class="pth-today-tag" style="color:#5DCAA5">${PATH_IC_CHECK.replace('<svg','<svg width="12" height="12"')} Done for today</div><div class="pth-today-t">Lesson ${done} complete</div><div class="pth-today-s">${PATH_IC_LOCK} Lesson ${done+1} — “${escHtml(PATH_LESSONS[done].t)}” unlocks tomorrow</div></div>`;
+  } else {
+    const locked = done >= PATH_FREE_LESSONS && !hasPremium();
+    today.innerHTML = `<div class="pth-today" role="button" tabindex="0" onclick="openPathLesson(${done})"><div class="pth-today-tag">Today's lesson · ${done+1} of ${total}</div><div class="pth-today-t">${escHtml(PATH_LESSONS[done].t)}</div><div class="pth-today-s">${locked ? PATH_IC_LOCK + ' Premium lesson · tap to unlock' : '2 min read · tap to begin'}</div></div>`;
+  }
+
+  // Full 13-week syllabus
+  const showLock = !hasPremium();
+  document.getElementById('path-list').innerHTML = PATH_WEEKS.map((w, wi) => {
+    const start = wi * 7;
+    const rows = PATH_LESSONS.slice(start, start + 7).map((L, j) => {
+      const i = start + j;
+      const isDone = i < done;
+      const isCur = i === done && !pathDoneToday();
+      const cls = isDone ? 'dn' : isCur ? 'cur' : 'lk';
+      const num = isDone ? PATH_IC_CHECK.replace('<svg','<svg width="11" height="11"') : (i + 1);
+      const meta = isDone ? 'Done' : isCur ? (showLock && i >= PATH_FREE_LESSONS ? PATH_IC_LOCK + ' Premium' : 'Today') : (showLock && i >= PATH_FREE_LESSONS ? PATH_IC_LOCK : '');
+      return `<div class="pth-row ${cls}" onclick="openPathLesson(${i})" role="button" tabindex="0"><div class="pth-num">${num}</div><div class="pth-row-t">${escHtml(L.t)}</div><div class="pth-row-m">${meta}</div></div>`;
+    }).join('');
+    return `<div class="pw-h"><span class="pw-h-n">Week ${wi+1}</span><span class="pw-h-t">${w.t}</span></div>${rows}`;
+  }).join('');
+}
+
+function openPathLesson(i) {
+  const done = pathDone();
+  if(i >= PATH_LESSONS.length) return;
+  if(i > done) { toast('Locked — the Path opens one lesson a day'); return; }
+  if(i === done && pathDoneToday()) { toast('Done for today. Lesson ' + (i+1) + ' unlocks tomorrow.'); return; }
+  if(i >= PATH_FREE_LESSONS && !requireMembership('path')) return;
+  const L = PATH_LESSONS[i];
+  const w = PATH_WEEKS[Math.floor(i / 7)];
+  const isNext = i === done;
+  document.getElementById('plr-body').innerHTML =
+    `<div class="plr-week">Week ${Math.floor(i/7)+1} — ${w.t} · Lesson ${i+1} of ${PATH_LESSONS.length}</div>` +
+    `<div class="plr-title">${escHtml(L.t)}</div>` +
+    `<div class="plr-body"><p>${L.b}</p></div>` +
+    `<div class="plr-act"><div class="plr-act-h"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>Today's action</div><div class="plr-act-b">${L.a}</div></div>` +
+    (isNext
+      ? `<button class="plr-btn" onclick="pathComplete(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Complete lesson ${i+1}</button>`
+      : `<div class="plr-done-line"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Completed — revisit any time</div>`);
+  document.getElementById('plr-scroll').scrollTop = 0;
+  document.getElementById('path-reader').style.display = 'flex';
+}
+
+function pathComplete(i) {
+  if(i !== pathDone() || pathDoneToday()) return;
+  if(!S.path) S.path = [];
+  S.path.push(pathTodayStr());
+  save();
+  document.getElementById('path-reader').style.display = 'none';
+  const d = S.path.length;
+  if(d === PATH_LESSONS.length) toast('The Path is complete. 90 days of lessons. Respect.');
+  else if(d % 7 === 0) toast('Week ' + (d/7) + ' complete — next: ' + PATH_WEEKS[d/7].t);
+  else toast('Lesson ' + d + ' of ' + PATH_LESSONS.length + ' complete');
+  if(navigator.vibrate) navigator.vibrate([10,30,10]);
+  renderPath();
+  updateHome();
+}
+
+// Keeps the home-screen Path card in sync (called from updateHome).
+function updatePathCard() {
+  const fill = document.getElementById('pth-card-fill');
+  if(!fill) return;
+  const done = pathDone(), total = PATH_LESSONS.length;
+  fill.style.width = Math.round(done / total * 100) + '%';
+  const nEl = document.getElementById('pth-card-n'), tEl = document.getElementById('pth-card-t'), sEl = document.getElementById('pth-card-s-txt');
+  if(done >= total) {
+    nEl.textContent = '90 of 90'; tEl.textContent = 'The Path is complete';
+    sEl.textContent = 'Revisit any lesson, any time';
+  } else if(pathDoneToday()) {
+    nEl.textContent = done + ' of ' + total; tEl.textContent = 'Done for today';
+    sEl.textContent = 'Lesson ' + (done+1) + ' unlocks tomorrow';
+  } else {
+    nEl.textContent = 'Lesson ' + (done+1) + ' of ' + total;
+    tEl.textContent = PATH_LESSONS[done].t;
+    sEl.textContent = done === 0 ? 'Start the 90-day program · 2 min a day' : '2 min read · Week ' + (Math.floor(done/7)+1) + ': ' + PATH_WEEKS[Math.floor(done/7)].t;
+  }
+}
+
+// ===================== REWIRING SCORE =====================
+// A composite 0-100 measure of rewiring, not just abstinence. The streak
+// carries half; the other half (check-in consistency, urges beaten, Path
+// lessons) is earned progress that survives a streak reset — so a slip dents
+// the score instead of zeroing it, which is exactly the psychology we want
+// at the highest-churn moment in the app.
+function rewiringScore() {
+  const n = calcStreak();
+  const streakPts = Math.min(n / 90, 1) * 50;
+  // Consistency: distinct check-in days in the last 14 (window shrinks for new users)
+  const cutoff = Date.now() - 14 * 86400000;
+  const startMs = S.startDate ? new Date(S.startDate).getTime() : Date.now();
+  const windowDays = Math.max(1, Math.min(14, Math.floor((Date.now() - startMs) / 86400000) + 1));
+  const days = new Set(S.entries.filter(e => e.type === 'daily' && new Date(e.date).getTime() >= cutoff).map(e => new Date(e.date).toDateString()));
+  const consPts = Math.min(days.size / windowDays, 1) * 20;
+  const urgePts = Math.min((S.urgesBeat || 0) / 10, 1) * 15;
+  const pathPts = Math.min(pathDone() / 21, 1) * 15;
+  return {
+    total: Math.min(100, Math.round(streakPts + consPts + urgePts + pathPts)),
+    parts: [
+      {l:'Streak', v:Math.round(streakPts), m:50},
+      {l:'Check-in consistency', v:Math.round(consPts), m:20},
+      {l:'Urges beaten', v:Math.round(urgePts), m:15},
+      {l:'Path lessons', v:Math.round(pathPts), m:15}
+    ]
+  };
+}
+
+function openRwDetail() {
+  const rw = rewiringScore();
+  document.getElementById('rw-big').innerHTML = rw.total + '<small>/100</small>';
+  document.getElementById('rw-bars').innerHTML = rw.parts.map(p =>
+    `<div class="rw-row"><div class="rw-row-top"><span class="rw-row-l">${p.l}</span><span class="rw-row-v">${p.v} / ${p.m}</span></div><div class="rw-track"><div class="rw-fill" style="width:${Math.round(p.v / p.m * 100)}%"></div></div></div>`).join('');
+  document.getElementById('rw-overlay').classList.add('on');
+  if(navigator.vibrate) navigator.vibrate(6);
 }
 
 // ===================== STORIES =====================
