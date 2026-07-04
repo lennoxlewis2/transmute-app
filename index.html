@@ -238,8 +238,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .pd-tips li:last-child{margin-bottom:0;}
 .pd-tips li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--ac2);}
 /* Rewiring score — the pill inside the streak ring + the breakdown sheet */
-.rw-line{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:10px;font-weight:700;color:var(--ac2);letter-spacing:.02em;background:rgba(108,92,231,0.13);border:.5px solid rgba(108,92,231,0.32);padding:2.5px 9px;border-radius:11px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease;}
-.rw-line:active{transform:scale(0.94);}
+.rw-line{display:inline-flex;align-items:center;gap:3px;margin-top:3px;font-size:9.5px;font-weight:700;color:var(--ac2);opacity:.8;letter-spacing:.02em;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,opacity .12s ease;}
+.rw-line:active{transform:scale(0.94);opacity:1;}
 .rw-line svg{display:block;flex-shrink:0;}
 .rw-card{background:var(--sf);border:.5px solid var(--ac4);border-radius:20px;padding:24px 20px 22px;width:88%;max-width:350px;box-shadow:0 18px 60px rgba(0,0,0,.55);}
 .rw-tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ac2);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
@@ -1108,7 +1108,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <div class="flame-wrap" id="fw"><svg id="fsv" viewBox="0 0 24 24" fill="none"></svg></div>
               <div class="snum" id="snum">0</div>
               <div class="sday">days</div>
-              <div class="rw-line" id="rw-line" style="display:none;" role="button" tabindex="0" aria-label="Rewiring score breakdown" onclick="event.stopPropagation();openRwDetail()"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span id="rw-val">0% rewired</span></div>
+              <div class="rw-line" id="rw-line" style="display:none;" role="button" tabindex="0" aria-label="Rewiring score breakdown" onclick="event.stopPropagation();openRwDetail()"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span id="rw-val">0% rewired</span></div>
             </div>
           </div>
           <div class="ph-badge bd0" id="pbadge" role="button" tabindex="0" aria-label="View phase guidance" onclick="goTab('phases')">Day 0 · Begin</div>
