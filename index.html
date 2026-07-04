@@ -1093,7 +1093,6 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <div style="font-size:22px;font-weight:800;color:white;margin-bottom:8px;line-height:1.2;letter-spacing:-.4px;">Your journey starts now.</div>
           <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.7;margin-bottom:22px;max-width:260px;margin-left:auto;margin-right:auto;">Every streak starts at zero. The hardest part is committing to day one.</div>
           <button onclick="beginToday()" style="width:100%;padding:16px;background:linear-gradient(135deg,var(--ac),var(--acd));color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 6px 20px rgba(108,92,231,0.4);letter-spacing:-.1px;">Begin Day 1 today →</button>
-          <button onclick="document.getElementById('date-block').style.display='block';this.style.display='none';" style="background:transparent;border:none;color:rgba(255,255,255,0.25);font-size:12px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:11px;padding:5px;display:block;width:100%;">Started before today? Set a date</button>
         </div>
         <div style="padding:18px 20px 20px;">
           <div style="font-size:11px;font-weight:700;color:var(--tt);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">How it works</div>
@@ -1154,15 +1153,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
       <button class="btn" id="start-rev-btn" style="margin-bottom:12px;">Start weekly review</button>
     </div>
-    <div id="date-block" style="display:none;margin-bottom:12px;">
-      <div class="card" style="margin-bottom:0">
-        <div class="lbl">Streak start date</div>
-        <input type="date" id="date-input" style="margin-bottom:8px">
-        <button class="btn" id="set-date-btn" style="margin-top:0">Set start date</button>
-      </div>
-    </div>
     <div class="btn-row" id="home-btn-row">
-      <button class="btn-g" id="pick-date-btn" style="display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Set start date</button>
       <button class="btn-g" id="reset-btn" style="display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Start fresh</button>
     </div>
   </div>
@@ -3490,6 +3481,9 @@ function piWeekList() {
 // Stable within a week, fresh across weeks — so a given week's letter never
 // changes wording, but next week reads differently.
 function piWeekPick(pool, salt, wkKey) { if(!pool.length) return ''; return pool[piHash(salt + ':' + wkKey) % pool.length]; }
+// The goals the user picked in onboarding ("What are you chasing?"). Captured
+// under sr_goals; read here so the weekly letter can reflect their own why back.
+function getGoals() { try { var g = JSON.parse(localStorage.getItem('sr_goals') || '[]'); return Array.isArray(g) ? g : []; } catch(e) { return []; } }
 function piSetWeek(i) { piWeekOffset = i; renderInsights(); }
 
 function computeWeekReport(ws) {
@@ -3553,7 +3547,16 @@ function computeWeekReport(ws) {
   if(tw.length) { const mmap = {}; tw.forEach(e => { if(e.mood) (mmap[e.mood]=mmap[e.mood]||[]).push(e.urge||0); }); let best = null; Object.keys(mmap).forEach(m => { const a = mmap[m].reduce((x,y)=>x+y,0)/mmap[m].length; if(best === null || a < best.a) best = { m, a }; }); if(best) cands.push(`You were most at peace when you felt <b>${escHtml(best.m)}</b> this week. Chase more of whatever put you there.`); }
   const standout = cands.length ? cands[piHash('so:' + wk) % cands.length] : null;
 
-  const fwd = wp([`Next week doesn't need to be flawless${nm}. It just needs you to keep showing up — that's all it has ever needed.`, `Whatever next week brings${nm}, you've already proven you can meet it. One check-in at a time.`, `Carry this week's momentum forward${nm}. You're not starting over — you're building on everything you just did.`], 'fwd');
+  // Forward word — sometimes reflects back the goal they chose in onboarding, so
+  // the letter remembers WHY they said they're here (rotates which goal, per week).
+  var fwdPool = [`Next week doesn't need to be flawless${nm}. It just needs you to keep showing up — that's all it has ever needed.`, `Whatever next week brings${nm}, you've already proven you can meet it. One check-in at a time.`, `Carry this week's momentum forward${nm}. You're not starting over — you're building on everything you just did.`];
+  var goals = getGoals();
+  if(goals.length) {
+    var goal = goals[piHash('goal:' + wk) % goals.length].toLowerCase();
+    fwdPool.push(`You came here chasing ${goal}${nm}. Weeks like this one are exactly how it's built — quietly, one decision at a time.`);
+    fwdPool.push(`${goal.charAt(0).toUpperCase() + goal.slice(1)} isn't a feeling, it's a habit${nm} — and this week you practised it. Do it again.`);
+  }
+  const fwd = wp(fwdPool, 'fwd');
 
   return { range, hi, stats, wins: winsTop, standout, fwd, isCurrent, streak: (isCurrent && S.startDate) ? calcStreak() : null };
 }
@@ -5476,19 +5479,11 @@ document.addEventListener('DOMContentLoaded', function() {
     updateHome();
     toast(t('toastStreakSet') + '1 🔥');
   };
-  document.getElementById('pick-date-btn').addEventListener('click', function() {
-    const bl = document.getElementById('date-block');
-    bl.style.display = bl.style.display === 'none' || bl.style.display === '' ? 'block' : 'none';
-    if(S.startDate) document.getElementById('date-input').value = S.startDate;
-  });
-  document.getElementById('set-date-btn').addEventListener('click', function() {
-    const val = document.getElementById('date-input').value;
-    if(!val) { toast(t('toastPickDate')); return; }
-    if(new Date(val) > new Date()) { toast(t('toastFutureDate')); return; }
-    S.startDate = val; save(); updateHome();
-    document.getElementById('date-block').style.display = 'none';
-    toast(t('toastStreakSet') + calcStreak() + ' 🔥');
-  });
+  // The in-app arbitrary "set start date" picker was removed on purpose: the start
+  // date is set once during onboarding (fresh or an honest back-date), then it's
+  // locked so a future leaderboard can't be gamed by editing your start day. The
+  // only ways to change a streak now are Begin Day 1 (today) or Start fresh (reset).
+
   // Reset opens a supportive "fresh start" modal — never a bare, shaming confirm().
   const resetOverlay = document.getElementById('reset-overlay');
   document.getElementById('reset-btn').addEventListener('click', function() {
