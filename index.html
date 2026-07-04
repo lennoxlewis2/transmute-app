@@ -1097,7 +1097,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div class="card">
       <div class="streak-block">
         <div class="streak-left">
-          <div class="aura-wrap aura-pulse" id="aura-wrap" role="button" tabindex="0" aria-label="View your phase" onclick="goTab('phases')">
+          <div class="aura-wrap aura-pulse" id="aura-wrap" role="button" tabindex="0" aria-label="View your rewiring score" onclick="openRwDetail()">
             <svg class="aura-svg" viewBox="0 0 150 150" width="150" height="150">
               <circle class="aura-bg" cx="75" cy="75" r="68"/>
               <circle class="aura-ring" id="ar1" cx="75" cy="75" r="68" stroke-dasharray="427.3" stroke-dashoffset="427.3"/>
@@ -1108,7 +1108,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
               <div class="flame-wrap" id="fw"><svg id="fsv" viewBox="0 0 24 24" fill="none"></svg></div>
               <div class="snum" id="snum">0</div>
               <div class="sday">days</div>
-              <div class="rw-line" id="rw-line" style="display:none;" role="button" tabindex="0" aria-label="Rewiring score breakdown" onclick="event.stopPropagation();openRwDetail()"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span id="rw-val">0% rewired</span></div>
+              <div class="rw-line" id="rw-line" style="display:none;"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><span id="rw-val">0% rewired</span></div>
             </div>
           </div>
           <div class="ph-badge bd0" id="pbadge" role="button" tabindex="0" aria-label="View phase guidance" onclick="goTab('phases')">Day 0 · Begin</div>
@@ -5928,7 +5928,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('histbtn').addEventListener('click', function(){ goTab('history'); });
   document.getElementById('insightsbtn').addEventListener('click', function(){ goTab('insights'); });
   document.getElementById('pbadge').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goTab('phases'); } });
-  document.getElementById('aura-wrap').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); goTab('phases'); } });
+  document.getElementById('aura-wrap').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openRwDetail(); } });
   document.getElementById('close-s').addEventListener('click', closeSettings);
   document.getElementById('s-overlay').addEventListener('click', function(e) { if(e.target === this) closeSettings(); });
 
