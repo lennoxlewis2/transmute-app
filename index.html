@@ -603,6 +603,19 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws-why-box textarea::placeholder{color:rgba(255,255,255,0.32);}
   .ws-why-box textarea:focus{outline:none;border-color:#C4BCFF;}
   .ws-why-hint{font-size:12px;color:rgba(255,255,255,0.4);margin-top:10px;line-height:1.5;}
+  .ws-input{width:100%;max-width:340px;box-sizing:border-box;background:rgba(255,255,255,0.06);border:1px solid rgba(196,188,255,0.3);border-radius:12px;color:#fff;font-size:16px;padding:15px 16px;font-family:inherit;text-align:center;}
+  .ws-input:focus{outline:none;border-color:#C4BCFF;}
+  .ws-input::placeholder{color:rgba(255,255,255,0.3);}
+  .ws-goals{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:344px;margin-top:4px;}
+  .ws-goal{font-size:14px;font-weight:600;color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:22px;padding:11px 16px;cursor:pointer;font-family:inherit;-webkit-appearance:none;transition:all .15s;}
+  .ws-goal.on{color:#fff;background:linear-gradient(135deg,var(--ac),var(--acd));border-color:transparent;box-shadow:0 4px 14px rgba(108,92,231,0.4);}
+  .ws-start{display:flex;flex-direction:column;gap:11px;width:100%;max-width:344px;margin-top:2px;}
+  .ws-start-opt{text-align:left;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:15px;padding:15px 16px;cursor:pointer;font-family:inherit;-webkit-appearance:none;transition:all .15s;}
+  .ws-start-opt.on{border-color:#C4BCFF;background:rgba(108,92,231,0.18);}
+  .ws-start-opt strong{display:block;font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;}
+  .ws-start-opt span{font-size:12.5px;color:rgba(255,255,255,0.5);line-height:1.45;}
+  .ws-start-days{display:none;margin-top:2px;}
+  .ws-start-days.show{display:block;}
   /* Relapse pattern chart (History) — show the user WHEN their streaks break */
   .rp-card{background:var(--sf);border:.5px solid var(--bd);border-radius:16px;padding:16px;}
   .rp-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:7px;display:flex;align-items:center;gap:7px;}
@@ -813,6 +826,62 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
     </div>
 
+    <!-- SLIDE 5: Your name -->
+    <div class="ws-slide">
+      <div class="ws-icon">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 18px rgba(108,92,231,0.8));">
+          <circle cx="12" cy="8" r="3.4" stroke="url(#wsA5)" stroke-width="2" fill="none"/>
+          <path d="M5.5 20a6.5 6.5 0 0 1 13 0" stroke="url(#wsA5)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <defs><linearGradient id="wsA5" x1="12" y1="4" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="ws-title">First —<br>what's your name?</div>
+      <div class="ws-sub" style="margin-bottom:18px;">So this feels like yours, not ours. We'll use it to speak to you — never to track you. It stays on your device.</div>
+      <input type="text" id="ws-name-input" class="ws-input" maxlength="24" placeholder="Your first name" autocomplete="given-name" autocapitalize="words"/>
+    </div>
+
+    <!-- SLIDE 6: What you're chasing -->
+    <div class="ws-slide">
+      <div class="ws-icon">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 18px rgba(108,92,231,0.8));">
+          <circle cx="12" cy="12" r="9" stroke="url(#wsA6)" stroke-width="2" fill="none"/>
+          <circle cx="12" cy="12" r="5" stroke="url(#wsA6)" stroke-width="2" fill="none" opacity=".7"/>
+          <circle cx="12" cy="12" r="1.6" fill="url(#wsA6)"/>
+          <defs><linearGradient id="wsA6" x1="3" y1="3" x2="21" y2="21" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="ws-title">What are you<br>chasing?</div>
+      <div class="ws-sub" style="margin-bottom:20px;">Pick whatever pulls at you. This shapes what the app reflects back.</div>
+      <div class="ws-goals" id="ws-goals">
+        <button class="ws-goal" data-goal="Discipline">Discipline</button>
+        <button class="ws-goal" data-goal="Confidence">Confidence</button>
+        <button class="ws-goal" data-goal="Focus">Focus</button>
+        <button class="ws-goal" data-goal="Energy">Energy</button>
+        <button class="ws-goal" data-goal="Breaking the habit">Breaking the habit</button>
+        <button class="ws-goal" data-goal="Presence">Presence</button>
+        <button class="ws-goal" data-goal="Clarity">Clarity</button>
+        <button class="ws-goal" data-goal="Self-respect">Self-respect</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Where you're starting -->
+    <div class="ws-slide">
+      <div class="ws-icon">
+        <svg width="82" height="82" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(108,92,231,0.9)) drop-shadow(0 0 8px rgba(196,188,255,0.5));animation:flamePulse 2s ease-in-out infinite;">
+          <path d="M12 2c0 0-7 6-7 13a7 7 0 0 0 14 0c0-7-7-13-7-13z" fill="url(#wsA7)"/>
+          <path d="M12 9c0 0-3 3-3 6a3 3 0 0 0 6 0c0-3-3-6-3-6z" fill="white" opacity=".9"/>
+          <defs><linearGradient id="wsA7" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="50%" stop-color="#C4BCFF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="ws-title">Where are you<br>starting?</div>
+      <div class="ws-sub" style="margin-bottom:18px;">Set this once, honestly — it's the only time you can change it. Your streak grows from here.</div>
+      <div class="ws-start" id="ws-start">
+        <button class="ws-start-opt on" data-mode="fresh"><strong>Day 1 — I'm starting today</strong><span>A clean line in the sand, right now.</span></button>
+        <button class="ws-start-opt" data-mode="going"><strong>I'm already on a streak</strong><span>Carry your current run in — count from a day you're sure of.</span></button>
+        <div class="ws-start-days" id="ws-start-days"><input type="number" id="ws-start-days-input" class="ws-input" inputmode="numeric" min="1" max="3650" placeholder="How many days in? e.g. 12"/></div>
+      </div>
+    </div>
+
     <!-- SLIDE 3: Urge Wave hero -->
     <div class="ws-slide">
       <div class="ws-icon">
@@ -899,6 +968,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   <div class="ws-footer">
     <div class="ws-dots" id="ws-dots">
       <div class="ws-dot on"></div>
+      <div class="ws-dot"></div>
+      <div class="ws-dot"></div>
+      <div class="ws-dot"></div>
       <div class="ws-dot"></div>
       <div class="ws-dot"></div>
       <div class="ws-dot"></div>
@@ -5603,16 +5675,39 @@ if('serviceWorker' in navigator) {
 }
 
 function _hideWS() {
-  // Capture the onboarding "why" (if they wrote one) before the screen closes —
-  // covers every exit path: "Let's go", Skip, and install-accepted.
+  // Persist everything the onboarding captured before it closes — this covers
+  // every exit path: "Let's go", Skip, and install-accepted.
   try {
+    var nameInp = document.getElementById('ws-name-input');
+    if(nameInp && nameInp.value.trim()) {
+      localStorage.setItem('user_name', nameInp.value.trim());
+      if(typeof updateGreeting === 'function') updateGreeting();
+    }
+    var goalsOn = document.querySelectorAll('#ws-goals .ws-goal.on');
+    if(goalsOn.length) {
+      localStorage.setItem('sr_goals', JSON.stringify([].map.call(goalsOn, function(b){ return b.getAttribute('data-goal'); })));
+    }
+    // Start point — the ONE place a new user sets their start date. "going" back-dates
+    // by the days they entered; default/fresh starts today. Never overwrite an
+    // existing streak (e.g. if they somehow re-see onboarding).
+    var startSel = document.querySelector('#ws-start .ws-start-opt.on');
+    if(startSel && !S.startDate) {
+      var d = new Date();
+      if(startSel.getAttribute('data-mode') === 'going') {
+        var daysInp = document.getElementById('ws-start-days-input');
+        var n = daysInp ? parseInt(daysInp.value, 10) : 0;
+        if(n > 0 && n < 3650) d.setDate(d.getDate() - n);
+      }
+      S.startDate = d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+    }
     var inp = document.getElementById('ws-why-input');
     if(inp && inp.value.trim()) {
       S.why = inp.value.trim();
-      save();
       var setInp = document.getElementById('set-why-input');
       if(setInp) setInp.value = S.why;
     }
+    save();
+    if(typeof updateHome === 'function') updateHome();
   } catch(e){}
   var el = document.getElementById('ws');
   if(el) el.classList.add('hidden');
@@ -5631,7 +5726,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  var totalSlides = 7;
+  var totalSlides = 10;
   var curSlide = 0;
   var slides = document.getElementById('ws-slides');
   var dots = document.querySelectorAll('.ws-dot');
@@ -5678,6 +5773,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var skip = document.getElementById('ws-skip');
   if(skip) skip.addEventListener('click', _hideWS);
+
+  // Goals — multi-select chips (slide 6)
+  var goalsWrap = document.getElementById('ws-goals');
+  if(goalsWrap) [].forEach.call(goalsWrap.querySelectorAll('.ws-goal'), function(b){
+    b.addEventListener('click', function(){ b.classList.toggle('on'); });
+  });
+
+  // Start point — two options; "already on a streak" reveals a day-count input (slide 7)
+  var startWrap = document.getElementById('ws-start');
+  if(startWrap) [].forEach.call(startWrap.querySelectorAll('.ws-start-opt'), function(b){
+    b.addEventListener('click', function(){
+      [].forEach.call(startWrap.querySelectorAll('.ws-start-opt'), function(o){ o.classList.remove('on'); });
+      b.classList.add('on');
+      var days = document.getElementById('ws-start-days');
+      if(days) days.classList.toggle('show', b.getAttribute('data-mode') === 'going');
+    });
+  });
 });
 
 // Install prompt — single source of truth
