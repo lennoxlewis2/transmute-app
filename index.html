@@ -3380,7 +3380,7 @@ function computeWeekReport(ws) {
   const tw = daily.filter(e => inW(e,ws,we));
   const lw = daily.filter(e => inW(e,ps,pe));
   const urges = S.entries.filter(e => e.type === 'urge' && e.date && inW(e,ws,we));
-  const name = (localStorage.getItem('sr_name') || '').trim().split(' ')[0];
+  const name = (getUserName() || '').trim().split(' ')[0];
   const nm = name ? ', ' + name : '';
   const wk = ws.getTime();
   const wp = (pool,salt) => piWeekPick(pool, salt, wk);
