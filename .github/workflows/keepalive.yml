@@ -1,0 +1,21 @@
+# Pings the Supabase founder-counter every 3 days so the free-tier project
+# never hits the ~7-day inactivity pause (which would silently stall founder
+# claims until someone restores it in the dashboard).
+name: Supabase keep-alive
+on:
+  schedule:
+    - cron: '0 9 */3 * *'   # every 3 days at 09:00 UTC
+  workflow_dispatch: {}      # manual run button
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping founder_status
+        run: |
+          STATUS=$(curl -s -X POST \
+            "https://dtoasbwkxrolqvoapjqu.supabase.co/rest/v1/rpc/founder_status" \
+            -H "apikey: sb_publishable_PsL71257ZDoe-KOIp0WC4w_aI2XzOTg" \
+            -H "Content-Type: application/json" -d '{}')
+          echo "founder_status: $STATUS"
+          # Fail the job (visible red X + email) if the backend didn't answer sanely
+          echo "$STATUS" | grep -q '"claimed"' || exit 1
