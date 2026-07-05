@@ -796,6 +796,13 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pw-founder-track{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:7px;}
   .pw-founder-fill{height:100%;width:0;background:linear-gradient(90deg,#FFD700,#FFA500);border-radius:4px;transition:width .6s ease;}
   .pw-founder-txt{font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);text-align:center;letter-spacing:.02em;}
+  .ws-founder{width:100%;max-width:340px;margin:0 auto 24px;background:linear-gradient(135deg,rgba(255,215,0,0.13),rgba(255,165,0,0.05));border:1px solid rgba(255,215,0,0.35);border-radius:16px;padding:14px 16px;}
+  .ws-founder-top{display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:800;color:#FFD700;letter-spacing:.03em;margin-bottom:9px;}
+  .ws-founder-top svg{display:block;}
+  .ws-founder-track{height:6px;background:rgba(255,255,255,0.12);border-radius:4px;overflow:hidden;margin-bottom:8px;}
+  .ws-founder-fill{height:100%;width:0;background:linear-gradient(90deg,#FFD700,#FFA500);border-radius:4px;transition:width .7s ease;}
+  .ws-founder-sub{font-size:12px;color:rgba(255,255,255,0.6);text-align:center;line-height:1.45;}
+  .ws-founder-sub b{color:rgba(255,255,255,0.9);}
 
   .tabs{touch-action:none;user-select:none;-webkit-user-select:none;}
   .tab{transition:transform 0.18s cubic-bezier(.34,1.4,.64,1),opacity 0.15s,background 0.15s;}
@@ -1049,7 +1056,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
         </svg>
       </div>
       <div class="ws-title" id="ws-final-title">Day 1<br>starts now.</div>
-      <div class="ws-sub" style="margin-bottom:28px;">Free to use. No account. Works offline. Your data stays on your device.</div>
+      <div class="ws-sub" style="margin-bottom:20px;">Free to use. No account. Works offline. Your data stays on your device.</div>
+      <div class="ws-founder" id="ws-founder" style="display:none;"></div>
       <div id="ws-android" style="width:100%;display:flex;flex-direction:column;align-items:center;">
         <button class="ws-btn" id="ws-install" style="max-width:340px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="3"/></svg>Add to Home Screen</button>
         <div style="font-size:12px;color:rgba(255,255,255,0.25);">Free · No account needed · Works offline</div>
@@ -1128,6 +1136,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           </div>
         </div>
       </div>
+    </div>
+    <div data-founder-badge style="display:none;justify-content:center;margin:-2px 0 12px;">
+      <span class="founder-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 12.5H11l-1 9.5 8.5-11H12z"/></svg>Founder <span data-founder-num></span> · lifetime access</span>
     </div>
     <div class="m-grid">
       <div class="metric"><div class="m-val" id="m-best">0</div><div class="m-lbl">Best streak</div></div>
@@ -3364,17 +3375,39 @@ function refreshFounderUI() {
     } else el.style.display = 'none';
   });
   loadFounderStatus().then(s => {
-    if(!s) return;
-    const cap = s.cap || FOUNDER_CAP_FALLBACK;
-    const claimed = s.claimed || 0;
+    const cap = (s && s.cap) || FOUNDER_CAP_FALLBACK;
+    const claimed = (s && s.claimed) || 0;
+    const left = Math.max(0, cap - claimed);
     const pct = Math.min(100, Math.round(claimed / cap * 100));
-    document.querySelectorAll('[data-founder-bar]').forEach(el => {
+    // Paywall scarcity bar — social proof for non-founders who reach the paywall.
+    if(s) document.querySelectorAll('[data-founder-bar]').forEach(el => {
       const fill = el.querySelector('[data-founder-fill]');
       const txt = el.querySelector('[data-founder-txt]');
       if(fill) fill.style.width = pct + '%';
       if(txt) txt.textContent = claimed.toLocaleString() + ' / ' + cap.toLocaleString() + ' founder spots claimed';
       el.style.display = '';
     });
+    // Onboarding final-slide banner — context-aware: celebrate a claimed spot,
+    // otherwise show how many free founder spots are left (urgency to start now).
+    const ws = document.getElementById('ws-founder');
+    if(ws) {
+      const bolt = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 12.5H11l-1 9.5 8.5-11H12z"/></svg>';
+      const track = '<div class="ws-founder-track"><div class="ws-founder-fill" style="width:' + (isFounder() ? pct : Math.min(100, pct)) + '%"></div></div>';
+      if(isFounder()) {
+        ws.innerHTML = '<div class="ws-founder-top">' + bolt + 'Founder #' + founderNumber() + '</div>' + track +
+          '<div class="ws-founder-sub">You’re one of the first <b>' + cap.toLocaleString() + '</b>. Every tool, unlocked <b>free for life</b>.</div>';
+        ws.style.display = '';
+      } else if(s && left > 0) {
+        ws.innerHTML = '<div class="ws-founder-top">' + bolt + 'Founder access</div>' + track +
+          '<div class="ws-founder-sub">Only <b>' + left.toLocaleString() + '</b> of ' + cap.toLocaleString() + ' free founder spots left.</div>';
+        ws.style.display = '';
+      } else if(s) {
+        ws.innerHTML = '<div class="ws-founder-top">' + bolt + 'Founder spots full</div>' +
+          '<div class="ws-founder-track"><div class="ws-founder-fill" style="width:100%"></div></div>' +
+          '<div class="ws-founder-sub">All <b>' + cap.toLocaleString() + '</b> founder spots are claimed.</div>';
+        ws.style.display = '';
+      }
+    }
   });
 }
 
@@ -6407,6 +6440,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(n === totalSlides - 1) {
       nextBtn.textContent = 'Let\'s go ✓';
       nextBtn.onclick = _hideWS;
+      if(window.refreshFounderUI) refreshFounderUI();   // paint the founder banner
     } else {
       nextBtn.textContent = 'Next →';
       nextBtn.onclick = function() { goToSlide(curSlide + 1); };
