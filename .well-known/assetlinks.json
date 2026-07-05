@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "com.transmute.app",
       "sha256_cert_fingerprints": [
-        "54:EC:63:1F:BD:4C:88:2E:10:84:79:80:2A:2D:91:B3:3C:96:98:E2:8A:EC:F6:85:6E:C9:5A:FC:67:C4:40:01"
+        "54:EC:63:1F:BD:4C:88:2E:10:84:79:80:2A:2D:91:B3:3C:96:98:E2:8A:EC:F6:85:6E:C9:5A:FC:67:C4:40:01",
+        "1F:E1:46:6E:7B:D5:17:0F:80:15:7E:EE:2E:0D:A1:47:19:BE:E6:A6:05:A8:86:2A:F4:25:28:E6:9D:53:27:7C"
       ]
     }
   }
