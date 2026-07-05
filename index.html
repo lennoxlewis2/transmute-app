@@ -790,6 +790,12 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pw-links button{background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:4px 2px;-webkit-appearance:none;}
   .pw-links .dot{color:rgba(255,255,255,0.22);}
   .pw-restore{background:transparent;border:none;color:rgba(255,255,255,0.25);font-size:12px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:4px;}
+  /* Founder program */
+  .founder-pill{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#1a1000;font-size:11px;font-weight:800;letter-spacing:.03em;padding:5px 14px;border-radius:20px;}
+  .pw-founder{width:100%;max-width:320px;margin:-6px 0 18px;}
+  .pw-founder-track{height:6px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden;margin-bottom:7px;}
+  .pw-founder-fill{height:100%;width:0;background:linear-gradient(90deg,#FFD700,#FFA500);border-radius:4px;transition:width .6s ease;}
+  .pw-founder-txt{font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);text-align:center;letter-spacing:.02em;}
 
   .tabs{touch-action:none;user-select:none;-webkit-user-select:none;}
   .tab{transition:transform 0.18s cubic-bezier(.34,1.4,.64,1),opacity 0.15s,background 0.15s;}
@@ -2102,6 +2108,9 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <p id="demo-desc" style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Load a sample profile to preview the full Predictive Insights screen without weeks of logging. Your real data is saved and restored when you exit.</p>
       <button class="btn-g" id="demo-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3 3L21 7"/></svg><span id="demo-lbl">Load demo insights</span></button>
     </div>
+    <div data-founder-badge style="display:none;justify-content:center;margin-bottom:12px;">
+      <span class="founder-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 12.5H11l-1 9.5 8.5-11H12z"/></svg>Founder <span data-founder-num></span> · lifetime access</span>
+    </div>
     <p style="font-size:11px;color:var(--tt);text-align:center">Transmute · v3.0</p>
   </div>
 </div>
@@ -3241,7 +3250,9 @@ const PREMIUM_FEATURES = {
 };
 
 function isMember() {
-  return !!localStorage.getItem('uw_unlocked');
+  // A paid purchase/trial (uw_unlocked) OR a claimed founder spot — both are
+  // full lifetime members as far as every feature gate is concerned.
+  return !!localStorage.getItem('uw_unlocked') || isFounder();
 }
 function introTrialMsLeft() {
   const start = parseInt(localStorage.getItem('first_open') || Date.now(), 10);
@@ -3267,9 +3278,104 @@ function requireMembership(feature) {
 }
 function _showPaywall() {
   document.getElementById('uw-paywall').classList.remove('hidden');
+  refreshFounderUI();
 }
 function _hidePaywall() {
   document.getElementById('uw-paywall').classList.add('hidden');
+}
+
+// ===================== FOUNDER PROGRAM =====================
+// The first FOUNDER_CAP installs get lifetime premium free — the launch hype
+// engine. A single Supabase Postgres function (claim_founder) hands out
+// sequential spot numbers atomically, so there's no server of our own to run or
+// deploy — the client calls it directly with the public anon key. The grant is
+// mirrored into localStorage so it survives offline and is read by isMember().
+// Fails safe: if the backend is unreachable we grant nothing and retry on the
+// next open, so we can never over-issue free spots.
+//
+//   uw_founder_state  'granted' | 'missed' — terminal, never re-checked.
+//                     Absent = unresolved, will retry every open.
+//   uw_founder_num    the sequential spot number, once granted.
+const SUPABASE_URL = 'https://REPLACE_ME.supabase.co';  // Supabase project URL
+const SUPABASE_ANON_KEY = 'REPLACE_ME';                 // public anon key (safe to ship)
+const FOUNDER_CAP_FALLBACK = 1000;                      // shown until the live count loads
+
+function isFounder() {
+  return localStorage.getItem('uw_founder_state') === 'granted';
+}
+function founderNumber() {
+  const n = localStorage.getItem('uw_founder_num');
+  return n ? parseInt(n, 10) : null;
+}
+function founderConfigured() {
+  return SUPABASE_URL.indexOf('REPLACE_ME') === -1 && SUPABASE_ANON_KEY.indexOf('REPLACE_ME') === -1;
+}
+async function _sbRpc(fn, body) {
+  const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/' + fn, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body || {})
+  });
+  if(!res.ok) throw new Error('rpc ' + fn + ' ' + res.status);
+  return res.json();
+}
+
+// Claim a founder spot — called once per install on startup. Terminal states are
+// never re-checked; an unresolved install retries every open until the backend answers.
+async function claimFounderSpot() {
+  if(!founderConfigured()) return;                     // backend not wired yet
+  if(localStorage.getItem('uw_founder_state')) return; // already resolved
+  try {
+    const r = await _sbRpc('claim_founder', {});
+    if(r && r.granted) {
+      localStorage.setItem('uw_founder_num', String(r.number));
+      localStorage.setItem('uw_founder_state', 'granted');
+      _founderStatus = { claimed: r.claimed, cap: r.cap };
+      if(window.toast) toast("You're Founder #" + r.number + " — lifetime access unlocked ⚡");
+    } else {
+      localStorage.setItem('uw_founder_state', 'missed');
+      if(r) _founderStatus = { claimed: r.claimed, cap: r.cap };
+    }
+  } catch(e) { /* offline / backend down — stay unresolved, retry next open */ }
+  refreshFounderUI();
+}
+
+// Live scarcity count for the paywall bar. Read-only, cached for the session.
+let _founderStatus = null;
+async function loadFounderStatus() {
+  if(_founderStatus) return _founderStatus;
+  if(!founderConfigured()) return null;
+  try { _founderStatus = await _sbRpc('founder_status', {}); return _founderStatus; }
+  catch(e) { return null; }
+}
+
+// Paint every founder UI element: the "#347" pride badge (founders only) and the
+// "N / cap founder spots claimed" scarcity bar. Safe to call any time.
+function refreshFounderUI() {
+  document.querySelectorAll('[data-founder-badge]').forEach(el => {
+    if(isFounder()) {
+      el.style.display = '';
+      const num = el.querySelector('[data-founder-num]');
+      if(num) num.textContent = '#' + founderNumber();
+    } else el.style.display = 'none';
+  });
+  loadFounderStatus().then(s => {
+    if(!s) return;
+    const cap = s.cap || FOUNDER_CAP_FALLBACK;
+    const claimed = s.claimed || 0;
+    const pct = Math.min(100, Math.round(claimed / cap * 100));
+    document.querySelectorAll('[data-founder-bar]').forEach(el => {
+      const fill = el.querySelector('[data-founder-fill]');
+      const txt = el.querySelector('[data-founder-txt]');
+      if(fill) fill.style.width = pct + '%';
+      if(txt) txt.textContent = claimed.toLocaleString() + ' / ' + cap.toLocaleString() + ' founder spots claimed';
+      el.style.display = '';
+    });
+  });
 }
 
 // ===================== TABS =====================
@@ -5918,6 +6024,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update home
   updateHome();
 
+  // ---- FOUNDER PROGRAM ----
+  // Claim a lifetime founder spot (first N installs), then paint the badge/bar.
+  claimFounderSpot();
+  refreshFounderUI();
+
   // ---- TABS ----
   document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', function() { goTab(this.dataset.tab); });
@@ -6943,6 +7054,11 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     <div class="pw-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.9H21l-5.3 4 2 6.8L12 15.6 6.3 19.7l2-6.8-5.3-4h6.6z"/></svg>Transmute Membership</div>
     <div class="pw-title">You know it works.<br>Go all in.</div>
     <div class="pw-sub">One membership unlocks every tool built to keep you on the path, and everything new as it lands.</div>
+
+    <div class="pw-founder" data-founder-bar style="display:none;">
+      <div class="pw-founder-track"><div class="pw-founder-fill" data-founder-fill></div></div>
+      <div class="pw-founder-txt" data-founder-txt></div>
+    </div>
 
     <div class="pw-perks">
       <div class="pw-perk"><span class="pw-perk-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity=".45"/></svg></span><b>Urge Wave</b> — ride out any urge in real time</div>
