@@ -842,6 +842,44 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       scroll-behavior:auto!important;
     }
   }
+
+  /* ---- TEXT SIZE (Settings) ----
+     --fs scales READING surfaces only (lesson/phase/story/insight/quote bodies);
+     chrome, buttons and the streak number stay fixed so layout can't break. */
+  :root{--fs:1;}
+  .q-text{font-size:calc(15px * var(--fs));}
+  .ph-hero-text{font-size:calc(15px * var(--fs));}
+  .pl-text{font-size:calc(12px * var(--fs));}
+  .pd-lede{font-size:calc(14px * var(--fs));}
+  .pd-sec-b{font-size:calc(13.5px * var(--fs));}
+  .pd-tips li{font-size:calc(13.5px * var(--fs));}
+  .plr-body{font-size:calc(14.5px * var(--fs));}
+  .plr-act-b{font-size:calc(13.5px * var(--fs));}
+  .pth-today-t{font-size:calc(17px * var(--fs));}
+  .pth-today-s{font-size:calc(12px * var(--fs));}
+  .pth-row-t{font-size:calc(13px * var(--fs));}
+  .story-title{font-size:calc(15px * var(--fs));}
+  .story-body{font-size:calc(15px * var(--fs));}
+  .ms-msg{font-size:calc(15px * var(--fs));}
+  .he-title{font-size:calc(14px * var(--fs));}
+  .he-note{font-size:calc(12px * var(--fs));}
+  .in-synth{font-size:calc(15px * var(--fs));}
+  .in-empty p{font-size:calc(14px * var(--fs));}
+  .in-empty span{font-size:calc(12.5px * var(--fs));}
+  .pi-hero-t{font-size:calc(14px * var(--fs));}
+  .pi-find-t{font-size:calc(13.5px * var(--fs));}
+  .pi-find-x{font-size:calc(13px * var(--fs));}
+  .pi-act{font-size:calc(13px * var(--fs));}
+  .pi-next{font-size:calc(12px * var(--fs));}
+  .pi-build p{font-size:calc(12.5px * var(--fs));}
+  .wr-win{font-size:calc(13.5px * var(--fs));}
+  .wr-standout{font-size:calc(13.5px * var(--fs));}
+  .wr-fwd{font-size:calc(14px * var(--fs));}
+  #qc-sub{font-size:calc(11px * var(--fs)) !important;}
+  #latest{font-size:calc(13px * var(--fs));}
+  .fs-grid{display:flex;gap:8px;}
+  .fs-btn{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 0;border:.5px solid var(--bds);border-radius:var(--r1);background:var(--bg);font-weight:700;color:var(--tx);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;-webkit-appearance:none;}
+  .fs-btn.on{border-color:var(--ac);background:var(--acl);color:var(--acd);}
 </style>
 </head>
 <body>
@@ -2097,6 +2135,15 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
     </div>
     <div style="margin-bottom:20px">
+      <div class="lbl" id="fs-lbl">Text size</div>
+      <div class="fs-grid">
+        <button class="fs-btn" data-fs="0.9" style="font-size:11px">A−</button>
+        <button class="fs-btn" data-fs="1" style="font-size:13px">A</button>
+        <button class="fs-btn" data-fs="1.15" style="font-size:15px">A+</button>
+        <button class="fs-btn" data-fs="1.3" style="font-size:17px">A++</button>
+      </div>
+    </div>
+    <div style="margin-bottom:20px">
       <div class="lbl">Your reason</div>
       <p style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Why did you start? We'll show this back to you in the SOS Remind tool when an urge hits.</p>
       <textarea id="set-why-input" rows="3" maxlength="280" placeholder="The man I'm becoming doesn't do this. I want to feel clear, driven and in control…" style="margin-bottom:8px"></textarea>
@@ -2218,7 +2265,7 @@ const TRANSLATIONS = {
     exportCsv:'Export CSV',
     allPhases:'All phases',
     pranayama:'Pranayama', meditation:'Meditation', poses:'Poses',
-    settings:'Settings', language:'Language', colourTheme:'Colour theme',
+    settings:'Settings', language:'Language', colourTheme:'Colour theme', textSize:'Text size',
     bugReport:'Bug report', bugDesc:'Found an issue? Describe it and send to the developer.',
     bugPlaceholder:'Describe the bug or error...', sendBug:'Send bug report',
     supportApp:'Support the app',
@@ -2316,7 +2363,7 @@ const TRANSLATIONS = {
     exportCsv:'Exportar CSV',
     allPhases:'Todas las fases',
     pranayama:'Pranayama', meditation:'Meditación', poses:'Posturas',
-    settings:'Ajustes', language:'Idioma', colourTheme:'Tema de color',
+    settings:'Ajustes', language:'Idioma', colourTheme:'Tema de color', textSize:'Tamaño del texto',
     bugReport:'Reporte de error', bugDesc:'¿Encontraste un problema? Descríbelo y envíalo al desarrollador.',
     bugPlaceholder:'Describe el error...', sendBug:'Enviar reporte',
     supportApp:'Apoya la app',
@@ -2424,7 +2471,7 @@ const TRANSLATIONS = {
     exportCsv:'Exporter CSV',
     allPhases:'Toutes les phases',
     pranayama:'Pranayama', meditation:'Méditation', poses:'Postures',
-    settings:'Paramètres', language:'Langue', colourTheme:'Thème de couleur',
+    settings:'Paramètres', language:'Langue', colourTheme:'Thème de couleur', textSize:'Taille du texte',
     bugReport:'Signaler un bug', bugDesc:'Tu as trouvé un problème ? Décris-le et envoie-le au développeur.',
     bugPlaceholder:'Décris le bug ou l\'erreur...', sendBug:'Envoyer le rapport',
     supportApp:'Soutenir l\'app',
@@ -2532,7 +2579,7 @@ const TRANSLATIONS = {
     exportCsv:'CSV exportieren',
     allPhases:'Alle Phasen',
     pranayama:'Pranayama', meditation:'Meditation', poses:'Haltungen',
-    settings:'Einstellungen', language:'Sprache', colourTheme:'Farbthema',
+    settings:'Einstellungen', language:'Sprache', colourTheme:'Farbthema', textSize:'Textgröße',
     bugReport:'Fehler melden', bugDesc:'Fehler gefunden? Beschreibe ihn und sende ihn an den Entwickler.',
     bugPlaceholder:'Beschreibe den Fehler...', sendBug:'Fehlerbericht senden',
     supportApp:'App unterstützen',
@@ -2640,7 +2687,7 @@ const TRANSLATIONS = {
     exportCsv:'Exportar CSV',
     allPhases:'Todas as fases',
     pranayama:'Pranayama', meditation:'Meditação', poses:'Posturas',
-    settings:'Configurações', language:'Idioma', colourTheme:'Tema de cor',
+    settings:'Configurações', language:'Idioma', colourTheme:'Tema de cor', textSize:'Tamanho do texto',
     bugReport:'Reportar bug', bugDesc:'Encontrou um problema? Descreve e envia ao desenvolvedor.',
     bugPlaceholder:'Descreve o bug ou erro...', sendBug:'Enviar relatório',
     supportApp:'Apoiar a app',
@@ -2748,7 +2795,7 @@ const TRANSLATIONS = {
     exportCsv:'تصدير CSV',
     allPhases:'جميع المراحل',
     pranayama:'برانياما', meditation:'تأمل', poses:'أوضاع',
-    settings:'الإعدادات', language:'اللغة', colourTheme:'لون الثيم',
+    settings:'الإعدادات', language:'اللغة', colourTheme:'لون الثيم', textSize:'حجم النص',
     bugReport:'الإبلاغ عن خطأ', bugDesc:'وجدت مشكلة؟ صفها وأرسلها للمطور.',
     bugPlaceholder:'صف الخطأ أو المشكلة...', sendBug:'إرسال التقرير',
     supportApp:'دعم التطبيق',
@@ -3057,6 +3104,9 @@ function applyLang() {
 
   // Milestone modal
   set('ms-close', t('msClose'));
+
+  // Text size label
+  set('fs-lbl', t('textSize'));
 
   // Back buttons on sub-screens
   document.querySelectorAll('.subback').forEach(b => { const sv = b.querySelector('svg'); b.innerHTML = (sv ? sv.outerHTML : '') + t('back'); });
@@ -3637,6 +3687,8 @@ S.mood = null;
 function save() { try { localStorage.setItem('sr_v3', JSON.stringify(S)); } catch(e){} }
 
 let curTheme = localStorage.getItem('sr_theme') || 'purple';
+let curFs = parseFloat(localStorage.getItem('sr_fontscale')) || 1;
+function applyFs(v) { curFs = v; document.documentElement.style.setProperty('--fs', v); }
 let qIdx = 0, qTimer = null;
 let storyIdx = 0, stories = [...STORIES];
 
@@ -6731,6 +6783,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Apply theme
   applyTheme(curTheme);
+
+  // Apply saved text size
+  applyFs(curFs);
+  document.querySelectorAll('.fs-btn').forEach(b => {
+    b.classList.toggle('on', parseFloat(b.dataset.fs) === curFs);
+    b.addEventListener('click', function() {
+      applyFs(parseFloat(this.dataset.fs));
+      localStorage.setItem('sr_fontscale', this.dataset.fs);
+      document.querySelectorAll('.fs-btn').forEach(x => x.classList.toggle('on', x === this));
+      if(navigator.vibrate) navigator.vibrate(8);
+    });
+  });
 
   // Apply saved language
   applyLang();
