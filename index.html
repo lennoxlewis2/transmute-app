@@ -6975,6 +6975,25 @@ document.addEventListener('DOMContentLoaded', function() {
   // Free-trial renewal reminder (fires ~24h before the first charge)
   checkTrialReminder();
 
+  // ---- NEW-DAY REFRESH ----
+  // Android keeps the TWA in memory across days, so the page never reloads and
+  // every date-derived render (streak day, header date, check-in state, Path)
+  // goes stale. On resume — and once a minute for an app left open past
+  // midnight — re-render everything iff the calendar date changed. applyLang()
+  // already re-renders header date, home, phases and Path in one call.
+  let _renderedDay = new Date().toDateString();
+  function refreshIfNewDay() {
+    const today = new Date().toDateString();
+    if(today === _renderedDay) return;
+    _renderedDay = today;
+    applyLang();
+    checkDailyReminder();
+  }
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'visible') refreshIfNewDay();
+  });
+  setInterval(refreshIfNewDay, 60000);
+
   document.getElementById('sos-btn').addEventListener('click', uStart);
 
   // Breath tool — toggle the breathing bloom (engine lives in uBreathRun)
