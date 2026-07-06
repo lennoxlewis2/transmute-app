@@ -4027,6 +4027,9 @@ async function _sbRpc(fn, body) {
 // never re-checked; an unresolved install retries every open until the backend answers.
 async function claimFounderSpot() {
   if(!founderConfigured()) return;                     // backend not wired yet
+  // Dev/preview runs must never consume real founder spots on the production
+  // backend — reads (founder_status) stay live for UI testing, claims don't.
+  if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
   if(localStorage.getItem('uw_founder_state')) return; // already resolved
   try {
     const r = await _sbRpc('claim_founder', {});
