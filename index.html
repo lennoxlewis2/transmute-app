@@ -8015,11 +8015,23 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
         _hidePaywall();
         goTab('urge');
       } else {
-        alert('No active membership found. Contact support if you believe this is an error.');
+        // No Play purchase — fall back to the support unlock-code path.
+        promptUnlockCode('No active membership found on Google Play.');
       }
     } catch(e) {
       alert('Could not verify your membership. Check your connection and try again.');
     }
+  }
+
+  function promptUnlockCode(prefix) {
+    var code = prompt((prefix ? prefix + '\n' : '') + 'Enter your unlock code:');
+    if(code && code.trim().toUpperCase() === 'TRANSMUTE99') {
+      localStorage.setItem('uw_unlocked', '1');
+      _hidePaywall();
+      goTab('urge');
+      return;
+    }
+    if(code !== null) alert('Code not recognised. Contact support if you are already a member.');
   }
 
   if(unlockBtn) unlockBtn.addEventListener('click', function() {
@@ -8031,17 +8043,12 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
   });
 
   if(restoreBtn) restoreBtn.addEventListener('click', function() {
-    var code = prompt('Enter your unlock code:');
-    if(code && code.trim().toUpperCase() === 'TRANSMUTE99') {
-      localStorage.setItem('uw_unlocked', '1');
-      _hidePaywall();
-      goTab('urge');
-      return;
-    }
+    // In the TWA, Play restore comes first — a paying member should never see
+    // a code prompt. The code path remains as the web / no-purchase fallback.
     if (isTWA()) {
       restoreGooglePlay();
     } else {
-      if(code !== null) alert('Code not recognised. Contact support if you are already a member.');
+      promptUnlockCode();
     }
   });
 })();
