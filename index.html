@@ -7265,11 +7265,23 @@ document.addEventListener('DOMContentLoaded', function() {
   if(!ws) return;
 
   var _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  var _isStandalone = window.matchMedia('(display-mode: standalone)').matches || !!window.navigator.standalone;
+  // ?standalone=1 lets the installed-app path be exercised in a normal browser tab.
+  var _isStandalone = window.matchMedia('(display-mode: standalone)').matches || !!window.navigator.standalone || /[?&]standalone=1/.test(location.search);
 
-  if(_isStandalone || localStorage.getItem('ws_seen')) {
+  // Run onboarding for anyone who hasn't completed it — INCLUDING the installed
+  // app: a Play Store user's very first run is in standalone (TWA), and "Reset
+  // all data" must land back here too. Guard: never onboard over live data —
+  // a streak with no ws_seen predates this gate (or is restored data).
+  if(localStorage.getItem('ws_seen') || (typeof S !== 'undefined' && S.startDate)) {
     ws.classList.add('hidden');
     return;
+  }
+  if(_isStandalone) {
+    // Already installed — the final slide's Add-to-Home-Screen UI is
+    // meaningless here; the "Let's go ✓" next button remains the exit.
+    var _wsa = document.getElementById('ws-android'), _wsi = document.getElementById('ws-ios');
+    if(_wsa) _wsa.style.display = 'none';
+    if(_wsi) _wsi.style.display = 'none';
   }
 
   var totalSlides = 11;
