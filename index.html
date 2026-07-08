@@ -529,6 +529,11 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .rs-ic{display:flex;align-items:center;justify-content:center;width:54px;height:54px;margin:0 auto 14px;border-radius:50%;background:rgba(108,92,231,0.14);color:var(--ac2);}
 .rs-cancel{background:none;border:none;color:var(--ts);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;padding:6px;}
 .rs-cancel:active{opacity:.6;}
+.wipe-box{background:var(--cor50);border:1px solid var(--cor6);border-radius:12px;padding:12px 14px;margin-bottom:16px;text-align:start;}
+.wipe-box-t{font-size:12px;font-weight:700;color:var(--cor2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.4px;}
+.wipe-box ul{margin:0;padding-inline-start:16px;}
+.wipe-box li{font-size:calc(12.5px * var(--fs));color:var(--ts);line-height:1.55;margin-bottom:3px;}
+.wipe-box-n{font-size:calc(11.5px * var(--fs));color:var(--tt);line-height:1.5;margin-top:9px;}
 /* Toast */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--tx);color:var(--sf);padding:9px 18px;border-radius:18px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9999;white-space:nowrap;max-width:90vw;text-align:center;}
 .toast.on{opacity:1;}
@@ -2183,6 +2188,11 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <p id="demo-desc" style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Load a sample profile to preview the full Predictive Insights screen without weeks of logging. Your real data is saved and restored when you exit.</p>
       <button class="btn-g" id="demo-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3.5-3.5 3 3L21 7"/></svg><span id="demo-lbl">Load demo insights</span></button>
     </div>
+    <div style="margin-bottom:20px">
+      <div class="lbl" id="wipe-lbl">Start over</div>
+      <p id="wipe-desc" style="font-size:13px;color:var(--ts);margin-bottom:9px;line-height:1.5;">Permanently erase everything on this device — streaks, history, progress and settings — and go back to the very start.</p>
+      <button class="btn-g btn-d" id="wipe-btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg><span id="wipe-btn-lbl">Reset all data</span></button>
+    </div>
     <div data-founder-badge style="display:none;justify-content:center;margin-bottom:12px;">
       <span class="founder-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 12.5H11l-1 9.5 8.5-11H12z"/></svg>Founder <span data-founder-num></span> · lifetime access</span>
     </div>
@@ -2209,6 +2219,27 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
     <div class="ms-msg" id="reset-msg">Every day you held changed you, and none of that resets. Your best streak and your insights stay with you. This is just day one of the next one.</div>
     <button class="ms-close" id="reset-confirm" style="width:100%;margin-bottom:9px;">Start a fresh streak</button>
     <button class="rs-cancel" id="reset-cancel">Stay on this streak</button>
+  </div>
+</div>
+
+<!-- RESET-ALL-DATA MODAL — unlike the supportive streak reset above, this IS destructive: full wipe back to onboarding -->
+<div class="ms-overlay" id="wipe-overlay">
+  <div class="ms-modal">
+    <span class="rs-ic" style="background:var(--cor50);color:var(--cor2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+    <div class="ms-title" id="wipe-title">Erase everything?</div>
+    <div class="ms-msg" id="wipe-msg" style="margin-bottom:12px;">This wipes the app back to a brand-new install. It cannot be undone.</div>
+    <div class="wipe-box">
+      <div class="wipe-box-t" id="wipe-box-t">You will permanently lose:</div>
+      <ul>
+        <li id="wipe-i1">Your current streak and all past streaks</li>
+        <li id="wipe-i2">Every check-in, urge win and weekly review</li>
+        <li id="wipe-i3">Path progress, insights and milestones</li>
+        <li id="wipe-i4">Your reason, name and all settings</li>
+      </ul>
+      <div class="wipe-box-n" id="wipe-note">You'll start again from onboarding. A paid membership can be restored on the upgrade screen.</div>
+    </div>
+    <button class="ms-close" id="wipe-confirm" style="width:100%;margin-bottom:9px;background:linear-gradient(135deg,#D85A30,#B33230);">Erase all data</button>
+    <button class="rs-cancel" id="wipe-cancel">Keep my data</button>
   </div>
 </div>
 
@@ -2259,6 +2290,7 @@ const TRANSLATIONS = {
     streakStartDate:'Streak start date',
     setStartDate:'Set start date', reset:'Start fresh',
     resetTitle:'A slip isn\'t the end', resetMsg:'Every day you held changed you, and none of that resets. Your best streak and your insights stay with you. This is just day one of the next one.', resetConfirm:'Start a fresh streak', resetCancel:'Stay on this streak', yourPhase:'Your phase',
+    wipeLbl:'Start over', wipeDesc:'Permanently erase everything on this device — streaks, history, progress and settings — and go back to the very start.', wipeBtn:'Reset all data', wipeTitle:'Erase everything?', wipeMsg:'This wipes the app back to a brand-new install. It cannot be undone.', wipeBoxT:'You will permanently lose:', wipeI1:'Your current streak and all past streaks', wipeI2:'Every check-in, urge win and weekly review', wipeI3:'Path progress, insights and milestones', wipeI4:'Your reason, name and all settings', wipeNote:'You\'ll start again from onboarding. A paid membership can be restored on the upgrade screen.', wipeConfirm:'Erase all data', wipeCancel:'Keep my data',
     histTitle:'Your journey', histSub:'Every check-in, review and urge you\'ve ridden out.',
     insTitle:'Your insights', insSub:'What\'s actually changing, based on your own check-ins.',
     insVitalsLbl:'Your vitals · all-time avg vs last 7 days', insDayStreak:'Day streak', insCheckins:'Check-ins', insUrgesBeaten:'Urges beaten',
@@ -2408,6 +2440,7 @@ const TRANSLATIONS = {
     confirmReset:'¿Reiniciar tu racha? Esto borrará tu fecha de inicio.',
     checkedInShort:'Registrado hoy ✓ · toca para actualizar',
     resetTitle:'Un desliz no es el final', resetMsg:'Cada día que aguantaste te cambió, y nada de eso se reinicia. Tu mejor racha y tus insights se quedan contigo. Esto es solo el día uno de la siguiente.', resetConfirm:'Empezar una racha nueva', resetCancel:'Seguir con esta racha', yourPhase:'Tu fase',
+    wipeLbl:'Empezar de cero', wipeDesc:'Borra permanentemente todo en este dispositivo — rachas, historial, progreso y ajustes — y vuelve al principio.', wipeBtn:'Restablecer todos los datos', wipeTitle:'¿Borrar todo?', wipeMsg:'Esto deja la app como recién instalada. No se puede deshacer.', wipeBoxT:'Perderás para siempre:', wipeI1:'Tu racha actual y todas las anteriores', wipeI2:'Cada registro, impulso superado y revisión semanal', wipeI3:'Progreso del Camino, insights y logros', wipeI4:'Tu razón, tu nombre y todos los ajustes', wipeNote:'Volverás a pasar por la introducción. Una membresía pagada se puede restaurar en la pantalla de mejora.', wipeConfirm:'Borrar todos los datos', wipeCancel:'Conservar mis datos',
     histTitle:'Tu recorrido', histSub:'Cada registro, revisión e impulso que has superado.',
     insTitle:'Tus insights', insSub:'Lo que realmente está cambiando, según tus propios registros.',
     insVitalsLbl:'Tus constantes · media histórica vs últimos 7 días', insDayStreak:'Días de racha', insCheckins:'Registros', insUrgesBeaten:'Impulsos vencidos',
@@ -2516,6 +2549,7 @@ const TRANSLATIONS = {
     confirmReset:'Réinitialiser ta série ? Ta date de début sera effacée.',
     checkedInShort:'Enregistré aujourd\'hui ✓ · touche pour modifier',
     resetTitle:'Un écart n\'est pas la fin', resetMsg:'Chaque jour tenu t\'a changé, et rien de tout ça ne se réinitialise. Ta meilleure série et tes insights restent avec toi. Ce n\'est que le jour un de la prochaine.', resetConfirm:'Commencer une nouvelle série', resetCancel:'Rester sur cette série', yourPhase:'Ta phase',
+    wipeLbl:'Tout recommencer', wipeDesc:'Efface définitivement tout sur cet appareil — séries, historique, progression et réglages — et repart de zéro.', wipeBtn:'Réinitialiser toutes les données', wipeTitle:'Tout effacer ?', wipeMsg:'L\'app redevient comme neuve. C\'est irréversible.', wipeBoxT:'Tu perdras définitivement :', wipeI1:'Ta série actuelle et toutes les précédentes', wipeI2:'Chaque check-in, envie surmontée et bilan hebdo', wipeI3:'Progression du Chemin, insights et jalons', wipeI4:'Ta raison, ton nom et tous les réglages', wipeNote:'Tu repasseras par l\'introduction. Un abonnement payé peut être restauré depuis l\'écran d\'upgrade.', wipeConfirm:'Effacer toutes les données', wipeCancel:'Garder mes données',
     histTitle:'Ton parcours', histSub:'Chaque enregistrement, bilan et envie que tu as surmontée.',
     insTitle:'Tes insights', insSub:'Ce qui change vraiment, d\'après tes propres enregistrements.',
     insVitalsLbl:'Tes constantes · moyenne globale vs 7 derniers jours', insDayStreak:'Jours de série', insCheckins:'Enregistrements', insUrgesBeaten:'Envies vaincues',
@@ -2624,6 +2658,7 @@ const TRANSLATIONS = {
     confirmReset:'Serie zurücksetzen? Das löscht dein Startdatum.',
     checkedInShort:'Heute eingetragen ✓ · tippe zum Ändern',
     resetTitle:'Ein Ausrutscher ist nicht das Ende', resetMsg:'Jeder Tag, den du durchgehalten hast, hat dich verändert — und nichts davon wird zurückgesetzt. Deine beste Serie und deine Einblicke bleiben bei dir. Das ist nur Tag eins der nächsten.', resetConfirm:'Neue Serie starten', resetCancel:'Bei dieser Serie bleiben', yourPhase:'Deine Phase',
+    wipeLbl:'Neu anfangen', wipeDesc:'Löscht dauerhaft alles auf diesem Gerät — Serien, Verlauf, Fortschritt und Einstellungen — und beginnt ganz von vorn.', wipeBtn:'Alle Daten zurücksetzen', wipeTitle:'Alles löschen?', wipeMsg:'Die App wird wie neu installiert. Das lässt sich nicht rückgängig machen.', wipeBoxT:'Du verlierst dauerhaft:', wipeI1:'Deine aktuelle Serie und alle bisherigen', wipeI2:'Jeden Check-in, besiegten Drang und Wochenrückblick', wipeI3:'Pfad-Fortschritt, Einblicke und Meilensteine', wipeI4:'Deinen Grund, Namen und alle Einstellungen', wipeNote:'Du startest wieder beim Onboarding. Eine bezahlte Mitgliedschaft kannst du im Upgrade-Bildschirm wiederherstellen.', wipeConfirm:'Alle Daten löschen', wipeCancel:'Meine Daten behalten',
     histTitle:'Dein Weg', histSub:'Jeder Eintrag, jede Wochenbilanz und jeder überstandene Drang.',
     insTitle:'Deine Einblicke', insSub:'Was sich wirklich verändert — basierend auf deinen eigenen Einträgen.',
     insVitalsLbl:'Deine Werte · Gesamtschnitt vs letzte 7 Tage', insDayStreak:'Tage-Serie', insCheckins:'Einträge', insUrgesBeaten:'Besiegte Dränge',
@@ -2732,6 +2767,7 @@ const TRANSLATIONS = {
     confirmReset:'Reiniciar sequência? Isto irá apagar tua data de início.',
     checkedInShort:'Registrado hoje ✓ · toque para atualizar',
     resetTitle:'Um deslize não é o fim', resetMsg:'Cada dia que você aguentou te mudou, e nada disso é apagado. Sua melhor sequência e seus insights ficam com você. Este é só o dia um da próxima.', resetConfirm:'Começar uma nova sequência', resetCancel:'Continuar nesta sequência', yourPhase:'Sua fase',
+    wipeLbl:'Começar do zero', wipeDesc:'Apaga permanentemente tudo neste dispositivo — sequências, histórico, progresso e configurações — e volta ao início.', wipeBtn:'Redefinir todos os dados', wipeTitle:'Apagar tudo?', wipeMsg:'O app volta a ser como recém-instalado. Não dá para desfazer.', wipeBoxT:'Você perderá para sempre:', wipeI1:'Sua sequência atual e todas as anteriores', wipeI2:'Cada check-in, impulso vencido e revisão semanal', wipeI3:'Progresso do Caminho, insights e marcos', wipeI4:'Sua razão, seu nome e todas as configurações', wipeNote:'Você passará pela introdução de novo. Uma assinatura paga pode ser restaurada na tela de upgrade.', wipeConfirm:'Apagar todos os dados', wipeCancel:'Manter meus dados',
     histTitle:'Sua jornada', histSub:'Cada registro, revisão e impulso que você superou.',
     insTitle:'Seus insights', insSub:'O que está realmente mudando, com base nos seus próprios registros.',
     insVitalsLbl:'Seus sinais · média geral vs últimos 7 dias', insDayStreak:'Dias de sequência', insCheckins:'Registros', insUrgesBeaten:'Impulsos vencidos',
@@ -2840,6 +2876,7 @@ const TRANSLATIONS = {
     confirmReset:'إعادة تعيين سلسلتك؟ سيؤدي ذلك إلى مسح تاريخ البدء.',
     checkedInShort:'سجّلت اليوم ✓ · اضغط للتعديل',
     resetTitle:'الزلّة ليست النهاية', resetMsg:'كل يوم صمدت فيه غيّرك، ولا شيء من ذلك يُمحى. أفضل سلسلة لك ورؤاك تبقى معك. هذا فقط اليوم الأول من السلسلة التالية.', resetConfirm:'ابدأ سلسلة جديدة', resetCancel:'واصل هذه السلسلة', yourPhase:'مرحلتك',
+    wipeLbl:'البدء من جديد', wipeDesc:'يمحو كل شيء على هذا الجهاز نهائيًا — السلاسل والسجل والتقدّم والإعدادات — ويعيدك إلى البداية.', wipeBtn:'إعادة تعيين كل البيانات', wipeTitle:'محو كل شيء؟', wipeMsg:'يعود التطبيق كأنه مثبّت حديثًا. لا يمكن التراجع عن ذلك.', wipeBoxT:'ستفقد نهائيًا:', wipeI1:'سلسلتك الحالية وكل السلاسل السابقة', wipeI2:'كل تسجيل يومي ورغبة تغلّبت عليها ومراجعة أسبوعية', wipeI3:'تقدّم المسار والرؤى والإنجازات', wipeI4:'سببك واسمك وكل الإعدادات', wipeNote:'ستمر بالتهيئة من جديد. يمكن استعادة العضوية المدفوعة من شاشة الترقية.', wipeConfirm:'محو كل البيانات', wipeCancel:'الاحتفاظ ببياناتي',
     histTitle:'رحلتك', histSub:'كل تسجيل ومراجعة ورغبة تجاوزتها.',
     insTitle:'رؤاك', insSub:'ما الذي يتغيّر فعلاً، بناءً على تسجيلاتك.',
     insVitalsLbl:'مؤشراتك · المتوسط العام مقابل آخر ٧ أيام', insDayStreak:'أيام السلسلة', insCheckins:'التسجيلات', insUrgesBeaten:'رغبات هُزمت',
@@ -2962,6 +2999,19 @@ function applyLang() {
   set('reset-msg', t('resetMsg'));
   set('reset-confirm', t('resetConfirm'));
   set('reset-cancel', t('resetCancel'));
+  set('wipe-lbl', t('wipeLbl'));
+  set('wipe-desc', t('wipeDesc'));
+  set('wipe-btn-lbl', t('wipeBtn'));
+  set('wipe-title', t('wipeTitle'));
+  set('wipe-msg', t('wipeMsg'));
+  set('wipe-box-t', t('wipeBoxT'));
+  set('wipe-i1', t('wipeI1'));
+  set('wipe-i2', t('wipeI2'));
+  set('wipe-i3', t('wipeI3'));
+  set('wipe-i4', t('wipeI4'));
+  set('wipe-note', t('wipeNote'));
+  set('wipe-confirm', t('wipeConfirm'));
+  set('wipe-cancel', t('wipeCancel'));
   const setDateBtn = document.getElementById('set-date-btn');
   if(setDateBtn) setDateBtn.textContent = t('setStartDate');
   const startRevBtn = document.getElementById('start-rev-btn');
@@ -6974,6 +7024,25 @@ document.addEventListener('DOMContentLoaded', function() {
     toast(t('toastStreakReset'));
   });
 
+  // "Reset all data" (Settings) — factory wipe. Clears EVERY localStorage key
+  // (sr_v3, name, lang, theme, Path, trial/unlock state…) so the reload boots
+  // as a brand-new install straight into onboarding. Members re-restore via
+  // the paywall's Play restore (#126).
+  const wipeOverlay = document.getElementById('wipe-overlay');
+  document.getElementById('wipe-btn').addEventListener('click', function() {
+    wipeOverlay.style.display = 'flex';
+  });
+  document.getElementById('wipe-cancel').addEventListener('click', function() {
+    wipeOverlay.style.display = 'none';
+  });
+  wipeOverlay.addEventListener('click', function(e) {
+    if(e.target === wipeOverlay) wipeOverlay.style.display = 'none';
+  });
+  document.getElementById('wipe-confirm').addEventListener('click', function() {
+    localStorage.clear();
+    location.reload();
+  });
+
   // ---- HISTORY ----
   document.getElementById('hf-all').addEventListener('click', function() { renderHistory('all'); });
   document.getElementById('hf-daily').addEventListener('click', function() { renderHistory('daily'); });
@@ -7632,6 +7701,10 @@ function _backDismiss() {
   // 3. Reset-streak confirmation
   const ro = document.getElementById('reset-overlay');
   if(ro && ro.style.display === 'flex') { ro.style.display = 'none'; return true; }
+
+  // 3b. Reset-all-data confirmation
+  const wo = document.getElementById('wipe-overlay');
+  if(wo && wo.style.display === 'flex') { wo.style.display = 'none'; return true; }
 
   // 4. Name entry / rename modal
   const nm = document.getElementById('name-modal');
