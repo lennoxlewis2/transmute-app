@@ -7039,7 +7039,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if(e.target === wipeOverlay) wipeOverlay.style.display = 'none';
   });
   document.getElementById('wipe-confirm').addEventListener('click', function() {
+    // A granted founder spot is an entitlement, not user data — carry it through
+    // the wipe. The Supabase claim is anonymous, so re-claiming would burn a
+    // second slot and hand out a new, higher number (or 'missed' once the cap
+    // fills). Paid purchases are NOT preserved — Play restore recovers those.
+    const fState = localStorage.getItem('uw_founder_state');
+    const fNum = localStorage.getItem('uw_founder_num');
     localStorage.clear();
+    if(fState === 'granted') {
+      localStorage.setItem('uw_founder_state', fState);
+      if(fNum) localStorage.setItem('uw_founder_num', fNum);
+    }
     location.reload();
   });
 
