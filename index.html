@@ -3749,7 +3749,15 @@ const PATH_LESSONS = [
 // leave a required field (entries/reviews) undefined — a missing array would throw
 // in updateHome() during init and kill all event binding, freezing the whole app.
 const S_DEFAULTS = {startDate:null,best:0,entries:[],reviews:[],mood:null,path:[]};
-let S = Object.assign({}, S_DEFAULTS, JSON.parse(localStorage.getItem('sr_v3') || 'null'));
+// A truncated/corrupt save (killed mid-write) must never brick the app: keep
+// the bad blob for support recovery and boot with defaults instead of letting
+// a SyntaxError kill this whole script (permanent white screen).
+let S;
+try { S = Object.assign({}, S_DEFAULTS, JSON.parse(localStorage.getItem('sr_v3') || 'null')); }
+catch(e) {
+  try { localStorage.setItem('sr_v3_corrupt', localStorage.getItem('sr_v3') || ''); } catch(_) {}
+  S = Object.assign({}, S_DEFAULTS);
+}
 if(S.streak !== undefined && !S.startDate && S.streak > 0) {
   const d = new Date(); d.setDate(d.getDate() - S.streak);
   S.startDate = d.toISOString().split('T')[0]; delete S.streak;
