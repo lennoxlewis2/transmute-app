@@ -5386,7 +5386,9 @@ function renderStory() {
            <a href="${escHtml(s.url)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--ac4);text-decoration:none;font-weight:500;">View on Reddit →</a>
          </div>`
       : '';
-    const flair = s.isReddit && s.flair ? `r/semenretention · ${escHtml(s.flair)}` : `Community · ${escHtml(s.flair)}`;
+    // Store-safe: never surface the subreddit name in the flair line (Play
+    // policy call from the listing prep) — both live and curated say Community.
+    const flair = 'Community' + (s.flair ? ' · ' + escHtml(s.flair) : '');
     card.innerHTML = `<div class="story-flair">${flair}</div>
       <div class="story-title">${escHtml(s.title)}</div>
       <div class="story-meta">${s.days ? 'Day ' + s.days + ' streak · ' : ''}${s.up.toLocaleString()} upvotes</div>
