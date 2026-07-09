@@ -667,8 +667,10 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 
   .ws{position:fixed;inset:0;background:#080615;z-index:1000;display:flex;flex-direction:column;overflow:hidden;}
   .ws.hidden{display:none;}
-  .ws-slides{display:flex;flex:1;transition:transform .4s cubic-bezier(.4,0,.2,1);will-change:transform;}
-  .ws-slide{min-width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 28px 24px;text-align:center;}
+  /* min-height:0 lets the slide area compress instead of shoving the footer
+     (Next button) off-screen on short viewports; tall slides scroll inside. */
+  .ws-slides{display:flex;flex:1;min-height:0;transition:transform .4s cubic-bezier(.4,0,.2,1);will-change:transform;}
+  .ws-slide{min-width:100vw;display:flex;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;overflow-y:auto;padding:32px 28px 20px;text-align:center;}
   .ws-icon{display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
   .ws-title{font-size:30px;font-weight:800;color:white;margin-bottom:12px;line-height:1.2;letter-spacing:-.5px;}
   .ws-sub{font-size:15px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:300px;}
@@ -738,7 +740,10 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .ws-hero-perk{font-size:13px;color:rgba(255,255,255,0.8);display:flex;align-items:center;gap:8px;}
   .ws-trial{margin-top:16px;padding:12px;background:rgba(255,255,255,0.05);border-radius:12px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.5;text-align:center;}
   .ws-trial strong{color:rgba(255,255,255,0.8);}
-  .ws-footer{padding:20px 28px max(20px,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;}
+  /* Bottom pad must clear the Android system nav bar: the TWA draws edge-to-edge
+     under it and env(safe-area-inset-bottom) is not reliably reported there, so
+     keep a hard 52px floor rather than trusting the inset alone. */
+  .ws-footer{padding:16px 28px max(52px,calc(env(safe-area-inset-bottom) + 20px));display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;}
   .ws-dots{display:flex;gap:6px;margin-bottom:4px;}
   .ws-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.2);transition:all .3s;}
   .ws-dot.on{width:20px;background:var(--ac);}
@@ -7298,7 +7303,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(ni && ni.value.trim()) name = ni.value.trim().split(' ')[0];
     if(n === COMMIT_SLIDE) {
       var title = document.getElementById('ws-commit-title');
-      if(title) title.innerHTML = name ? (name + ' —<br>this is your line<br>in the sand.') : 'This is your<br>line in the sand.';
+      if(title) title.innerHTML = name ? (name + ',<br>this is your line<br>in the sand.') : 'This is your<br>line in the sand.';
       var card = document.getElementById('ws-commit-card');
       if(card) {
         var rows = [];
