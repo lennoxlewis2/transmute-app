@@ -4286,7 +4286,12 @@ function saveEntry() {
   const triggers = [...document.querySelectorAll('.trig-btn.on')].map(b => b.textContent.trim());
   const custom = document.getElementById('ctrig').value.trim();
   if(custom) triggers.push(custom);
-  S.entries.push({type:'daily',date:new Date().toISOString(),day:calcStreak(),mood,energy,clarity,urge,social,triggers,note});
+  const entry = {type:'daily',date:new Date().toISOString(),day:calcStreak(),mood,energy,clarity,urge,social,triggers,note};
+  // One daily entry per calendar day: re-logging replaces today's entry (the
+  // home card promises "tap to update") instead of double-counting the day.
+  const todayStr = new Date().toDateString();
+  const dupIdx = S.entries.findIndex(e => e.type === 'daily' && new Date(e.date).toDateString() === todayStr);
+  if(dupIdx >= 0) S.entries[dupIdx] = entry; else S.entries.push(entry);
   save(); updateHome();
   document.getElementById('jnote').value = '';
   document.getElementById('ctrig').value = '';
