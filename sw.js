@@ -20,8 +20,12 @@ self.addEventListener('fetch', e => {
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        const clone = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, clone));
+        // Only cache good same-origin responses — a 404/500 or an opaque
+        // cross-origin body must never overwrite a working offline copy.
+        if (res.ok && e.request.url.startsWith(self.location.origin)) {
+          const clone = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone)).catch(() => {});
+        }
         return res;
       })
       .catch(() => caches.match(e.request))
