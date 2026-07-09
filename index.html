@@ -2183,6 +2183,15 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       <p id="notif-status" style="font-size:11px;color:var(--ts);text-align:center;margin-top:6px;display:none;line-height:1.5;"></p>
     </div>
     <div style="margin-bottom:20px">
+      <div class="lbl" id="mem-lbl">Membership</div>
+      <div style="background:var(--sf);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:8px;">
+        <div id="mem-status" style="font-size:14px;font-weight:700;color:var(--tx);"></div>
+        <div id="mem-sub-line" style="font-size:12px;color:var(--ts);margin-top:4px;line-height:1.5;"></div>
+      </div>
+      <button class="btn" id="mem-cta" style="margin-top:0;margin-bottom:8px;">See membership options</button>
+      <button class="btn-g" id="mem-restore" style="width:100%;">Restore purchase</button>
+    </div>
+    <div style="margin-bottom:20px">
       <div class="lbl">Bug report</div>
       <p style="font-size:13px;color:var(--ts);margin-bottom:9px">Found an issue? Describe it and send to the developer.</p>
       <textarea id="bug-txt" rows="4" placeholder="Describe the bug or error..." style="margin-bottom:8px"></textarea>
@@ -2296,6 +2305,7 @@ const TRANSLATIONS = {
     setStartDate:'Set start date', reset:'Start fresh',
     resetTitle:'A slip isn\'t the end', resetMsg:'Every day you held changed you, and none of that resets. Your best streak and your insights stay with you. This is just day one of the next one.', resetConfirm:'Start a fresh streak', resetCancel:'Stay on this streak', yourPhase:'Your phase',
     wipeLbl:'Start over', wipeDesc:'Permanently erase everything on this device — streaks, history, progress and settings — and go back to the very start.', wipeBtn:'Reset all data', wipeTitle:'Erase everything?', wipeMsg:'This wipes the app back to a brand-new install. It cannot be undone.', wipeBoxT:'You will permanently lose:', wipeI1:'Your current streak and all past streaks', wipeI2:'Every check-in, urge win and weekly review', wipeI3:'Path progress, insights and milestones', wipeI4:'Your reason, name and all settings', wipeNote:'You\'ll start again from onboarding. A paid membership can be restored on the upgrade screen.', wipeConfirm:'Erase all data', wipeCancel:'Keep my data',
+    memLbl:'Membership', memFounder:'Founder #{n} · lifetime access', memFounderSub:'Everything unlocked, free forever — you were here first.', memSub:'Member · {plan}', memPlanYearly:'yearly plan', memPlanMonthly:'monthly plan', memManageSub:'Billed through Google Play. Cancel or change any time.', memFull:'Member · full access', memFullSub:'Everything unlocked. Thank you for backing Transmute.', memTrial:'Free taster · {d} days left', memFree:'Free plan', memFreeSub:'Your streak, check-ins and breathing are free forever. Membership unlocks Urge Wave, predictive insights and the full Path.', memSee:'See membership options', memManage:'Manage subscription', memRestore:'Restore purchase',
     histTitle:'Your journey', histSub:'Every check-in, review and urge you\'ve ridden out.',
     insTitle:'Your insights', insSub:'What\'s actually changing, based on your own check-ins.',
     insVitalsLbl:'Your vitals · all-time avg vs last 7 days', insDayStreak:'Day streak', insCheckins:'Check-ins', insUrgesBeaten:'Urges beaten',
@@ -2446,6 +2456,7 @@ const TRANSLATIONS = {
     checkedInShort:'Registrado hoy ✓ · toca para actualizar',
     resetTitle:'Un desliz no es el final', resetMsg:'Cada día que aguantaste te cambió, y nada de eso se reinicia. Tu mejor racha y tus insights se quedan contigo. Esto es solo el día uno de la siguiente.', resetConfirm:'Empezar una racha nueva', resetCancel:'Seguir con esta racha', yourPhase:'Tu fase',
     wipeLbl:'Empezar de cero', wipeDesc:'Borra permanentemente todo en este dispositivo — rachas, historial, progreso y ajustes — y vuelve al principio.', wipeBtn:'Restablecer todos los datos', wipeTitle:'¿Borrar todo?', wipeMsg:'Esto deja la app como recién instalada. No se puede deshacer.', wipeBoxT:'Perderás para siempre:', wipeI1:'Tu racha actual y todas las anteriores', wipeI2:'Cada registro, impulso superado y revisión semanal', wipeI3:'Progreso del Camino, insights y logros', wipeI4:'Tu razón, tu nombre y todos los ajustes', wipeNote:'Volverás a pasar por la introducción. Una membresía pagada se puede restaurar en la pantalla de mejora.', wipeConfirm:'Borrar todos los datos', wipeCancel:'Conservar mis datos',
+    memLbl:'Membresía', memFounder:'Fundador #{n} · acceso de por vida', memFounderSub:'Todo desbloqueado, gratis para siempre — llegaste primero.', memSub:'Miembro · {plan}', memPlanYearly:'plan anual', memPlanMonthly:'plan mensual', memManageSub:'Facturado a través de Google Play. Cancela o cambia cuando quieras.', memFull:'Miembro · acceso completo', memFullSub:'Todo desbloqueado. Gracias por apoyar Transmute.', memTrial:'Prueba gratuita · quedan {d} días', memFree:'Plan gratuito', memFreeSub:'Tu racha, registros y respiración son gratis para siempre. La membresía desbloquea Urge Wave, insights predictivos y el Camino completo.', memSee:'Ver opciones de membresía', memManage:'Gestionar suscripción', memRestore:'Restaurar compra',
     histTitle:'Tu recorrido', histSub:'Cada registro, revisión e impulso que has superado.',
     insTitle:'Tus insights', insSub:'Lo que realmente está cambiando, según tus propios registros.',
     insVitalsLbl:'Tus constantes · media histórica vs últimos 7 días', insDayStreak:'Días de racha', insCheckins:'Registros', insUrgesBeaten:'Impulsos vencidos',
@@ -2555,6 +2566,7 @@ const TRANSLATIONS = {
     checkedInShort:'Enregistré aujourd\'hui ✓ · touche pour modifier',
     resetTitle:'Un écart n\'est pas la fin', resetMsg:'Chaque jour tenu t\'a changé, et rien de tout ça ne se réinitialise. Ta meilleure série et tes insights restent avec toi. Ce n\'est que le jour un de la prochaine.', resetConfirm:'Commencer une nouvelle série', resetCancel:'Rester sur cette série', yourPhase:'Ta phase',
     wipeLbl:'Tout recommencer', wipeDesc:'Efface définitivement tout sur cet appareil — séries, historique, progression et réglages — et repart de zéro.', wipeBtn:'Réinitialiser toutes les données', wipeTitle:'Tout effacer ?', wipeMsg:'L\'app redevient comme neuve. C\'est irréversible.', wipeBoxT:'Tu perdras définitivement :', wipeI1:'Ta série actuelle et toutes les précédentes', wipeI2:'Chaque check-in, envie surmontée et bilan hebdo', wipeI3:'Progression du Chemin, insights et jalons', wipeI4:'Ta raison, ton nom et tous les réglages', wipeNote:'Tu repasseras par l\'introduction. Un abonnement payé peut être restauré depuis l\'écran d\'upgrade.', wipeConfirm:'Effacer toutes les données', wipeCancel:'Garder mes données',
+    memLbl:'Adhésion', memFounder:'Fondateur n°{n} · accès à vie', memFounderSub:'Tout est débloqué, gratuit à vie — tu étais là en premier.', memSub:'Membre · {plan}', memPlanYearly:'formule annuelle', memPlanMonthly:'formule mensuelle', memManageSub:'Facturé via Google Play. Annule ou change à tout moment.', memFull:'Membre · accès complet', memFullSub:'Tout est débloqué. Merci de soutenir Transmute.', memTrial:'Essai gratuit · {d} jours restants', memFree:'Formule gratuite', memFreeSub:'Ta série, tes check-ins et la respiration restent gratuits à vie. L\'adhésion débloque Urge Wave, les insights prédictifs et la Voie complète.', memSee:'Voir les formules', memManage:'Gérer l\'abonnement', memRestore:'Restaurer l\'achat',
     histTitle:'Ton parcours', histSub:'Chaque enregistrement, bilan et envie que tu as surmontée.',
     insTitle:'Tes insights', insSub:'Ce qui change vraiment, d\'après tes propres enregistrements.',
     insVitalsLbl:'Tes constantes · moyenne globale vs 7 derniers jours', insDayStreak:'Jours de série', insCheckins:'Enregistrements', insUrgesBeaten:'Envies vaincues',
@@ -2664,6 +2676,7 @@ const TRANSLATIONS = {
     checkedInShort:'Heute eingetragen ✓ · tippe zum Ändern',
     resetTitle:'Ein Ausrutscher ist nicht das Ende', resetMsg:'Jeder Tag, den du durchgehalten hast, hat dich verändert — und nichts davon wird zurückgesetzt. Deine beste Serie und deine Einblicke bleiben bei dir. Das ist nur Tag eins der nächsten.', resetConfirm:'Neue Serie starten', resetCancel:'Bei dieser Serie bleiben', yourPhase:'Deine Phase',
     wipeLbl:'Neu anfangen', wipeDesc:'Löscht dauerhaft alles auf diesem Gerät — Serien, Verlauf, Fortschritt und Einstellungen — und beginnt ganz von vorn.', wipeBtn:'Alle Daten zurücksetzen', wipeTitle:'Alles löschen?', wipeMsg:'Die App wird wie neu installiert. Das lässt sich nicht rückgängig machen.', wipeBoxT:'Du verlierst dauerhaft:', wipeI1:'Deine aktuelle Serie und alle bisherigen', wipeI2:'Jeden Check-in, besiegten Drang und Wochenrückblick', wipeI3:'Pfad-Fortschritt, Einblicke und Meilensteine', wipeI4:'Deinen Grund, Namen und alle Einstellungen', wipeNote:'Du startest wieder beim Onboarding. Eine bezahlte Mitgliedschaft kannst du im Upgrade-Bildschirm wiederherstellen.', wipeConfirm:'Alle Daten löschen', wipeCancel:'Meine Daten behalten',
+    memLbl:'Mitgliedschaft', memFounder:'Founder #{n} · lebenslanger Zugang', memFounderSub:'Alles freigeschaltet, für immer kostenlos — du warst zuerst da.', memSub:'Mitglied · {plan}', memPlanYearly:'Jahresplan', memPlanMonthly:'Monatsplan', memManageSub:'Abgerechnet über Google Play. Jederzeit kündbar oder änderbar.', memFull:'Mitglied · voller Zugang', memFullSub:'Alles freigeschaltet. Danke, dass du Transmute unterstützt.', memTrial:'Gratis-Test · noch {d} Tage', memFree:'Gratis-Plan', memFreeSub:'Deine Serie, Check-ins und Atmung bleiben für immer gratis. Die Mitgliedschaft schaltet Urge Wave, prädiktive Einblicke und den ganzen Pfad frei.', memSee:'Mitgliedschaftsoptionen ansehen', memManage:'Abo verwalten', memRestore:'Kauf wiederherstellen',
     histTitle:'Dein Weg', histSub:'Jeder Eintrag, jede Wochenbilanz und jeder überstandene Drang.',
     insTitle:'Deine Einblicke', insSub:'Was sich wirklich verändert — basierend auf deinen eigenen Einträgen.',
     insVitalsLbl:'Deine Werte · Gesamtschnitt vs letzte 7 Tage', insDayStreak:'Tage-Serie', insCheckins:'Einträge', insUrgesBeaten:'Besiegte Dränge',
@@ -2773,6 +2786,7 @@ const TRANSLATIONS = {
     checkedInShort:'Registrado hoje ✓ · toque para atualizar',
     resetTitle:'Um deslize não é o fim', resetMsg:'Cada dia que você aguentou te mudou, e nada disso é apagado. Sua melhor sequência e seus insights ficam com você. Este é só o dia um da próxima.', resetConfirm:'Começar uma nova sequência', resetCancel:'Continuar nesta sequência', yourPhase:'Sua fase',
     wipeLbl:'Começar do zero', wipeDesc:'Apaga permanentemente tudo neste dispositivo — sequências, histórico, progresso e configurações — e volta ao início.', wipeBtn:'Redefinir todos os dados', wipeTitle:'Apagar tudo?', wipeMsg:'O app volta a ser como recém-instalado. Não dá para desfazer.', wipeBoxT:'Você perderá para sempre:', wipeI1:'Sua sequência atual e todas as anteriores', wipeI2:'Cada check-in, impulso vencido e revisão semanal', wipeI3:'Progresso do Caminho, insights e marcos', wipeI4:'Sua razão, seu nome e todas as configurações', wipeNote:'Você passará pela introdução de novo. Uma assinatura paga pode ser restaurada na tela de upgrade.', wipeConfirm:'Apagar todos os dados', wipeCancel:'Manter meus dados',
+    memLbl:'Assinatura', memFounder:'Fundador #{n} · acesso vitalício', memFounderSub:'Tudo desbloqueado, grátis para sempre — você chegou primeiro.', memSub:'Membro · {plan}', memPlanYearly:'plano anual', memPlanMonthly:'plano mensal', memManageSub:'Cobrado pelo Google Play. Cancele ou mude quando quiser.', memFull:'Membro · acesso completo', memFullSub:'Tudo desbloqueado. Obrigado por apoiar o Transmute.', memTrial:'Teste grátis · faltam {d} dias', memFree:'Plano gratuito', memFreeSub:'Sua sequência, check-ins e respiração são grátis para sempre. A assinatura desbloqueia o Urge Wave, insights preditivos e o Caminho completo.', memSee:'Ver opções de assinatura', memManage:'Gerenciar assinatura', memRestore:'Restaurar compra',
     histTitle:'Sua jornada', histSub:'Cada registro, revisão e impulso que você superou.',
     insTitle:'Seus insights', insSub:'O que está realmente mudando, com base nos seus próprios registros.',
     insVitalsLbl:'Seus sinais · média geral vs últimos 7 dias', insDayStreak:'Dias de sequência', insCheckins:'Registros', insUrgesBeaten:'Impulsos vencidos',
@@ -2882,6 +2896,7 @@ const TRANSLATIONS = {
     checkedInShort:'سجّلت اليوم ✓ · اضغط للتعديل',
     resetTitle:'الزلّة ليست النهاية', resetMsg:'كل يوم صمدت فيه غيّرك، ولا شيء من ذلك يُمحى. أفضل سلسلة لك ورؤاك تبقى معك. هذا فقط اليوم الأول من السلسلة التالية.', resetConfirm:'ابدأ سلسلة جديدة', resetCancel:'واصل هذه السلسلة', yourPhase:'مرحلتك',
     wipeLbl:'البدء من جديد', wipeDesc:'يمحو كل شيء على هذا الجهاز نهائيًا — السلاسل والسجل والتقدّم والإعدادات — ويعيدك إلى البداية.', wipeBtn:'إعادة تعيين كل البيانات', wipeTitle:'محو كل شيء؟', wipeMsg:'يعود التطبيق كأنه مثبّت حديثًا. لا يمكن التراجع عن ذلك.', wipeBoxT:'ستفقد نهائيًا:', wipeI1:'سلسلتك الحالية وكل السلاسل السابقة', wipeI2:'كل تسجيل يومي ورغبة تغلّبت عليها ومراجعة أسبوعية', wipeI3:'تقدّم المسار والرؤى والإنجازات', wipeI4:'سببك واسمك وكل الإعدادات', wipeNote:'ستمر بالتهيئة من جديد. يمكن استعادة العضوية المدفوعة من شاشة الترقية.', wipeConfirm:'محو كل البيانات', wipeCancel:'الاحتفاظ ببياناتي',
+    memLbl:'العضوية', memFounder:'مؤسس #{n} · وصول مدى الحياة', memFounderSub:'كل شيء مفتوح، مجانًا للأبد — كنت هنا أولًا.', memSub:'عضو · {plan}', memPlanYearly:'الخطة السنوية', memPlanMonthly:'الخطة الشهرية', memManageSub:'تُحصَّل عبر Google Play. ألغِ أو غيّر في أي وقت.', memFull:'عضو · وصول كامل', memFullSub:'كل شيء مفتوح. شكرًا لدعمك Transmute.', memTrial:'تجربة مجانية · تبقّى {d} أيام', memFree:'الخطة المجانية', memFreeSub:'سلسلتك وتسجيلاتك والتنفس مجانية للأبد. العضوية تفتح Urge Wave والرؤى التنبؤية والمسار الكامل.', memSee:'عرض خيارات العضوية', memManage:'إدارة الاشتراك', memRestore:'استعادة الشراء',
     histTitle:'رحلتك', histSub:'كل تسجيل ومراجعة ورغبة تجاوزتها.',
     insTitle:'رؤاك', insSub:'ما الذي يتغيّر فعلاً، بناءً على تسجيلاتك.',
     insVitalsLbl:'مؤشراتك · المتوسط العام مقابل آخر ٧ أيام', insDayStreak:'أيام السلسلة', insCheckins:'التسجيلات', insUrgesBeaten:'رغبات هُزمت',
@@ -3017,6 +3032,8 @@ function applyLang() {
   set('wipe-note', t('wipeNote'));
   set('wipe-confirm', t('wipeConfirm'));
   set('wipe-cancel', t('wipeCancel'));
+  set('mem-lbl', t('memLbl'));
+  if(typeof renderMembership === 'function') renderMembership();
   const setDateBtn = document.getElementById('set-date-btn');
   if(setDateBtn) setDateBtn.textContent = t('setStartDate');
   const startRevBtn = document.getElementById('start-rev-btn');
@@ -4134,7 +4151,7 @@ function _hidePaywall() {
 //   uw_founder_num    the sequential spot number, once granted.
 const SUPABASE_URL = 'https://dtoasbwkxrolqvoapjqu.supabase.co';           // Supabase project URL
 const SUPABASE_ANON_KEY = 'sb_publishable_PsL71257ZDoe-KOIp0WC4w_aI2XzOTg'; // publishable key (safe to ship)
-const FOUNDER_CAP_FALLBACK = 1000;                      // shown until the live count loads
+const FOUNDER_CAP_FALLBACK = 250;                       // shown until the live count loads — keep in sync with the Supabase cap
 
 function isFounder() {
   return localStorage.getItem('uw_founder_state') === 'granted';
@@ -5527,10 +5544,54 @@ function checkTrialReminder() {
 }
 
 // ===================== SETTINGS =====================
+// Membership card in Settings: live status (founder / member / trial / free)
+// + the right action. Restore reuses the paywall's flow via _membershipRestore.
+function renderMembership() {
+  const st = document.getElementById('mem-status');
+  if(!st) return;
+  const sub = document.getElementById('mem-sub-line');
+  const cta = document.getElementById('mem-cta');
+  const rest = document.getElementById('mem-restore');
+  const plan = localStorage.getItem('sub_plan');
+  let mode = 'upgrade';
+  if(isFounder()) {
+    st.textContent = t('memFounder').replace('{n}', founderNumber() || '');
+    sub.textContent = t('memFounderSub');
+    mode = 'none';
+  } else if(localStorage.getItem('uw_unlocked')) {
+    if(plan === 'annual' || plan === 'monthly') {
+      st.textContent = t('memSub').replace('{plan}', t(plan === 'annual' ? 'memPlanYearly' : 'memPlanMonthly'));
+      sub.textContent = t('memManageSub');
+      mode = 'manage';
+    } else {
+      st.textContent = t('memFull');
+      sub.textContent = t('memFullSub');
+      mode = 'none';
+    }
+  } else if(inIntroTrial()) {
+    st.textContent = t('memTrial').replace('{d}', Math.max(1, Math.ceil(introTrialMsLeft() / 86400000)));
+    sub.textContent = t('memFreeSub');
+  } else {
+    st.textContent = t('memFree');
+    sub.textContent = t('memFreeSub');
+  }
+  cta.style.display = mode === 'none' ? 'none' : '';
+  cta.textContent = mode === 'manage' ? t('memManage') : t('memSee');
+  cta.onclick = mode === 'manage'
+    ? function() {
+        const sku = plan === 'annual' ? 'transmute_annual' : 'transmute_monthly';
+        window.open('https://play.google.com/store/account/subscriptions?sku=' + sku + '&package=com.transmute.app', '_blank');
+      }
+    : function() { closeSettings(); if(window._showPaywall) _showPaywall(); };
+  rest.textContent = t('memRestore');
+  rest.onclick = function() { if(window._membershipRestore) window._membershipRestore(); };
+}
+
 function openSettings() {
   document.getElementById('s-overlay').style.display = 'block';
   document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('on', b.dataset.theme === curTheme));
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === (localStorage.getItem('sr_lang')||'en')));
+  renderMembership();
   initNotifBtn();
 }
 function closeSettings() { document.getElementById('s-overlay').style.display = 'none'; }
@@ -8205,6 +8266,11 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
       alert('Join the membership through the Transmute app on Google Play.');
     }
   });
+
+  // Settings → Membership card reuses this exact restore flow.
+  window._membershipRestore = function() {
+    if (isTWA()) restoreGooglePlay(); else promptUnlockCode();
+  };
 
   if(restoreBtn) restoreBtn.addEventListener('click', function() {
     // In the TWA, Play restore comes first — a paying member should never see
