@@ -3777,7 +3777,10 @@ function calcStreak() {
   const parts = S.startDate.split('-');
   const a = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
   const b = new Date(); b.setHours(0,0,0,0);
-  return Math.max(0, Math.floor((b - a) / 86400000));
+  // round, not floor: both are local midnights, but a DST change between them
+  // makes the gap ±1h off a whole day — floor read day 180 as 179 for anyone
+  // whose streak crosses the March clock change.
+  return Math.max(0, Math.round((b - a) / 86400000));
 }
 
 function shuffle(arr) {
@@ -3968,7 +3971,9 @@ function updateHome() {
   updateAura(n); updateFlame(n);
   const b = getBadge(n);
   const pbEl = document.getElementById('pbadge');
-  const badgeLabel = (n === 0 && S.startDate) ? t('badgeStarted') : badgeLabelFor(b);
+  // Days 0-6 all wear the "Started" badge with the live day number (digit swap
+  // works in all 6 langs) — bd0's "Day 0 · Begin" is only for the not-started state.
+  const badgeLabel = (S.startDate && n < 7) ? t('badgeStarted').replace('1', String(Math.max(1, n))) : badgeLabelFor(b);
   pbEl.innerHTML = (b.icon ? b.icon + ' ' : '') + badgeLabel;
   pbEl.className = 'ph-badge ' + b.cls;
   checkMilestone(n);
