@@ -991,7 +991,7 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
           <defs><linearGradient id="wsA5" x1="12" y1="4" x2="12" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8E3FF"/><stop offset="100%" stop-color="#6C5CE7"/></linearGradient></defs>
         </svg>
       </div>
-      <div class="ws-title">First —<br>what's your name?</div>
+      <div class="ws-title">First,<br>what's your name?</div>
       <div class="ws-sub" style="margin-bottom:18px;">So this feels like yours, not ours. We'll use it to speak to you — never to track you. It stays on your device.</div>
       <input type="text" id="ws-name-input" class="ws-input" maxlength="24" placeholder="Your first name" autocomplete="given-name" autocapitalize="words"/>
     </div>
@@ -5516,10 +5516,11 @@ function checkTrialReminder() {
   if(!_trialReminderDue()) return;
   localStorage.setItem('sub_renew_notified', '1');
   const price = localStorage.getItem('sub_price') || '';
+  const priceDisp = localStorage.getItem('sub_price_disp') || (price ? '£' + price : '');
   const period = localStorage.getItem('sub_plan') === 'monthly' ? 'month' : 'year';
   try {
     new Notification('Transmute', {
-      body: 'Your free trial ends tomorrow' + (price ? '. You’ll be charged £' + price + '/' + period : '') + ' unless you cancel in Google Play.',
+      body: 'Your free trial ends tomorrow' + (priceDisp ? '. You’ll be charged ' + priceDisp + '/' + period : '') + ' unless you cancel in Google Play.',
       icon: '/icon-192.png'
     });
   } catch(e) {}
@@ -8057,6 +8058,46 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
   var ALL_SKUS = ['transmute_annual','transmute_monthly','transmute_lifetime'];
   var selected = 'annual';
 
+  // Localized pricing: in the TWA, replace every visible £-amount with the
+  // store's real local price from the Digital Goods API, so non-UK users see
+  // what Play will actually charge. The hardcoded £ strings stay as the web /
+  // offline fallback.
+  var _playDetails = null;
+  var PRICE_RE = /£\s?\d+(?:[.,]\d+)?/;
+  function fmtPrice(p) {
+    try { return new Intl.NumberFormat(undefined, {style:'currency', currency:p.currency}).format(parseFloat(p.value)); }
+    catch(e) { return p.currency + ' ' + p.value; }
+  }
+  function withLocalPrice(planKey, s) {
+    var d = PLANS[planKey] && PLANS[planKey].display;
+    return d ? s.replace(PRICE_RE, d) : s;
+  }
+  async function localizePlayPrices() {
+    if (!isTWA()) return;
+    try {
+      if (!_playDetails) {
+        var service = await window.getDigitalGoodsService('https://play.google.com/billing');
+        _playDetails = await service.getDetails(ALL_SKUS);
+      }
+      _playDetails.forEach(function(d) {
+        var key = Object.keys(PLANS).find(function(k){ return PLANS[k].sku === d.itemId; });
+        if (!key || !d.price) return;
+        PLANS[key].display = fmtPrice(d.price);
+        PLANS[key].price = d.price.value;
+        PLANS[key].currency = d.price.currency;
+        if (key === 'annual') PLANS.annual.perMonth = fmtPrice({currency:d.price.currency, value:(parseFloat(d.price.value)/12).toFixed(2)});
+      });
+      if (plansEl) [].forEach.call(plansEl.querySelectorAll('.pw-plan'), function(b) {
+        var k = b.getAttribute('data-plan');
+        if (!PLANS[k] || !PLANS[k].display) return;
+        var pr = b.querySelector('.pw-plan-price'); if (pr) pr.textContent = PLANS[k].display;
+        var de = b.querySelector('.pw-plan-desc');
+        if (de && k === 'annual' && PLANS.annual.perMonth) de.textContent = de.textContent.replace(PRICE_RE, PLANS.annual.perMonth);
+      });
+      selectPlan(selected);
+    } catch(e) { /* offline / no billing — keep the £ fallback */ }
+  }
+
   var CTA_KEYS = {annual:'pwCtaYearly', monthly:'pwCtaMonthly', lifetime:'pwCtaLifetime'};
   var NOTE_KEYS = {annual:'pwNoteYearly', monthly:'pwNoteMonthly', lifetime:'pwNoteLifetime'};
   function selectPlan(p) {
@@ -8065,8 +8106,8 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
     if(plansEl) [].forEach.call(plansEl.querySelectorAll('.pw-plan'), function(b){
       b.classList.toggle('sel', b.getAttribute('data-plan') === p);
     });
-    if(ctaLabel) ctaLabel.textContent = t(CTA_KEYS[p]);
-    if(ctaSub) ctaSub.textContent = t(NOTE_KEYS[p]);
+    if(ctaLabel) ctaLabel.textContent = withLocalPrice(p, t(CTA_KEYS[p]));
+    if(ctaSub) ctaSub.textContent = withLocalPrice(p, t(NOTE_KEYS[p]));
   }
   if(plansEl) [].forEach.call(plansEl.querySelectorAll('.pw-plan'), function(b){
     b.addEventListener('click', function(){ selectPlan(b.getAttribute('data-plan')); });
@@ -8081,6 +8122,7 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
       if(warn) warn.style.display = days > 0 ? '' : 'none';
     }
     selectPlan('annual');
+    localizePlayPrices();   // async — re-paints prices when Play answers
     document.getElementById('uw-paywall').classList.remove('hidden');
   };
 
@@ -8099,7 +8141,7 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
       }
       var request = new PaymentRequest(
         [{ supportedMethods: 'https://play.google.com/billing', data: { sku: plan.sku } }],
-        { total: { label: 'Transmute Membership', amount: { currency: 'GBP', value: plan.price } } }
+        { total: { label: 'Transmute Membership', amount: { currency: plan.currency || 'GBP', value: plan.price } } }
       );
       if (!(await request.canMakePayment())) {
         alert('Google Play Billing is not available on this device.');
@@ -8116,6 +8158,8 @@ document.querySelectorAll('.qmood-btn,.mbtn').forEach(b => {
         localStorage.setItem('sub_trial_days', '7');
         localStorage.setItem('sub_plan', selected);
         localStorage.setItem('sub_price', plan.price);
+        // Formatted local price for the trial-end reminder ("£24.99" fallback).
+        localStorage.setItem('sub_price_disp', plan.display || ('£' + plan.price));
         localStorage.removeItem('sub_renew_notified');
       }
       _hidePaywall();
