@@ -5432,11 +5432,6 @@ function openRwDetail() {
 // ===================== STORIES =====================
 let redditLoaded = false;
 
-function extractDaysFromText(text) {
-  const m = text.match(/\b(\d+)\s*day/i);
-  return m ? parseInt(m[1]) : 0;
-}
-
 let storFilter = 'all';
 let _storView = [];       // the list currently painted in the feed (filter applied)
 let _readerStory = null;
@@ -5471,35 +5466,26 @@ function storMarkLive() {
   if(sub) sub.textContent = t('storiesLive');
 }
 
+// Live stories come from /stories.json on this site, refreshed twice a day by
+// .github/workflows/stories.yml. The device never contacts Reddit directly —
+// Reddit blocks cross-origin browser requests, so the old direct fetch always
+// failed silently and every user only ever saw the curated set.
 async function loadRedditStories() {
   if(redditLoaded) return;
   try {
-    const res = await fetch('https://www.reddit.com/r/semenretention/top.json?limit=30&t=month&raw_json=1');
+    const res = await fetch('/stories.json', { cache: 'no-store' });
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    const posts = data.data.children
-      .map(c => c.data)
-      .filter(p => p.is_self && p.selftext && p.selftext !== '[deleted]' && p.selftext !== '[removed]' && p.score > 20 && p.selftext.length > 80)
-      .slice(0, 25);
+    const posts = (data && data.stories) || [];
     if(posts.length >= 3) {
       redditLoaded = true;
-      const mapped = posts.map(p => ({
-        title: p.title,
-        flair: p.link_flair_text || '',
-        up: p.score,
-        days: extractDaysFromText(p.title + ' ' + p.selftext),
-        body: p.selftext.length > 6000 ? p.selftext.slice(0, 6000) + '…' : p.selftext,
-        author: p.author,
-        url: 'https://reddit.com' + p.permalink,
-        isReddit: true
-      }));
-      try { localStorage.setItem('stories_cache', JSON.stringify(mapped)); } catch(e) {}
-      stories = shuffle([...mapped]);
+      try { localStorage.setItem('stories_cache', JSON.stringify(posts)); } catch(e) {}
+      stories = shuffle([...posts]);
       storMarkLive();
       renderStoriesFeed();
     }
   } catch(e) {
-    // Network unavailable or CORS — cached/curated stories remain
+    // Offline or stories.json not deployed yet — cached/curated stories remain
   }
 }
 
