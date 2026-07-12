@@ -497,14 +497,33 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 .med-step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
 .med-step-title{font-size:11px;font-weight:700;color:var(--ac);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
 .med-step p{font-size:15px;color:var(--ts);line-height:1.7;}
-/* Stories */
-.story-card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r3);padding:18px;min-height:280px;transition:opacity .25s;}
-.story-card.fade{opacity:0;}
-.story-flair{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--grn1);color:var(--grn8);margin-bottom:9px;}
-.story-title{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:6px;line-height:1.4;}
-.story-meta{font-size:11px;color:var(--tt);margin-bottom:12px;}
-.story-body{font-size:15px;color:var(--ts);line-height:1.8;}
-.story-votes{font-size:11px;color:var(--cor6);font-weight:600;margin-top:10px;}
+/* Stories — feed + reader */
+.stor-chips{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.stor-chips::-webkit-scrollbar{display:none;}
+.stor-chip{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;background:var(--acl);border:.5px solid rgba(108,92,231,0.25);color:var(--ac2);font-size:12px;font-weight:600;padding:7px 14px;border-radius:18px;cursor:pointer;transition:background .15s,color .15s;font-family:inherit;}
+.stor-chip.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.stor-card{background:var(--sf);border:.5px solid var(--bd);border-radius:var(--r2);padding:14px 16px;margin-bottom:9px;cursor:pointer;transition:transform .12s;}
+.stor-card:active{transform:scale(.985);}
+.stor-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.stor-day{display:inline-flex;align-items:center;gap:4px;background:rgba(240,159,39,0.13);color:#EFA33B;font-size:11px;font-weight:700;padding:2px 9px;border-radius:12px;letter-spacing:.02em;}
+.stor-flair{display:inline-block;background:var(--grn1);color:#7DCAA0;font-size:11px;font-weight:600;padding:2px 9px;border-radius:12px;}
+.stor-bm{background:none;border:none;padding:5px;margin:-5px -5px -5px 0;color:var(--tt);cursor:pointer;line-height:0;}
+.stor-bm.on{color:var(--ac4);}
+.stor-bm.on svg{fill:currentColor;}
+.stor-title{font-size:14px;font-weight:700;color:var(--tx);line-height:1.4;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.stor-prev{font-size:13px;color:var(--ts);line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px;}
+.stor-meta{font-size:11px;color:var(--tt);}
+.stor-empty{text-align:center;color:var(--tt);font-size:13px;line-height:1.6;padding:36px 20px;}
+#story-reader{display:none;position:fixed;inset:0;background:var(--bg);z-index:450;flex-direction:column;max-width:480px;margin:0 auto;}
+.stor-rd-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:.5px solid var(--bd);flex-shrink:0;}
+.stor-rd-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--ts);font-size:13px;font-weight:600;cursor:pointer;padding:6px 8px;margin-left:-8px;font-family:inherit;}
+.stor-rd-scroll{flex:1;overflow-y:auto;padding:18px 20px calc(40px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch;}
+.stor-rd-title{font-size:18px;font-weight:700;color:var(--tx);line-height:1.35;margin:10px 0 8px;}
+.stor-rd-meta{font-size:12px;color:var(--tt);margin-bottom:16px;padding-bottom:14px;border-bottom:.5px solid var(--bd);}
+.stor-rd-body{font-size:15px;color:var(--ts);line-height:1.85;}
+.stor-rd-body p{margin:0 0 14px;}
+.stor-rd-src{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:14px;border-top:.5px solid var(--bd);font-size:12px;color:var(--tt);}
+.stor-rd-src a{color:var(--ac4);text-decoration:none;font-weight:600;}
 /* Weekly */
 .w-banner{background:var(--amb50);border:.5px solid var(--amb1);border-radius:var(--r2);padding:13px;margin-bottom:11px;}
 .sep{border:none;border-top:.5px solid var(--bd);margin:13px 0;}
@@ -868,8 +887,8 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
   .pth-today-t{font-size:calc(17px * var(--fs));}
   .pth-today-s{font-size:calc(12px * var(--fs));}
   .pth-row-t{font-size:calc(13px * var(--fs));}
-  .story-title{font-size:calc(15px * var(--fs));}
-  .story-body{font-size:calc(15px * var(--fs));}
+  .stor-rd-title{font-size:calc(18px * var(--fs));}
+  .stor-rd-body{font-size:calc(15px * var(--fs));}
   .ms-msg{font-size:calc(15px * var(--fs));}
   .he-title{font-size:calc(14px * var(--fs));}
   .he-note{font-size:calc(12px * var(--fs));}
@@ -1775,13 +1794,28 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
       </div>
       <p style="font-size:12px;color:rgba(125,202,160,0.65);line-height:1.5;margin:0;" id="stories-sub">Real experiences shared by the community. Tap arrows or swipe to browse.</p>
     </div>
-    <div class="story-card" id="story-card"><div style="display:flex;align-items:center;justify-content:center;height:200px;color:var(--tt);font-size:13px">Loading stories...</div></div>
-    <div class="btn-row" style="margin-top:11px">
-      <button class="btn-g" id="sprev">← Prev</button>
-      <div style="flex:1;text-align:center;font-size:12px;color:var(--tt);padding-top:11px" id="sctr">1 / 20</div>
-      <button class="btn-g" id="snext">Next →</button>
+    <div class="stor-chips" id="stor-chips">
+      <button class="stor-chip on" data-f="all"></button>
+      <button class="stor-chip" data-f="top"></button>
+      <button class="stor-chip" data-f="day90"></button>
+      <button class="stor-chip" data-f="saved"></button>
     </div>
-    <button class="btn-g" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px;" id="sshuffle"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>Shuffle</button>
+    <div id="stories-feed"><div class="stor-empty">Loading stories...</div></div>
+  </div>
+
+  <!-- STORY READER (full-screen overlay) -->
+  <div id="story-reader">
+    <div class="stor-rd-head">
+      <button class="stor-rd-back" id="stor-rd-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span id="stor-rd-backtxt">Back</span></button>
+      <button class="stor-bm" id="stor-rd-bm" aria-label="Save story"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+    </div>
+    <div class="stor-rd-scroll" id="stor-rd-scroll">
+      <div id="stor-rd-chips" style="display:flex;gap:6px;align-items:center;"></div>
+      <div class="stor-rd-title" id="stor-rd-title"></div>
+      <div class="stor-rd-meta" id="stor-rd-meta"></div>
+      <div class="stor-rd-body" id="stor-rd-body"></div>
+      <div class="stor-rd-src" id="stor-rd-src"></div>
+    </div>
   </div>
 
     <!-- URGE SURF -->
@@ -2397,8 +2431,13 @@ const TRANSLATIONS = {
     pathWeekDone:'Week {w} complete — next: {t}',
     pathCardDone:'The Path is complete', pathCardRevisit:'Revisit any lesson, any time',
     pathStart:'Start the 90-day program · 2 min a day', pathRead:'2 min read · Week {w}: {t}',
-    storiesSub:'Real experiences shared by the community. Tap arrows or swipe to browse.',
-    storiesLive:'Live top posts from the community this month. Tap arrows or swipe.',
+    storiesSub:'Real experiences shared by the community. Tap a story to read it in full.',
+    storiesLive:'Live top posts from the community this month. Tap a story to read.',
+    storAll:'All', storTop:'Top', storDay90:'Day 90+', storSaved:'Saved',
+    storMinRead:'{m} min read', storUpvotes:'upvotes',
+    storSaveToast:'Story saved 🔖', storUnsaveToast:'Removed from saved',
+    storSavedEmpty:'No saved stories yet — tap the bookmark on any story to keep it here.',
+    storNone:'No stories match this filter yet.',
   },
   es: {
     tabHome:'Hoy', tabSos:'SOS', tabStories:'Historias', tabTransmute:'Transmuta', tabPhases:'Fases', tabHistory:'Historial',
@@ -2507,8 +2546,13 @@ const TRANSLATIONS = {
     pathWeekDone:'Semana {w} completa — siguiente: {t}',
     pathCardDone:'El Camino está completo', pathCardRevisit:'Vuelve a cualquier lección, cuando quieras',
     pathStart:'Empieza el programa de 90 días · 2 min al día', pathRead:'2 min de lectura · Semana {w}: {t}',
-    storiesSub:'Experiencias reales compartidas por la comunidad. Toca las flechas o desliza.',
-    storiesLive:'Publicaciones destacadas de la comunidad este mes. Toca las flechas o desliza.',
+    storiesSub:'Experiencias reales compartidas por la comunidad. Toca una historia para leerla completa.',
+    storiesLive:'Publicaciones destacadas de la comunidad este mes. Toca una historia para leerla.',
+    storAll:'Todas', storTop:'Top', storDay90:'Día 90+', storSaved:'Guardadas',
+    storMinRead:'{m} min de lectura', storUpvotes:'votos',
+    storSaveToast:'Historia guardada 🔖', storUnsaveToast:'Eliminada de guardadas',
+    storSavedEmpty:'Aún no hay historias guardadas — toca el marcador en cualquier historia para conservarla aquí.',
+    storNone:'Ninguna historia coincide con este filtro todavía.',
   },
   fr: {
     tabHome:'Aujourd\'hui', tabSos:'SOS', tabStories:'Histoires', tabTransmute:'Transmuter', tabPhases:'Phases', tabHistory:'Historique',
@@ -2617,8 +2661,13 @@ const TRANSLATIONS = {
     pathWeekDone:'Semaine {w} terminée — ensuite : {t}',
     pathCardDone:'La Voie est complète', pathCardRevisit:'Relis n\'importe quelle leçon, à tout moment',
     pathStart:'Commence le programme de 90 jours · 2 min par jour', pathRead:'2 min de lecture · Semaine {w} : {t}',
-    storiesSub:'Expériences réelles partagées par la communauté. Touche les flèches ou balaie.',
-    storiesLive:'Meilleures publications de la communauté ce mois-ci. Touche les flèches ou balaie.',
+    storiesSub:'Expériences réelles partagées par la communauté. Touche une histoire pour la lire en entier.',
+    storiesLive:'Meilleures publications de la communauté ce mois-ci. Touche une histoire pour la lire.',
+    storAll:'Toutes', storTop:'Top', storDay90:'Jour 90+', storSaved:'Enregistrées',
+    storMinRead:'{m} min de lecture', storUpvotes:'votes',
+    storSaveToast:'Histoire enregistrée 🔖', storUnsaveToast:'Retirée des enregistrées',
+    storSavedEmpty:'Aucune histoire enregistrée — touche le marque-page sur une histoire pour la garder ici.',
+    storNone:'Aucune histoire ne correspond à ce filtre pour l\'instant.',
   },
   de: {
     tabHome:'Heute', tabSos:'SOS', tabStories:'Geschichten', tabTransmute:'Transmutation', tabPhases:'Phasen', tabHistory:'Verlauf',
@@ -2727,8 +2776,13 @@ const TRANSLATIONS = {
     pathWeekDone:'Woche {w} geschafft — als Nächstes: {t}',
     pathCardDone:'Der Pfad ist vollendet', pathCardRevisit:'Lies jede Lektion, wann immer du willst',
     pathStart:'Starte das 90-Tage-Programm · 2 Min pro Tag', pathRead:'2 Min Lesezeit · Woche {w}: {t}',
-    storiesSub:'Echte Erfahrungen aus der Community. Tippe auf die Pfeile oder wische.',
-    storiesLive:'Top-Beiträge der Community diesen Monat. Tippe auf die Pfeile oder wische.',
+    storiesSub:'Echte Erfahrungen aus der Community. Tippe auf eine Geschichte, um sie ganz zu lesen.',
+    storiesLive:'Top-Beiträge der Community diesen Monat. Tippe auf eine Geschichte, um sie zu lesen.',
+    storAll:'Alle', storTop:'Top', storDay90:'Tag 90+', storSaved:'Gespeichert',
+    storMinRead:'{m} Min. Lesezeit', storUpvotes:'Stimmen',
+    storSaveToast:'Geschichte gespeichert 🔖', storUnsaveToast:'Aus Gespeichert entfernt',
+    storSavedEmpty:'Noch keine gespeicherten Geschichten — tippe auf das Lesezeichen einer Geschichte, um sie hier zu behalten.',
+    storNone:'Keine Geschichte passt bisher zu diesem Filter.',
   },
   pt: {
     tabHome:'Hoje', tabSos:'SOS', tabStories:'Histórias', tabTransmute:'Transmutar', tabPhases:'Fases', tabHistory:'Histórico',
@@ -2837,8 +2891,13 @@ const TRANSLATIONS = {
     pathWeekDone:'Semana {w} concluída — a seguir: {t}',
     pathCardDone:'O Caminho está completo', pathCardRevisit:'Revisite qualquer lição, a qualquer momento',
     pathStart:'Comece o programa de 90 dias · 2 min por dia', pathRead:'2 min de leitura · Semana {w}: {t}',
-    storiesSub:'Experiências reais compartilhadas pela comunidade. Toque nas setas ou deslize.',
-    storiesLive:'Principais publicações da comunidade neste mês. Toque nas setas ou deslize.',
+    storiesSub:'Experiências reais compartilhadas pela comunidade. Toque em uma história para lê-la por completo.',
+    storiesLive:'Principais publicações da comunidade neste mês. Toque em uma história para ler.',
+    storAll:'Todas', storTop:'Top', storDay90:'Dia 90+', storSaved:'Salvas',
+    storMinRead:'{m} min de leitura', storUpvotes:'votos',
+    storSaveToast:'História salva 🔖', storUnsaveToast:'Removida das salvas',
+    storSavedEmpty:'Nenhuma história salva ainda — toque no marcador de qualquer história para guardá-la aqui.',
+    storNone:'Nenhuma história corresponde a este filtro ainda.',
   },
   ar: {
     tabHome:'اليوم', tabSos:'SOS', tabStories:'قصص', tabTransmute:'التحويل', tabPhases:'المراحل', tabHistory:'السجل',
@@ -2947,8 +3006,13 @@ const TRANSLATIONS = {
     pathWeekDone:'اكتمل الأسبوع {w} — التالي: {t}',
     pathCardDone:'اكتمل الدرب', pathCardRevisit:'عُد إلى أي درس في أي وقت',
     pathStart:'ابدأ برنامج التسعين يوماً · دقيقتان يومياً', pathRead:'قراءة دقيقتين · الأسبوع {w}: {t}',
-    storiesSub:'تجارب حقيقية من المجتمع. اضغط الأسهم أو اسحب.',
-    storiesLive:'أفضل منشورات المجتمع هذا الشهر. اضغط الأسهم أو اسحب.',
+    storiesSub:'تجارب حقيقية من المجتمع. اضغط على قصة لقراءتها كاملة.',
+    storiesLive:'أفضل منشورات المجتمع هذا الشهر. اضغط على قصة لقراءتها.',
+    storAll:'الكل', storTop:'الأفضل', storDay90:'يوم 90+', storSaved:'المحفوظة',
+    storMinRead:'{m} دقائق قراءة', storUpvotes:'تصويتات',
+    storSaveToast:'تم حفظ القصة 🔖', storUnsaveToast:'أُزيلت من المحفوظات',
+    storSavedEmpty:'لا قصص محفوظة بعد — اضغط على علامة الحفظ في أي قصة لإبقائها هنا.',
+    storNone:'لا قصص تطابق هذا الفلتر بعد.',
   }
 };
 
@@ -3238,6 +3302,8 @@ function applyLang() {
   if(qEl && typeof quotesFor === 'function' && typeof qIdx !== 'undefined') qEl.textContent = quotesFor()[qIdx] || quotesFor()[0];
   const storiesSubEl = document.getElementById('stories-sub');
   if(storiesSubEl) storiesSubEl.textContent = (typeof redditLoaded !== 'undefined' && redditLoaded) ? t('storiesLive') : t('storiesSub');
+  // Stories feed chips + cards carry translated labels — repaint them
+  if(typeof renderStoriesFeed === 'function') renderStoriesFeed();
   try { if(typeof updateHome === 'function' && typeof S !== 'undefined' && document.getElementById('snum')) updateHome(); } catch(e){}
   try { if(typeof renderPhase === 'function' && document.getElementById('ph-current')) renderPhase(); } catch(e){}
   try { if(typeof renderPath === 'function' && document.getElementById('path-hero')) renderPath(); } catch(e){}
@@ -3787,7 +3853,7 @@ let curTheme = localStorage.getItem('sr_theme') || 'purple';
 let curFs = parseFloat(localStorage.getItem('sr_fontscale')) || 1;
 function applyFs(v) { curFs = v; document.documentElement.style.setProperty('--fs', v); }
 let qIdx = 0, qTimer = null;
-let storyIdx = 0, stories = [...STORIES];
+let stories = [...STORIES];
 
 // ===================== UTILS =====================
 function toast(msg) {
@@ -4275,7 +4341,10 @@ function goTab(id) {
   if(id === 'phases') renderPhase();
   if(id === 'path') renderPath();
   if(id === 'insights') { piWeekOffset = 0; renderInsights(); }
-  if(id === 'stories') { if(!redditLoaded) { shuffle(stories); storyIdx = 0; renderStory(); loadRedditStories(); } else renderStory(); }
+  if(id === 'stories') {
+    if(!redditLoaded) { if(storLoadCache()) storMarkLive(); else shuffle(stories); loadRedditStories(); }
+    renderStoriesFeed();
+  }
   if(id === 'transmute') switchTr('pranayama');
   if(id === 'checkin') {
     const alEl = document.getElementById('already-logged');
@@ -5368,6 +5437,40 @@ function extractDaysFromText(text) {
   return m ? parseInt(m[1]) : 0;
 }
 
+let storFilter = 'all';
+let _storView = [];       // the list currently painted in the feed (filter applied)
+let _readerStory = null;
+
+// --- saved stories: full objects persisted so a bookmark survives the live
+// batch rotating out of the monthly top posts ---
+function storId(s){ return s.url || 'c:' + s.title.slice(0, 60); }
+function storSavedList(){ try { return JSON.parse(localStorage.getItem('stories_saved') || '[]'); } catch(e){ return []; } }
+function storIsSaved(s){ const id = storId(s); return storSavedList().some(x => storId(x) === id); }
+function storToggleSave(s){
+  const id = storId(s); let list = storSavedList();
+  const was = list.some(x => storId(x) === id);
+  if(was) list = list.filter(x => storId(x) !== id); else list.unshift(s);
+  try { localStorage.setItem('stories_saved', JSON.stringify(list)); } catch(e) {}
+  toast(t(was ? 'storUnsaveToast' : 'storSaveToast'));
+}
+
+// --- offline cache: the last successfully fetched live batch, so an offline
+// open still shows real community posts instead of only the curated set ---
+function storLoadCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem('stories_cache') || 'null');
+    if(c && c.length >= 3) { stories = shuffle(c); return true; }
+  } catch(e) {}
+  return false;
+}
+
+function storMarkLive() {
+  const badge = document.getElementById('reddit-badge');
+  const sub = document.getElementById('stories-sub');
+  if(badge) badge.style.display = 'block';
+  if(sub) sub.textContent = t('storiesLive');
+}
+
 async function loadRedditStories() {
   if(redditLoaded) return;
   try {
@@ -5380,51 +5483,95 @@ async function loadRedditStories() {
       .slice(0, 25);
     if(posts.length >= 3) {
       redditLoaded = true;
-      stories = shuffle(posts.map(p => ({
+      const mapped = posts.map(p => ({
         title: p.title,
-        flair: p.link_flair_text || 'Community',
+        flair: p.link_flair_text || '',
         up: p.score,
         days: extractDaysFromText(p.title + ' ' + p.selftext),
-        body: p.selftext.length > 900 ? p.selftext.slice(0, 900) + '…' : p.selftext,
+        body: p.selftext.length > 6000 ? p.selftext.slice(0, 6000) + '…' : p.selftext,
         author: p.author,
         url: 'https://reddit.com' + p.permalink,
         isReddit: true
-      })));
-      storyIdx = 0;
-      const badge = document.getElementById('reddit-badge');
-      const sub = document.getElementById('stories-sub');
-      if(badge) badge.style.display = 'block';
-      if(sub) sub.textContent = t('storiesLive');
-      renderStory();
+      }));
+      try { localStorage.setItem('stories_cache', JSON.stringify(mapped)); } catch(e) {}
+      stories = shuffle([...mapped]);
+      storMarkLive();
+      renderStoriesFeed();
     }
   } catch(e) {
-    // Network unavailable or CORS — curated stories remain
+    // Network unavailable or CORS — cached/curated stories remain
   }
 }
 
-function renderStory() {
-  const s = stories[storyIdx];
-  const card = document.getElementById('story-card');
-  card.classList.add('fade');
-  setTimeout(() => {
-    const srcLine = s.isReddit && s.author
-      ? `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:.5px solid rgba(255,255,255,0.06);">
-           <span style="font-size:11px;color:var(--tt);">u/${escHtml(s.author)}</span>
-           <a href="${escHtml(s.url)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--ac4);text-decoration:none;font-weight:500;">View on Reddit →</a>
-         </div>`
-      : '';
-    // Store-safe: never surface the subreddit name in the flair line (Play
-    // policy call from the listing prep) — both live and curated say Community.
-    const flair = 'Community' + (s.flair ? ' · ' + escHtml(s.flair) : '');
-    card.innerHTML = `<div class="story-flair">${flair}</div>
-      <div class="story-title">${escHtml(s.title)}</div>
-      <div class="story-meta">${s.days ? 'Day ' + s.days + ' streak · ' : ''}${s.up.toLocaleString()} upvotes</div>
-      <div class="story-body">${escHtml(s.body)}</div>
-      <div class="story-votes">▲ ${s.up.toLocaleString()} upvotes</div>
-      ${srcLine}`;
-    document.getElementById('sctr').textContent = (storyIdx+1) + ' / ' + stories.length;
-    card.classList.remove('fade');
-  }, 240);
+function storReadMins(s){ return Math.max(1, Math.round(s.body.split(/\s+/).length / 200)); }
+
+function storVisibleStories() {
+  if(storFilter === 'saved') return storSavedList();
+  let list = [...stories];
+  if(storFilter === 'top') list.sort((a, b) => b.up - a.up);
+  if(storFilter === 'day90') list = list.filter(s => s.days >= 90);
+  return list;
+}
+
+function storChipLabels() {
+  const labels = { all: t('storAll'), top: t('storTop'), day90: t('storDay90'), saved: t('storSaved') };
+  document.querySelectorAll('#stor-chips .stor-chip').forEach(b => {
+    b.textContent = labels[b.dataset.f] || b.dataset.f;
+    b.classList.toggle('on', b.dataset.f === storFilter);
+  });
+}
+
+const _storBmSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+
+function renderStoriesFeed() {
+  const feed = document.getElementById('stories-feed');
+  if(!feed) return;
+  storChipLabels();
+  _storView = storVisibleStories();
+  if(!_storView.length) {
+    feed.innerHTML = '<div class="stor-empty">' + t(storFilter === 'saved' ? 'storSavedEmpty' : 'storNone') + '</div>';
+    return;
+  }
+  feed.innerHTML = _storView.map((s, i) => {
+    // Store-safe: never surface the subreddit name in the flair chip (Play
+    // policy call from the listing prep) — flairless stories say Community.
+    const chip = s.days
+      ? '<span class="stor-day">Day ' + s.days + '</span>'
+      : '<span class="stor-flair">' + escHtml(s.flair || 'Community') + '</span>';
+    return '<div class="stor-card" data-i="' + i + '">' +
+      '<div class="stor-card-top">' + chip +
+        '<button class="stor-bm' + (storIsSaved(s) ? ' on' : '') + '" aria-label="Save story">' + _storBmSvg + '</button></div>' +
+      '<div class="stor-title">' + escHtml(s.title) + '</div>' +
+      '<div class="stor-prev">' + escHtml(s.body.slice(0, 260)) + '</div>' +
+      '<div class="stor-meta">▲ ' + s.up.toLocaleString() + ' · ' + t('storMinRead').replace('{m}', storReadMins(s)) + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function openStoryReader(s) {
+  _readerStory = s;
+  const flair = '<span class="stor-flair">Community' + (s.flair ? ' · ' + escHtml(s.flair) : '') + '</span>';
+  document.getElementById('stor-rd-chips').innerHTML = flair + (s.days ? '<span class="stor-day">Day ' + s.days + '</span>' : '');
+  document.getElementById('stor-rd-title').textContent = s.title;
+  document.getElementById('stor-rd-meta').textContent = '▲ ' + s.up.toLocaleString() + ' ' + t('storUpvotes') + ' · ' + t('storMinRead').replace('{m}', storReadMins(s));
+  document.getElementById('stor-rd-body').innerHTML = '<p>' + escHtml(s.body).replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+  const src = document.getElementById('stor-rd-src');
+  if(s.isReddit && s.author) {
+    src.style.display = 'flex';
+    src.innerHTML = '<span>u/' + escHtml(s.author) + '</span><a href="' + escHtml(s.url) + '" target="_blank" rel="noopener">View on Reddit →</a>';
+  } else { src.style.display = 'none'; src.innerHTML = ''; }
+  document.getElementById('stor-rd-backtxt').textContent = t('back');
+  storPaintRdBm();
+  document.getElementById('story-reader').style.display = 'flex';
+  document.getElementById('stor-rd-scroll').scrollTop = 0;
+}
+function closeStoryReader() {
+  document.getElementById('story-reader').style.display = 'none';
+  _readerStory = null;
+}
+function storPaintRdBm() {
+  const b = document.getElementById('stor-rd-bm');
+  if(b && _readerStory) b.classList.toggle('on', storIsSaved(_readerStory));
 }
 
 // ===================== TRANSMUTATION =====================
@@ -6964,7 +7111,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Stories
   shuffle(stories);
-  renderStory();
+  renderStoriesFeed();
 
   // Transmutation default
   switchTr('pranayama');
@@ -7152,25 +7299,26 @@ document.addEventListener('DOMContentLoaded', function() {
   if(demoBtn) { syncDemoBtn(); demoBtn.addEventListener('click', () => inDemo() ? exitDemo() : enterDemo()); }
 
   // ---- STORIES ----
-  document.getElementById('snext').addEventListener('click', function() {
-    storyIdx = (storyIdx + 1) % stories.length; renderStory();
+  document.getElementById('stor-chips').addEventListener('click', function(e) {
+    const chip = e.target.closest('.stor-chip');
+    if(!chip) return;
+    storFilter = chip.dataset.f;
+    renderStoriesFeed();
   });
-  document.getElementById('sprev').addEventListener('click', function() {
-    storyIdx = (storyIdx - 1 + stories.length) % stories.length; renderStory();
+  document.getElementById('stories-feed').addEventListener('click', function(e) {
+    const card = e.target.closest('.stor-card');
+    if(!card) return;
+    const s = _storView[parseInt(card.dataset.i, 10)];
+    if(!s) return;
+    if(e.target.closest('.stor-bm')) { storToggleSave(s); renderStoriesFeed(); return; }
+    openStoryReader(s);
   });
-  document.getElementById('sshuffle').addEventListener('click', function() {
-    shuffle(stories); storyIdx = 0; renderStory(); toast(t('toastReshuffle'));
-  });
-  // Swipe
-  let tx = 0;
-  const sc = document.getElementById('story-card');
-  sc.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
-  sc.addEventListener('touchend', e => {
-    const dx = tx - e.changedTouches[0].clientX;
-    if(Math.abs(dx) > 50) {
-      storyIdx = dx > 0 ? (storyIdx+1)%stories.length : (storyIdx-1+stories.length)%stories.length;
-      renderStory();
-    }
+  document.getElementById('stor-rd-back').addEventListener('click', closeStoryReader);
+  document.getElementById('stor-rd-bm').addEventListener('click', function() {
+    if(!_readerStory) return;
+    storToggleSave(_readerStory);
+    storPaintRdBm();
+    renderStoriesFeed(); // keep the feed's bookmark state in sync behind the reader
   });
 
   // ---- TRANSMUTATION ----
@@ -7607,7 +7755,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Elements that own their own horizontal swipe/scroll — a gesture that
   // starts inside one of these should browse *that* widget, not change tabs.
-  var HSWIPE_SEL = '.q-side, #story-card, #quick-mood-row';
+  var HSWIPE_SEL = '.q-side, #stor-chips, #story-reader, #quick-mood-row';
 
   function getLiveTabOrder() {
     return Array.from(document.querySelectorAll('.tab')).map(function(t) { return t.dataset.tab; });
@@ -7804,6 +7952,10 @@ function _backDismiss() {
   // 1. Milestone celebration modal (top-most)
   const ms = document.getElementById('ms-overlay');
   if(ms && ms.classList.contains('on')) { ms.classList.remove('on'); return true; }
+
+  // 1b. Story reader overlay
+  const srd = document.getElementById('story-reader');
+  if(srd && srd.style.display === 'flex') { closeStoryReader(); return true; }
 
   // 2. Phase detail overlay
   const pd = document.getElementById('phase-detail');
