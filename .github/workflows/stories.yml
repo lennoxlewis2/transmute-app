@@ -1,0 +1,105 @@
+# Refreshes the Stories tab's live feed. Fetches the subreddit's top posts of
+# the month twice a day and commits them to /stories.json, which Vercel serves
+# same-origin — the app never contacts Reddit from the device (Reddit blocks
+# cross-origin browser requests, so a direct fetch always failed silently).
+#
+# Fetch strategy: try the public JSON endpoint first; if Reddit 403s the
+# GitHub runner, fall back to the official OAuth API using the
+# REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET repo secrets (a free "script" app
+# from https://www.reddit.com/prefs/apps). If both fail the job errors —
+# GitHub emails on failure and the site keeps serving the previous batch.
+name: Refresh community stories
+
+on:
+  schedule:
+    - cron: '0 5,17 * * *'   # twice a day, 05:00 / 17:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch top posts and build stories.json
+        env:
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+        run: |
+          cat > /tmp/fetch-stories.mjs <<'EOF'
+          import { writeFileSync } from 'node:fs';
+
+          const UA = 'web:transmute-stories:v1.0 (Transmute app stories feed)';
+          const LISTING = '/r/semenretention/top?limit=30&t=month&raw_json=1';
+
+          async function getPublic() {
+            const res = await fetch('https://www.reddit.com/r/semenretention/top.json?limit=30&t=month&raw_json=1',
+              { headers: { 'User-Agent': UA } });
+            if (!res.ok) throw new Error('public JSON HTTP ' + res.status);
+            return res.json();
+          }
+
+          async function getOAuth() {
+            const id = process.env.REDDIT_CLIENT_ID, secret = process.env.REDDIT_CLIENT_SECRET;
+            if (!id || !secret) throw new Error('no REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET secrets configured');
+            const tok = await fetch('https://www.reddit.com/api/v1/access_token', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Basic ' + Buffer.from(id + ':' + secret).toString('base64'),
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': UA
+              },
+              body: 'grant_type=client_credentials'
+            });
+            if (!tok.ok) throw new Error('token HTTP ' + tok.status);
+            const { access_token } = await tok.json();
+            const res = await fetch('https://oauth.reddit.com' + LISTING,
+              { headers: { 'Authorization': 'Bearer ' + access_token, 'User-Agent': UA } });
+            if (!res.ok) throw new Error('oauth listing HTTP ' + res.status);
+            return res.json();
+          }
+
+          function extractDays(text) {
+            const m = text.match(/\b(\d+)\s*day/i);
+            return m ? parseInt(m[1], 10) : 0;
+          }
+
+          let data;
+          try { data = await getPublic(); console.log('fetched via public JSON'); }
+          catch (e) { console.log(e.message + ' — trying OAuth'); data = await getOAuth(); console.log('fetched via OAuth'); }
+
+          const stories = data.data.children
+            .map(c => c.data)
+            .filter(p => p.is_self && p.selftext && p.selftext !== '[deleted]' && p.selftext !== '[removed]' && p.score > 20 && p.selftext.length > 80)
+            .slice(0, 25)
+            .map(p => ({
+              title: p.title,
+              flair: p.link_flair_text || '',
+              up: p.score,
+              days: extractDays(p.title + ' ' + p.selftext),
+              body: p.selftext.length > 6000 ? p.selftext.slice(0, 6000) + '…' : p.selftext,
+              author: p.author,
+              url: 'https://reddit.com' + p.permalink,
+              isReddit: true
+            }));
+
+          if (stories.length < 5) throw new Error('only ' + stories.length + ' usable posts — keeping the previous stories.json');
+          writeFileSync('stories.json', JSON.stringify({ updated: new Date().toISOString(), stories }, null, 1));
+          console.log('wrote ' + stories.length + ' stories');
+          EOF
+          node /tmp/fetch-stories.mjs
+
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain stories.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add stories.json
+            git commit -m "chore: refresh community stories"
+            git push
+          else
+            echo "stories.json unchanged"
+          fi
