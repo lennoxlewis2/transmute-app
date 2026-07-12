@@ -5,6 +5,29 @@ description: Drive the Google Play Console for the Transmute app via the claude-
 
 # Transmute on Google Play Console
 
+## THE file-upload recipe (works for listing assets AND .aab releases)
+The old "patch HTMLInputElement.prototype.click" trick does NOT fire for the asset
+library (it mounts its own input late). Instead:
+1. JS-click the "Add assets"/upload button → an `input[type=file]` appears in the DOM.
+2. Serve the file from localhost with CORS: python `SimpleHTTPRequestHandler` subclass
+   sending `Access-Control-Allow-Origin: *` on a spare port (3012+), run_in_background.
+3. In the page: `fetch('http://127.0.0.1:PORT/file') → blob → new File → DataTransfer →
+   input.files = dt.files` + dispatch `input` and `change`. (HTTPS pages may fetch
+   localhost http — it's exempt from mixed-content.)
+4. Kill the server after (`netstat -ano | grep :PORT` → `taskkill //F //PID`).
+
+**Swapping a listing image**: after adding, the slot holds BOTH images ("Too many
+images") — remove the old one via its `aria-label` (e.g. "Remove App icon"; the newly
+added asset is labelled by filename instead). Then Save.
+
+**Submitting changes**: Save → Publishing overview → "Submit N changes for review" →
+the confirm dialog renders ~3s LATE; wait, then "Send changes for review". Verify the
+section header flips to "Changes in review".
+
+**Prefer JS clicks over coordinates** for buttons found by text/aria-label — the page
+is huge (viewport ~3832×2040) and `zoom` regions use RAW viewport px, not screenshot px,
+so coordinate maths silently misses.
+
 Account **Lewis Curtis** (personal), id `6775960790393968580`, login `lennoxlewis1258@googlemail.com` (already signed in in Chrome — the account picker may appear; click the "Lewis Curtis" listbox option, coordinate clicks on it can silently no-op, use `find` + ref).
 App **Transmute: Semen Retention** (`com.transmute.app`), id `4973933796371250215`.
 
