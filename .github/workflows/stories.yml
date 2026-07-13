@@ -3,11 +3,16 @@
 # same-origin — the app never contacts Reddit from the device (Reddit blocks
 # cross-origin browser requests, so a direct fetch always failed silently).
 #
-# Fetch strategy: try the public JSON endpoint first; if Reddit 403s the
-# GitHub runner, fall back to the official OAuth API using the
-# REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET repo secrets (a free "script" app
-# from https://www.reddit.com/prefs/apps). If both fail the job errors —
-# GitHub emails on failure and the site keeps serving the previous batch.
+# Fetch strategy, in order:
+#   1. curl-impersonate (Chrome TLS fingerprint) — Reddit 403s plain HTTP
+#      clients but serves real browsers, so this usually just works.
+#   2. Plain fetch from node (in case Reddit relaxes).
+#   3. Official OAuth API using REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET repo
+#      secrets (a free "script" app from https://www.reddit.com/prefs/apps).
+#      Note 2026-07: Reddit currently refuses to create script apps for this
+#      account (silent captcha rejection), so secrets are NOT configured.
+# If all fail the job errors — GitHub emails on failure and the site keeps
+# serving the previous batch.
 name: Refresh community stories
 
 on:
@@ -24,13 +29,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch top posts and build stories.json
+      - name: Fetch listing with curl-impersonate (Chrome TLS fingerprint)
+        continue-on-error: true
+        run: |
+          url=$(curl -s https://api.github.com/repos/lexiforest/curl-impersonate/releases/latest \
+            | grep -o 'https://[^"]*x86_64-linux-gnu\.tar\.gz' | head -1)
+          echo "downloading $url"
+          curl -sL "$url" -o /tmp/ci.tar.gz
+          mkdir -p /tmp/ci && tar xzf /tmp/ci.tar.gz -C /tmp/ci
+          bin=$(find /tmp/ci -name 'curl_chrome*' -type f | sort -V | tail -1)
+          echo "using $bin"
+          "$bin" -s --max-time 30 'https://www.reddit.com/r/semenretention/top.json?limit=30&t=month&raw_json=1' -o /tmp/listing.json
+          jq -e '.data.children | length >= 3' /tmp/listing.json && echo "curl-impersonate OK" || { echo "curl-impersonate failed"; rm -f /tmp/listing.json; }
+
+      - name: Build stories.json
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
         run: |
           cat > /tmp/fetch-stories.mjs <<'EOF'
-          import { writeFileSync } from 'node:fs';
+          import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 
           const UA = 'web:transmute-stories:v1.0 (Transmute app stories feed)';
           const LISTING = '/r/semenretention/top?limit=30&t=month&raw_json=1';
@@ -68,8 +86,13 @@ jobs:
           }
 
           let data;
-          try { data = await getPublic(); console.log('fetched via public JSON'); }
-          catch (e) { console.log(e.message + ' — trying OAuth'); data = await getOAuth(); console.log('fetched via OAuth'); }
+          if (existsSync('/tmp/listing.json')) {
+            data = JSON.parse(readFileSync('/tmp/listing.json', 'utf8'));
+            console.log('using curl-impersonate listing');
+          } else {
+            try { data = await getPublic(); console.log('fetched via public JSON'); }
+            catch (e) { console.log(e.message + ' — trying OAuth'); data = await getOAuth(); console.log('fetched via OAuth'); }
+          }
 
           const stories = data.data.children
             .map(c => c.data)
