@@ -15,9 +15,15 @@
 # serving the previous batch.
 name: Refresh community stories
 
+# Schedule DISABLED 2026-07-13: Reddit IP-blocks GitHub runners on every host
+# (www/old/api, even with a Chrome TLS fingerprint) and currently refuses to
+# create a script app for the account, so no server-side fetch path exists and
+# scheduled runs would only email failure spam. Refreshes are done manually via
+# a real-browser capture (ask Claude: "refresh stories"). Re-enable the cron
+# once REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET secrets exist (Reddit Data API
+# registration: https://support.reddithelp.com/hc/en-us/requests/new — or retry
+# creating a script app at old.reddit.com/prefs/apps in a few days).
 on:
-  schedule:
-    - cron: '0 5,17 * * *'   # twice a day, 05:00 / 17:00 UTC
   workflow_dispatch:
 
 permissions:
