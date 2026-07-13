@@ -39,8 +39,19 @@ jobs:
           mkdir -p /tmp/ci && tar xzf /tmp/ci.tar.gz -C /tmp/ci
           bin=$(find /tmp/ci -name 'curl_chrome*' -type f | sort -V | tail -1)
           echo "using $bin"
-          "$bin" -s --max-time 30 'https://www.reddit.com/r/semenretention/top.json?limit=30&t=month&raw_json=1' -o /tmp/listing.json
-          jq -e '.data.children | length >= 3' /tmp/listing.json && echo "curl-impersonate OK" || { echo "curl-impersonate failed"; rm -f /tmp/listing.json; }
+          for u in 'https://www.reddit.com/r/semenretention/top.json?limit=30&t=month&raw_json=1' \
+                   'https://old.reddit.com/r/semenretention/top.json?limit=30&t=month&raw_json=1' \
+                   'https://api.reddit.com/r/semenretention/top?limit=30&t=month&raw_json=1'; do
+            code=$("$bin" -sL --max-time 30 -w '%{http_code}' "$u" -o /tmp/listing.json || echo curlerr)
+            echo "GET $u -> HTTP $code"
+            echo "body head: $(head -c 200 /tmp/listing.json | tr -d '\n')"
+            if jq -e '.data.children | length >= 3' /tmp/listing.json >/dev/null 2>&1; then
+              echo "curl-impersonate OK via $u"; break
+            else
+              rm -f /tmp/listing.json
+            fi
+          done
+          [ -f /tmp/listing.json ] || echo "curl-impersonate failed on all hosts"
 
       - name: Build stories.json
         env:
