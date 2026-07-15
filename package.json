@@ -1,0 +1,8 @@
+{
+  "name": "transmute-app",
+  "private": true,
+  "description": "Static PWA + Vercel serverless functions for web push. No build step - the site itself is plain HTML/JS.",
+  "dependencies": {
+    "web-push": "^3.6.7"
+  }
+}

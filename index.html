@@ -3847,7 +3847,11 @@ if(S.streak !== undefined && !S.startDate && S.streak > 0) {
 }
 // Always clear transient mood on load — never persist across sessions
 S.mood = null;
-function save() { try { localStorage.setItem('sr_v3', JSON.stringify(S)); } catch(e){} }
+function save() {
+  try { localStorage.setItem('sr_v3', JSON.stringify(S)); } catch(e){}
+  // Keep the push worker's IndexedDB mirror in step with every state change.
+  try { _pushMirror(); } catch(e){}
+}
 
 let curTheme = localStorage.getItem('sr_theme') || 'purple';
 let curFs = parseFloat(localStorage.getItem('sr_fontscale')) || 1;
@@ -5636,7 +5640,7 @@ function initNotifBtn() {
   btn.onclick = function() {
     Notification.requestPermission().then(function(perm) {
       initNotifBtn();
-      if(perm === 'granted') toast('Reminders enabled ✓');
+      if(perm === 'granted') { toast('Reminders enabled ✓'); _pushMirror(); _pushSync(); }
     });
   };
 }
@@ -5660,7 +5664,7 @@ function checkDailyReminder() {
   // Honest framing: the streak is date-based and rolls over on its own —
   // logging captures the day, it doesn't "save" the streak.
   notify('Transmute', 'Day ' + n + ' · close out today, log how it felt before midnight.', 'daily-reminder')
-    .then(function(ok) { if(!ok) localStorage.removeItem('last_notif_date'); });
+    .then(function(ok) { if(!ok) localStorage.removeItem('last_notif_date'); _pushMirror(); });
 }
 
 // ---- Free-trial renewal reminder ----
@@ -5732,7 +5736,110 @@ function checkStreakNotifs() {
     body = 'Day ' + n + ' locked in. ' + STREAK_NOTIF_LINES[n % STREAK_NOTIF_LINES.length];
   }
   notify(title, body, 'streak')
-    .then(function(ok) { if(!ok) localStorage.setItem('streak_notif_day', String(last)); });
+    .then(function(ok) { if(!ok) localStorage.setItem('streak_notif_day', String(last)); _pushMirror(); });
+}
+
+// ---- Web Push (notifications with the app closed) ----
+// The device subscribes with the VAPID public key and registers at
+// /api/subscribe with its timezone. A daily server push at local 6 PM wakes
+// sw.js even when the app is closed; the worker reads the state mirrored below
+// (localStorage is invisible to service workers) and shows the right thing:
+// reminder, milestone, or positive day-complete note. Flags flow both ways so
+// app and worker never duplicate a notification.
+const PUSH_VAPID_PUBLIC = 'BNwcM9xS3-zdMJfoIu77ijhjqgaT2YAyciNtP-owyGnqQ1WpXGcO3ndM5Ft_gKA3HJjG_SW0peo7vhU5Hf2fqLU';
+
+function _b64ToU8(s) {
+  const pad = '='.repeat((4 - s.length % 4) % 4);
+  const raw = atob((s + pad).replace(/-/g, '+').replace(/_/g, '/'));
+  const out = new Uint8Array(raw.length);
+  for(let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+function _idbOpen() {
+  return new Promise(function(res, rej) {
+    const r = indexedDB.open('transmute-push', 1);
+    r.onupgradeneeded = function() { r.result.createObjectStore('kv'); };
+    r.onsuccess = function() { res(r.result); };
+    r.onerror = function() { rej(r.error); };
+  });
+}
+function _idbSet(obj) {
+  return _idbOpen().then(function(db) {
+    return new Promise(function(res) {
+      const tx = db.transaction('kv', 'readwrite');
+      const st = tx.objectStore('kv');
+      Object.keys(obj).forEach(function(k) { st.put(obj[k], k); });
+      tx.oncomplete = function() { db.close(); res(true); };
+      tx.onerror = function() { db.close(); res(false); };
+    });
+  }).catch(function() { return false; });
+}
+function _idbGet(keys) {
+  return _idbOpen().then(function(db) {
+    return new Promise(function(res) {
+      const st = db.transaction('kv', 'readonly').objectStore('kv');
+      const out = {}; let n = keys.length;
+      keys.forEach(function(k) {
+        const g = st.get(k);
+        g.onsuccess = function() { out[k] = g.result; if(--n === 0) { db.close(); res(out); } };
+        g.onerror = function() { if(--n === 0) { db.close(); res(out); } };
+      });
+    });
+  });
+}
+
+// Mirror the state sw.js needs into IndexedDB. Called on boot, on every
+// save(), and after notification flags change.
+function _pushMirror() {
+  try {
+    const daily = S.entries.filter(function(e) { return e.type === 'daily'; });
+    const lastLog = daily.length ? new Date(daily[daily.length - 1].date).toDateString() : '';
+    _idbSet({
+      startDate: S.startDate || '',
+      lastLog: lastLog,
+      streakNotifDay: parseInt(localStorage.getItem('streak_notif_day') || '0', 10),
+      lastNotifDate: localStorage.getItem('last_notif_date') || ''
+    });
+  } catch(e) {}
+}
+
+// Subscribe (or refresh) this device for server pushes. Safe to call often —
+// subscribe() returns the existing subscription when one exists.
+function _pushSync() {
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  navigator.serviceWorker.ready.then(function(reg) {
+    return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64ToU8(PUSH_VAPID_PUBLIC) });
+  }).then(function(sub) {
+    const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/London';
+    return fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ subscription: sub.toJSON(), tz: tz })
+    });
+  }).catch(function() {});
+}
+
+// Boot sequence: adopt flags the worker wrote while the app was closed (so a
+// push-shown milestone isn't re-fired in-app), THEN run the local checks, then
+// mirror + refresh the subscription. The .catch keeps the checks running even
+// if IndexedDB is unavailable.
+function _pushBoot() {
+  _idbGet(['streakNotifDay', 'lastNotifDate']).then(function(v) {
+    try {
+      const cur = parseInt(localStorage.getItem('streak_notif_day') || '0', 10);
+      const swDay = parseInt(v && v.streakNotifDay, 10) || 0;
+      if(swDay > cur) localStorage.setItem('streak_notif_day', String(swDay));
+      if(v && v.lastNotifDate === new Date().toDateString()) localStorage.setItem('last_notif_date', v.lastNotifDate);
+    } catch(e) {}
+  }).catch(function() {}).then(function() {
+    checkDailyReminder();
+    checkTrialReminder();
+    checkStreakNotifs();
+    _pushMirror();
+    _pushSync();
+  });
 }
 
 // ===================== SETTINGS =====================
@@ -7410,12 +7517,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   updateGreeting();
 
-  // Daily reminder check (fires if after 6pm and not yet logged)
-  checkDailyReminder();
-  // Free-trial renewal reminder (fires ~24h before the first charge)
-  checkTrialReminder();
-  // Positive feedback: milestone + day-landed streak notifications
-  checkStreakNotifs();
+  // Notifications boot: adopt worker-written flags, run the local checks
+  // (evening reminder, trial reminder, streak positives), mirror state for
+  // the push worker and refresh this device's push subscription.
+  _pushBoot();
 
   // ---- NEW-DAY REFRESH ----
   // Android keeps the TWA in memory across days, so the page never reloads and

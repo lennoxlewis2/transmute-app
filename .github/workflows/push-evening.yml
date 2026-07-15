@@ -1,0 +1,19 @@
+name: evening-push
+
+# Hourly trigger for the evening notification fan-out. The endpoint itself
+# filters devices to those whose LOCAL hour is 6 PM, so each timezone gets one
+# push per day. The endpoint returns 200 {skipped} when the backend isn't
+# configured, keeping scheduled runs green.
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger evening push fan-out
+        run: |
+          curl -fsS -m 60 -X POST "https://sr-tracker-rho.vercel.app/api/send-evening" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
