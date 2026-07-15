@@ -1,19 +1,34 @@
 name: evening-push
 
-# Hourly trigger for the evening notification fan-out. The endpoint itself
-# filters devices to those whose LOCAL hour is 6 PM, so each timezone gets one
-# push per day. The endpoint returns 200 {skipped} when the backend isn't
-# configured, keeping scheduled runs green.
+# Hourly evening-notification fan-out. The script filters stored devices to
+# those whose LOCAL hour is 6 PM, so each timezone gets one push per day.
+# Sending happens right here in the runner (no public endpoint): Upstash and
+# VAPID credentials come from repo Actions secrets. The script exits 0 with
+# "skipped" when secrets are missing, keeping scheduled runs green.
 on:
   schedule:
     - cron: '7 * * * *'
   workflow_dispatch:
+    inputs:
+      hour:
+        description: "Override target local hour (0-23) — for test sends"
+        required: false
 
 jobs:
   send:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger evening push fan-out
-        run: |
-          curl -fsS -m 60 -X POST "https://sr-tracker-rho.vercel.app/api/send-evening" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install web-push
+        run: npm install --omit=dev --no-audit --no-fund
+      - name: Send evening pushes
+        run: node scripts/send-evening.js
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_HOUR: ${{ inputs.hour }}
