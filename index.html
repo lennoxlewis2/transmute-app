@@ -5806,19 +5806,38 @@ function _pushMirror() {
 
 // Subscribe (or refresh) this device for server pushes. Safe to call often —
 // subscribe() returns the existing subscription when one exists.
+// TEMP DIAGNOSTIC (remove once push is confirmed on-device): every stage
+// reports to /api/subscribe {debug} so failures on real phones are visible.
+function _pushDebug(stage, detail) {
+  try {
+    fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ debug: stage + ': ' + String(detail).slice(0, 300) + ' | ua:' + navigator.userAgent.slice(0, 80) })
+    }).catch(function() {});
+  } catch(e) {}
+}
+
 function _pushSync() {
-  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
-  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    _pushDebug('unsupported', 'sw:' + ('serviceWorker' in navigator) + ' push:' + ('PushManager' in window));
+    return;
+  }
+  if(!('Notification' in window) || Notification.permission !== 'granted') {
+    _pushDebug('permission', ('Notification' in window) ? Notification.permission : 'no Notification API');
+    return;
+  }
   navigator.serviceWorker.ready.then(function(reg) {
-    return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64ToU8(PUSH_VAPID_PUBLIC) });
+    return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64ToU8(PUSH_VAPID_PUBLIC) })
+      .catch(function(err) { _pushDebug('subscribe-failed', (err && err.name) + ' ' + (err && err.message)); throw err; });
   }).then(function(sub) {
     const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/London';
     return fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ subscription: sub.toJSON(), tz: tz })
-    });
-  }).catch(function() {});
+    }).then(function(r) { if(!r.ok) _pushDebug('store-failed', 'http ' + r.status); });
+  }).catch(function(err) { _pushDebug('sync-failed', (err && err.name) + ' ' + (err && err.message)); });
 }
 
 // Boot sequence: adopt flags the worker wrote while the app was closed (so a

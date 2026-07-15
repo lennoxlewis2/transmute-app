@@ -27,6 +27,12 @@ module.exports = async (req, res) => {
 
   const b = req.body || {};
   try {
+    // TEMP DIAGNOSTIC (remove once push is confirmed on-device): client-side
+    // subscribe failures land here so they can be read straight from Redis.
+    if (typeof b.debug === 'string') {
+      await redis(['SET', 'debug:' + Date.now(), b.debug.slice(0, 500), 'EX', '86400']);
+      return res.status(200).json({ logged: true });
+    }
     if (b.unsubscribe && typeof b.endpoint === 'string') {
       await redis(['DEL', keyFor(b.endpoint)]);
       return res.status(200).json({ removed: true });
