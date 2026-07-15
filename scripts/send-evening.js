@@ -1,16 +1,9 @@
-// Sends the evening push to every stored device whose LOCAL time is currently
-// the target hour (18:00 by default). Triggered hourly by the GitHub Actions
-// workflow push-evening.yml with `Authorization: Bearer CRON_SECRET`, so each
-// timezone gets exactly one push per day at its own 6 PM.
-//
-// The payload is deliberately dumb ({kind:'evening'}): the service worker on
-// the device reads its own mirrored state from IndexedDB and decides whether
-// to show a "log today" reminder, a milestone celebration, or a positive
-// day-complete note. Server knows endpoints + timezones, nothing else.
-//
-// Unconfigured environments return 200 {skipped} so the scheduled workflow
-// stays green before/without setup (the stories cron taught us: red scheduled
-// runs = failure-email spam).
+// Evening push fan-out. Runs INSIDE the hourly GitHub Action (push-evening.yml)
+// with secrets injected as env vars — there is deliberately no public send
+// endpoint and no shared cron secret. Pushes {kind:'evening'} to every stored
+// device whose LOCAL hour is the target (18 unless PUSH_HOUR overrides, e.g.
+// for a test dispatch). The service worker on the device decides what to show.
+// Exits 0 with a "skipped" line when unconfigured so scheduled runs stay green.
 
 const R_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
 const R_TOK = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
@@ -33,17 +26,11 @@ function localHour(tz, now) {
   }
 }
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
-  if (!process.env.CRON_SECRET || !R_URL || !R_TOK ||
-      !process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
-    return res.status(200).json({ skipped: 'not configured' });
+(async () => {
+  if (!R_URL || !R_TOK || !process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+    console.log('skipped: not configured');
+    return;
   }
-  if (req.headers.authorization !== 'Bearer ' + process.env.CRON_SECRET) {
-    return res.status(401).json({ error: 'unauthorized' });
-  }
-
-  // Lazy require so an unconfigured deploy never even needs the dependency.
   const webpush = require('web-push');
   webpush.setVapidDetails('mailto:lewiscurtis2@hotmail.co.uk',
     process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
@@ -81,5 +68,5 @@ module.exports = async (req, res) => {
     await Promise.all(jobs);
   } while (cursor !== '0');
 
-  return res.status(200).json({ checked, sent, pruned, failed, hour: targetHour });
-};
+  console.log(JSON.stringify({ checked, sent, pruned, failed, hour: targetHour }));
+})().catch(e => { console.error('send failed:', e.message); process.exit(1); });
