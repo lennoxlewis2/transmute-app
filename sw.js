@@ -1,4 +1,4 @@
-const CACHE = 'transmute-v4';
+const CACHE = 'transmute-v5';
 const FILES = ['/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/privacy.html'];
 
 self.addEventListener('install', e => {
@@ -13,6 +13,18 @@ self.addEventListener('activate', e => {
     )
   );
   self.clients.claim();
+});
+
+// Tapping a notification must open (or refocus) the app — without this
+// handler, notification taps on Android do nothing at all.
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      for (const c of list) { if ('focus' in c) return c.focus(); }
+      return clients.openWindow('/');
+    })
+  );
 });
 
 self.addEventListener('fetch', e => {

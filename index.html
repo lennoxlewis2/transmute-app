@@ -5577,6 +5577,27 @@ function switchTr(name) {
 }
 
 // ===================== NOTIFICATIONS =====================
+// Single path for showing a system notification. On Android (and any browser
+// with an active service worker) the page-context `new Notification()`
+// constructor throws — reg.showNotification() is the only API that reaches the
+// tray — so try the SW route first and fall back to the constructor only for
+// SW-less contexts (desktop testing, file://). Resolves true iff a
+// notification was actually shown, so callers can gate their once-flags on it.
+function notify(title, body, tag) {
+  if(!('Notification' in window) || Notification.permission !== 'granted') return Promise.resolve(false);
+  const opts = { body: body, icon: '/icon-192.png', badge: '/icon-192.png' };
+  if(tag) opts.tag = tag;
+  const viaSW = ('serviceWorker' in navigator)
+    ? navigator.serviceWorker.getRegistration().then(function(reg) {
+        if(!reg) throw new Error('no sw');
+        return reg.showNotification(title, opts).then(function() { return true; });
+      })
+    : Promise.reject(new Error('no sw'));
+  return viaSW.catch(function() {
+    try { new Notification(title, opts); return true; } catch(e) { return false; }
+  });
+}
+
 function initNotifBtn() {
   const btn = document.getElementById('notif-btn');
   const status = document.getElementById('notif-status');
@@ -5597,7 +5618,7 @@ function initNotifBtn() {
     btn.style.color = '#9DD870';
     btn.style.boxShadow = 'none';
     btn.disabled = true;
-    if(status) { status.textContent = "You'll be reminded after 6 PM if you haven't logged yet."; status.style.display = 'block'; }
+    if(status) { status.textContent = "You'll get milestone celebrations, streak progress and a reminder after 6 PM if you haven't logged yet."; status.style.display = 'block'; }
     return;
   }
   if(Notification.permission === 'denied') {
@@ -5633,15 +5654,13 @@ function checkDailyReminder() {
   // third day, then only weekly. A seasoned streak doesn't need nagging.
   if(n > 14 && n <= 90 && n % 3 !== 0) return;
   if(n > 90 && n % 7 !== 0) return;
+  // Set the once-a-day flag up front (dedupes the startup + day-change calls),
+  // but give the attempt back if nothing was actually shown.
   localStorage.setItem('last_notif_date', today);
-  try {
-    // Honest framing: the streak is date-based and rolls over on its own —
-    // logging captures the day, it doesn't "save" the streak.
-    new Notification('Transmute', {
-      body: 'Day ' + n + ' · close out today, log how it felt before midnight.',
-      icon: '/icon-192.png'
-    });
-  } catch(e) {}
+  // Honest framing: the streak is date-based and rolls over on its own —
+  // logging captures the day, it doesn't "save" the streak.
+  notify('Transmute', 'Day ' + n + ' · close out today, log how it felt before midnight.', 'daily-reminder')
+    .then(function(ok) { if(!ok) localStorage.removeItem('last_notif_date'); });
 }
 
 // ---- Free-trial renewal reminder ----
@@ -5670,12 +5689,50 @@ function checkTrialReminder() {
   const price = localStorage.getItem('sub_price') || '';
   const priceDisp = localStorage.getItem('sub_price_disp') || (price ? '£' + price : '');
   const period = localStorage.getItem('sub_plan') === 'monthly' ? 'month' : 'year';
-  try {
-    new Notification('Transmute', {
-      body: 'Your free trial ends tomorrow' + (priceDisp ? '. You’ll be charged ' + priceDisp + '/' + period : '') + ' unless you cancel in Google Play.',
-      icon: '/icon-192.png'
-    });
-  } catch(e) {}
+  notify('Transmute', 'Your free trial ends tomorrow' + (priceDisp ? '. You’ll be charged ' + priceDisp + '/' + period : '') + ' unless you cancel in Google Play.', 'trial-reminder')
+    .then(function(ok) { if(!ok) localStorage.removeItem('sub_renew_notified'); });
+}
+
+// ---- Positive streak notifications ----
+// Celebrates progress instead of only nagging: when a new streak day has
+// landed, fire a system notification — a milestone celebration on milestone
+// days (7, 14, 21, 30…), otherwise a short positive nudge tapered to the same
+// rhythm as the evening reminder so it stays a treat, not noise. Client-side
+// like the other notifications: it fires on open/resume and lands in the
+// Android tray via the service worker.
+const STREAK_NOTIF_LINES = [
+  'Momentum is building.',
+  'Energy compounding — keep channelling it.',
+  'Another promise kept.',
+  'Your future self just got stronger.',
+  'Discipline is becoming identity.'
+];
+
+function checkStreakNotifs() {
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  const n = calcStreak();
+  if(n < 1) return;
+  const last = parseInt(localStorage.getItem('streak_notif_day') || '0', 10);
+  if(n <= last) return;
+  const ms = MILESTONES[n];
+  if(!ms) {
+    // Same taper as the evening reminder: daily for the first two weeks,
+    // every 3rd day to 90, weekly after.
+    if(n > 14 && n <= 90 && n % 3 !== 0) return;
+    if(n > 90 && n % 7 !== 0) return;
+  }
+  localStorage.setItem('streak_notif_day', String(n));
+  let title, body;
+  if(ms) {
+    const msT = msTr(n);
+    title = 'Day ' + n + ' · ' + msT.title + ' 🔥';
+    body = 'Milestone unlocked — a new flame form is waiting for you.';
+  } else {
+    title = 'Transmute';
+    body = 'Day ' + n + ' locked in. ' + STREAK_NOTIF_LINES[n % STREAK_NOTIF_LINES.length];
+  }
+  notify(title, body, 'streak')
+    .then(function(ok) { if(!ok) localStorage.setItem('streak_notif_day', String(last)); });
 }
 
 // ===================== SETTINGS =====================
@@ -7357,6 +7414,8 @@ document.addEventListener('DOMContentLoaded', function() {
   checkDailyReminder();
   // Free-trial renewal reminder (fires ~24h before the first charge)
   checkTrialReminder();
+  // Positive feedback: milestone + day-landed streak notifications
+  checkStreakNotifs();
 
   // ---- NEW-DAY REFRESH ----
   // Android keeps the TWA in memory across days, so the page never reloads and
@@ -7371,6 +7430,7 @@ document.addEventListener('DOMContentLoaded', function() {
     _renderedDay = today;
     applyLang();
     checkDailyReminder();
+    checkStreakNotifs();
   }
   document.addEventListener('visibilitychange', () => {
     if(document.visibilityState === 'visible') refreshIfNewDay();
