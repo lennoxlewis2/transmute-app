@@ -7,3 +7,6 @@ audio/test.mp3
 
 # Project export archives
 *.zip
+
+# Node (web-push dependency is installed by Vercel at deploy time)
+node_modules/
