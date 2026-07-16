@@ -5626,9 +5626,9 @@ function initNotifBtn() {
     return;
   }
   if(Notification.permission === 'denied') {
-    btn.innerHTML = icBellOff + 'Blocked · enable in browser settings';
+    btn.innerHTML = icBellOff + 'Blocked · allow in phone settings';
     btn.disabled = true;
-    if(status) { status.textContent = 'Open your browser site settings to allow notifications.'; status.style.display = 'block'; }
+    if(status) { status.textContent = 'Allow notifications for Transmute in Android Settings (App info → Notifications) or your browser’s site settings, then come back here.'; status.style.display = 'block'; }
     return;
   }
   btn.innerHTML = icBell + 'Enable reminders';
@@ -7557,7 +7557,13 @@ document.addEventListener('DOMContentLoaded', function() {
     checkStreakNotifs();
   }
   document.addEventListener('visibilitychange', () => {
-    if(document.visibilityState === 'visible') refreshIfNewDay();
+    if(document.visibilityState !== 'visible') return;
+    refreshIfNewDay();
+    // Permission can change while we're backgrounded (user flips the Android
+    // notification toggle, then returns) — re-read it, refresh the button,
+    // and subscribe for push the moment it turns granted.
+    initNotifBtn();
+    _pushSync();
   });
   setInterval(refreshIfNewDay, 60000);
 
