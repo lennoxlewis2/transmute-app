@@ -2271,6 +2271,17 @@ textarea:focus,input[type=text]:focus,input[type=date]:focus{border-color:var(--
 </div>
 
 <!-- RESET-ALL-DATA MODAL — unlike the supportive streak reset above, this IS destructive: full wipe back to onboarding -->
+<!-- NOTIFICATION PERMISSION PROMPT — proactive ask so reminders actually reach every user -->
+<div class="ms-overlay" id="notifask-overlay">
+  <div class="ms-modal">
+    <span class="rs-ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+    <div class="ms-title" id="notifask-title">Never miss a day</div>
+    <div class="ms-msg" id="notifask-msg">Get your evening reminder, milestone celebrations and streak wins — even when the app is closed.</div>
+    <button class="ms-close" id="notifask-yes" style="width:100%;margin-bottom:9px;">Turn on notifications</button>
+    <button class="rs-cancel" id="notifask-later">Maybe later</button>
+  </div>
+</div>
+
 <div class="ms-overlay" id="wipe-overlay">
   <div class="ms-modal">
     <span class="rs-ic" style="background:var(--cor50);color:var(--cor2);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
@@ -5840,6 +5851,44 @@ function _pushSync() {
   }).catch(function(err) { _pushDebug('sync-failed', (err && err.name) + ' ' + (err && err.message)); });
 }
 
+// Ask for notification permission and report the outcome. The tap on the
+// prompt overlay supplies the user gesture Chrome wants for a full-screen
+// permission dialog (in the TWA this is the Android system dialog).
+function _notifAsk(source) {
+  if(!('Notification' in window)) return Promise.resolve('unsupported');
+  return Notification.requestPermission().then(function(perm) {
+    _pushDebug('ask-' + source, perm);
+    initNotifBtn();
+    if(perm === 'granted') { toast('Reminders on ✓'); _pushMirror(); _pushSync(); }
+    return perm;
+  }).catch(function(err) { _pushDebug('ask-' + source + '-err', (err && err.name) + ' ' + (err && err.message)); });
+}
+
+// Proactive prompt: every user who hasn't decided yet gets asked — once per
+// day at most, never on top of onboarding (waits for it to finish so brand-new
+// installs are asked right after their first tour). Granted/denied ends the
+// prompting permanently (permission is no longer 'default').
+function _notifPromptMaybe() {
+  if(!('Notification' in window) || Notification.permission !== 'default') return;
+  const today = new Date().toDateString();
+  if(localStorage.getItem('notif_ask_day') === today) return;
+  const show = function() {
+    if(Notification.permission !== 'default') return;
+    localStorage.setItem('notif_ask_day', today);
+    const ov = document.getElementById('notifask-overlay');
+    if(ov) ov.style.display = 'flex';
+  };
+  const ws = document.getElementById('ws');
+  if(ws && !ws.classList.contains('hidden') && !localStorage.getItem('ws_seen')) {
+    // Onboarding on screen — ask right after it closes.
+    const waitWS = setInterval(function() {
+      if(!ws || ws.classList.contains('hidden')) { clearInterval(waitWS); setTimeout(show, 1600); }
+    }, 600);
+    return;
+  }
+  setTimeout(show, 1200);
+}
+
 // Boot sequence: adopt flags the worker wrote while the app was closed (so a
 // push-shown milestone isn't re-fired in-app), THEN run the local checks, then
 // mirror + refresh the subscription. The .catch keeps the checks running even
@@ -5858,6 +5907,7 @@ function _pushBoot() {
     checkStreakNotifs();
     _pushMirror();
     _pushSync();
+    _notifPromptMaybe();
   });
 }
 
@@ -7567,6 +7617,15 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   setInterval(refreshIfNewDay, 60000);
 
+  // Notification permission prompt overlay
+  document.getElementById('notifask-yes').addEventListener('click', function() {
+    document.getElementById('notifask-overlay').style.display = 'none';
+    _notifAsk('tap');
+  });
+  document.getElementById('notifask-later').addEventListener('click', function() {
+    document.getElementById('notifask-overlay').style.display = 'none';
+  });
+
   document.getElementById('sos-btn').addEventListener('click', uStart);
 
   // Breath tool — toggle the breathing bloom (engine lives in uBreathRun)
@@ -8124,6 +8183,10 @@ const _visible = el => el && el.style.display !== 'none' && el.style.display !==
 
 function _backDismiss() {
   // Return true if a layer was closed (stay in app); false to allow exit.
+
+  // 0. Notification permission prompt
+  const na = document.getElementById('notifask-overlay');
+  if(na && na.style.display === 'flex') { na.style.display = 'none'; return true; }
 
   // 1. Milestone celebration modal (top-most)
   const ms = document.getElementById('ms-overlay');
