@@ -36,6 +36,13 @@ Gotchas:
 - The PATH additions are load-bearing: gradlew needs the project dir on PATH (Windows
   NoDefaultCurrentDirectoryInExePath), jarsigner needs the JDK bin.
 - Non-interactive: the env vars suppress the password prompts entirely.
+- **Keep `"alphaDependencies": {"enabled": false}` in twa-manifest.json.** The alpha
+  androidbrowserhelper (2.7.0-alpha02) shipped in v1–v4 had BROKEN notification
+  permission delegation — grants never persisted to Chrome's site permission, so web
+  push subscriptions were revoked (410) within minutes and no notification ever showed.
+  v5 (2026-07-16) fixed this by regenerating with stable androidbrowserhelper 2.6.2;
+  playBilling works fine without alpha deps. Never re-enable without re-testing push
+  end-to-end on a real device.
 
 ## Verify BEFORE uploading (never ship blind)
 
