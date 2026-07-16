@@ -5834,10 +5834,16 @@ function _pushSync() {
     _pushDebug('unsupported', 'sw:' + ('serviceWorker' in navigator) + ' push:' + ('PushManager' in window));
     return;
   }
-  if(!('Notification' in window) || Notification.permission !== 'granted') {
-    _pushDebug('permission', ('Notification' in window) ? Notification.permission : 'no Notification API');
+  if(!('Notification' in window) || Notification.permission === 'denied') {
+    _pushDebug('permission', ('Notification' in window) ? 'denied' : 'no Notification API');
     return;
   }
+  // Do NOT gate on permission === 'granted': in the TWA the cached permission
+  // value can stay 'default' after a successful delegated grant (observed on
+  // device: requestPermission resolves 'granted', getter still reads
+  // 'default'). pushManager.subscribe() checks the REAL permission — attempt
+  // it and let the rejection tell the truth.
+  if(Notification.permission !== 'granted') _pushDebug('permission', Notification.permission + ' → attempting subscribe anyway');
   navigator.serviceWorker.ready.then(function(reg) {
     return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64ToU8(PUSH_VAPID_PUBLIC) })
       .catch(function(err) { _pushDebug('subscribe-failed', (err && err.name) + ' ' + (err && err.message)); throw err; });
