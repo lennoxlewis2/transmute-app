@@ -1,4 +1,14 @@
-const CACHE = 'transmute-v6';
+const CACHE = 'transmute-v7';
+
+// TEMP DIAGNOSTIC (remove with the page-side beacons once push is confirmed):
+// reports push-pipeline stages to the same debug channel the page uses.
+function swDebug(stage, detail) {
+  return fetch('/api/subscribe', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ debug: 'sw-' + stage + ': ' + String(detail).slice(0, 200) + ' | ' + CACHE })
+  }).catch(() => {});
+}
 const FILES = ['/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png', '/privacy.html'];
 
 self.addEventListener('install', e => {
@@ -120,7 +130,12 @@ self.addEventListener('push', e => {
   let data = {}; try { data = e.data ? e.data.json() : {}; } catch (err) {}
   // Only 'evening' exists today; unknown kinds fall through to the same logic
   // so an old worker never drops a push silently.
-  e.waitUntil(handleEveningPush(data));
+  e.waitUntil(
+    swDebug('push-received', JSON.stringify(data))
+      .then(() => handleEveningPush(data))
+      .then(() => swDebug('push-shown', 'ok'))
+      .catch(err => swDebug('push-show-failed', (err && err.name) + ' ' + (err && err.message)))
+  );
 });
 
 // Test hook: lets the page (and verification tooling) exercise the exact push
