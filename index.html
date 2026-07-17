@@ -5817,44 +5817,24 @@ function _pushMirror() {
 
 // Subscribe (or refresh) this device for server pushes. Safe to call often —
 // subscribe() returns the existing subscription when one exists.
-// TEMP DIAGNOSTIC (remove once push is confirmed on-device): every stage
-// reports to /api/subscribe {debug} so failures on real phones are visible.
-function _pushDebug(stage, detail) {
-  try {
-    fetch('/api/subscribe', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ debug: stage + ': ' + String(detail).slice(0, 300) + ' | ua:' + navigator.userAgent.slice(0, 80) })
-    }).catch(function() {});
-  } catch(e) {}
-}
-
 function _pushSync() {
-  if(!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    _pushDebug('unsupported', 'sw:' + ('serviceWorker' in navigator) + ' push:' + ('PushManager' in window));
-    return;
-  }
-  if(!('Notification' in window) || Notification.permission === 'denied') {
-    _pushDebug('permission', ('Notification' in window) ? 'denied' : 'no Notification API');
-    return;
-  }
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if(!('Notification' in window) || Notification.permission === 'denied') return;
   // Do NOT gate on permission === 'granted': in the TWA the cached permission
   // value can stay 'default' after a successful delegated grant (observed on
   // device: requestPermission resolves 'granted', getter still reads
   // 'default'). pushManager.subscribe() checks the REAL permission — attempt
   // it and let the rejection tell the truth.
-  if(Notification.permission !== 'granted') _pushDebug('permission', Notification.permission + ' → attempting subscribe anyway');
   navigator.serviceWorker.ready.then(function(reg) {
-    return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64ToU8(PUSH_VAPID_PUBLIC) })
-      .catch(function(err) { _pushDebug('subscribe-failed', (err && err.name) + ' ' + (err && err.message)); throw err; });
+    return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: _b64ToU8(PUSH_VAPID_PUBLIC) });
   }).then(function(sub) {
     const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Europe/London';
     return fetch('/api/subscribe', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ subscription: sub.toJSON(), tz: tz })
-    }).then(function(r) { if(!r.ok) _pushDebug('store-failed', 'http ' + r.status); });
-  }).catch(function(err) { _pushDebug('sync-failed', (err && err.name) + ' ' + (err && err.message)); });
+    });
+  }).catch(function() {});
 }
 
 // Ask for notification permission and report the outcome. The tap on the
@@ -5863,11 +5843,10 @@ function _pushSync() {
 function _notifAsk(source) {
   if(!('Notification' in window)) return Promise.resolve('unsupported');
   return Notification.requestPermission().then(function(perm) {
-    _pushDebug('ask-' + source, perm);
     initNotifBtn();
     if(perm === 'granted') { toast('Reminders on ✓'); _pushMirror(); _pushSync(); }
     return perm;
-  }).catch(function(err) { _pushDebug('ask-' + source + '-err', (err && err.name) + ' ' + (err && err.message)); });
+  }).catch(function() {});
 }
 
 // Proactive prompt: every user who hasn't decided yet gets asked — once per
