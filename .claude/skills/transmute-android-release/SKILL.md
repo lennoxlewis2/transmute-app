@@ -26,8 +26,12 @@ size matches the local file.
 cd 'C:/Users/lewis/transmute-twa'
 export PATH="$PATH:/c/Users/lewis/jdk-17.0.19+10/bin:/c/Users/lewis/transmute-twa"
 export BUBBLEWRAP_KEYSTORE_PASSWORD=txXjtHBCBsZI BUBBLEWRAP_KEY_PASSWORD=txXjtHBCBsZI
-bubblewrap update   # regenerates the Android project, re-fetches the icon
-bubblewrap build    # → app-release-bundle.aab + app-release-signed.apk
+bubblewrap update       # regenerates the Android project, re-fetches the icon
+bash apply-splash.sh    # REQUIRED: replaces the square-tile splash with the
+                        # transparent glowing flame (update regenerates the
+                        # squares from iconUrl every time — skipping this step
+                        # ships the ugly square splash again)
+bubblewrap build        # → app-release-bundle.aab + app-release-signed.apk
 ```
 
 Gotchas:
