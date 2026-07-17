@@ -88,7 +88,9 @@ function streakDayFrom(startDate) {
 
 async function handleEveningPush() {
   const v = await idbGet(['startDate', 'lastLog', 'streakNotifDay', 'lastNotifDate']).catch(() => ({}));
-  const opts = { icon: '/icon-192.png', badge: '/icon-192.png', tag: 'evening' };
+  // badge must be a white-on-transparent silhouette — Android flattens any
+  // colour icon in the status bar into a blank square.
+  const opts = { icon: '/icon-192.png', badge: '/badge-96.png', tag: 'evening' };
   const today = new Date().toDateString();
   const n = streakDayFrom(v.startDate);
   if (n < 1) {

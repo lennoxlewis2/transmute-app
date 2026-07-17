@@ -5606,7 +5606,8 @@ function notify(title, body, tag, showWhenVisible) {
   // delivers the moment properly when the app is closed. Rare direct
   // disclosures (trial renewal) opt out via showWhenVisible.
   if(!showWhenVisible && document.visibilityState === 'visible') return Promise.resolve(false);
-  const opts = { body: body, icon: '/icon-192.png', badge: '/icon-192.png' };
+  // badge = status-bar silhouette (white on transparent), NOT the colour icon
+  const opts = { body: body, icon: '/icon-192.png', badge: '/badge-96.png' };
   if(tag) opts.tag = tag;
   const viaSW = ('serviceWorker' in navigator)
     ? navigator.serviceWorker.getRegistration().then(function(reg) {
