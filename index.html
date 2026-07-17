@@ -5598,8 +5598,14 @@ function switchTr(name) {
 // tray — so try the SW route first and fall back to the constructor only for
 // SW-less contexts (desktop testing, file://). Resolves true iff a
 // notification was actually shown, so callers can gate their once-flags on it.
-function notify(title, body, tag) {
+function notify(title, body, tag, showWhenVisible) {
   if(!('Notification' in window) || Notification.permission !== 'granted') return Promise.resolve(false);
+  // The tray is for the CLOSED app. While the user is looking at the app a
+  // system notification is noise (the UI itself shows the state), so skip and
+  // return false — callers give their once-flags back, and the evening push
+  // delivers the moment properly when the app is closed. Rare direct
+  // disclosures (trial renewal) opt out via showWhenVisible.
+  if(!showWhenVisible && document.visibilityState === 'visible') return Promise.resolve(false);
   const opts = { body: body, icon: '/icon-192.png', badge: '/icon-192.png' };
   if(tag) opts.tag = tag;
   const viaSW = ('serviceWorker' in navigator)
@@ -5704,7 +5710,7 @@ function checkTrialReminder() {
   const price = localStorage.getItem('sub_price') || '';
   const priceDisp = localStorage.getItem('sub_price_disp') || (price ? '£' + price : '');
   const period = localStorage.getItem('sub_plan') === 'monthly' ? 'month' : 'year';
-  notify('Transmute', 'Your free trial ends tomorrow' + (priceDisp ? '. You’ll be charged ' + priceDisp + '/' + period : '') + ' unless you cancel in Google Play.', 'trial-reminder')
+  notify('Transmute', 'Your free trial ends tomorrow' + (priceDisp ? '. You’ll be charged ' + priceDisp + '/' + period : '') + ' unless you cancel in Google Play.', 'trial-reminder', true)
     .then(function(ok) { if(!ok) localStorage.removeItem('sub_renew_notified'); });
 }
 
