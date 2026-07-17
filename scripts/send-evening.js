@@ -26,6 +26,14 @@ function localHour(tz, now) {
   }
 }
 
+function localDate(tz, now) {
+  try {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(now); // YYYY-MM-DD
+  } catch (e) {
+    return 'invalid';
+  }
+}
+
 (async () => {
   if (!R_URL || !R_TOK || !process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
     console.log('skipped: not configured');
@@ -35,7 +43,15 @@ function localHour(tz, now) {
   webpush.setVapidDetails('mailto:lewiscurtis2@hotmail.co.uk',
     process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
 
-  const targetHour = parseInt(process.env.PUSH_HOUR || '18', 10);
+  // Two modes:
+  // - Test dispatch (PUSH_HOUR input set): exact-hour match, and the send does
+  //   NOT count as the day's delivery, so tests never eat the real evening one.
+  // - Scheduled (default): GitHub's cron is unreliable (delayed for hours,
+  //   sometimes skipped entirely — observed 07:35 → 12:20 → 16:54), so don't
+  //   demand a run inside one exact hour. Each device gets the push on the
+  //   FIRST run where its local time is in the 18:00–23:59 window and it
+  //   hasn't been sent today (per-device lastSent date in its record).
+  const overrideHour = process.env.PUSH_HOUR ? parseInt(process.env.PUSH_HOUR, 10) : null;
   const now = new Date();
   const payload = JSON.stringify({ kind: 'evening' });
   let cursor = '0', checked = 0, sent = 0, pruned = 0, failed = 0;
@@ -51,15 +67,28 @@ function localHour(tz, now) {
       if (!vals[i]) continue;
       let rec; try { rec = JSON.parse(vals[i]); } catch (e) { continue; }
       checked++;
-      if (localHour(rec.tz, now) !== targetHour) continue;
+      const h = localHour(rec.tz, now);
+      const today = localDate(rec.tz, now);
+      if (overrideHour !== null) {
+        if (h !== overrideHour) continue;
+      } else {
+        if (h < 18 || rec.lastSent === today) continue;
+      }
+      const key = keys[i];
       jobs.push(
         webpush.sendNotification(rec.sub, payload, { TTL: 4 * 3600 })
-          .then(() => { sent++; })
+          .then(() => {
+            sent++;
+            if (overrideHour === null) {
+              rec.lastSent = today;
+              return redis(['SET', key, JSON.stringify(rec)]).catch(() => {});
+            }
+          })
           .catch(err => {
             // 404/410 = subscription dead (app uninstalled / permission revoked)
             if (err && (err.statusCode === 404 || err.statusCode === 410)) {
               pruned++;
-              return redis(['DEL', keys[i]]).catch(() => {});
+              return redis(['DEL', key]).catch(() => {});
             }
             failed++;
           })
@@ -68,5 +97,5 @@ function localHour(tz, now) {
     await Promise.all(jobs);
   } while (cursor !== '0');
 
-  console.log(JSON.stringify({ checked, sent, pruned, failed, hour: targetHour }));
+  console.log(JSON.stringify({ checked, sent, pruned, failed, mode: overrideHour === null ? 'evening-window' : 'test-hour-' + overrideHour }));
 })().catch(e => { console.error('send failed:', e.message); process.exit(1); });
