@@ -15,7 +15,10 @@ to `/api/subscribe` (Vercel fn) → stored in Upstash Redis (`sub:<sha256(endpoi
 Hourly GitHub Action `evening-push` runs `scripts/send-evening.js` → pushes
 `{kind:'evening'}` to each device on the FIRST run after 18:00 local, once per
 local day (`lastSent` on the record — GH cron is hours-late/skippy, exact-hour
-matching silently drops evenings). The SW `push` handler picks the message from
+matching silently drops evenings). Because GH cron proved capable of skipping an
+entire evening (2026-07-18), `/api/cron-evening` (Vercel cron, 17:10 + 19:10 UTC
+daily, Hobby-plan max) is the guaranteed backstop — same window+lastSent rules,
+so the schedulers can't double-send. The SW `push` handler picks the message from
 an IndexedDB mirror (`transmute-push` db) of app state — SWs can't read
 localStorage — choosing: log-reminder / milestone / day-locked positive /
 day-complete. Flags sync both ways so app and SW never double-notify.
@@ -31,7 +34,10 @@ disclosure passes `showWhenVisible=true`. Don't add on-open tray notifications.
   GH Actions secrets (`UPSTASH_REDIS_REST_TOKEN`). Db `transmute-push-subs`, free tier.
 - VAPID keypair: GH Actions secrets + backup `C:\Users\lewis\transmute-push-secrets.txt`;
   public key hardcoded in index.html (`PUSH_VAPID_PUBLIC`).
-- No public send endpoint, no cron secret — sending happens inside the workflow.
+- Vercel env (project transmute-app) additionally needs `VAPID_PUBLIC_KEY`,
+  `VAPID_PRIVATE_KEY` and `CRON_SECRET` for `/api/cron-evening` — Vercel sends
+  `Authorization: Bearer <CRON_SECRET>` on cron invocations automatically; the
+  endpoint fails closed without it. GH workflow sending is unchanged.
 
 ## Test recipes
 
@@ -118,8 +124,10 @@ This found every root cause of the July saga. PRs #152/#156 (added) and #158
 
 ## Known limits / future
 
-- Delivery time = first GH-cron wake after 18:00 local (can be 18:07 or 20:30).
-  If tighter timing is ever demanded: move the schedule to a real scheduler.
+- Delivery time = first scheduler wake after 18:00 local. GH cron often lands
+  18:07 local but can skip a whole evening; the Vercel crons guarantee UK
+  delivery by ~19:10 BST / ~20:10 GMT worst case (Hobby crons run once daily,
+  up to 59 min late). Non-European timezones still depend on GH cron alone.
 - Notifications rendered by Chrome show the site URL — unavoidable web-side;
   the clean native look requires delegation display through the app (v6 shell +
   permission granted via the app dialog, not Chrome site settings).
