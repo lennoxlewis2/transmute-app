@@ -7486,17 +7486,21 @@ document.addEventListener('DOMContentLoaded', function() {
     if(e.target === wipeOverlay) wipeOverlay.style.display = 'none';
   });
   document.getElementById('wipe-confirm').addEventListener('click', function() {
-    // A granted founder spot is an entitlement, not user data — carry it through
-    // the wipe. The Supabase claim is anonymous, so re-claiming would burn a
-    // second slot and hand out a new, higher number (or 'missed' once the cap
-    // fills). Paid purchases are NOT preserved — Play restore recovers those.
-    const fState = localStorage.getItem('uw_founder_state');
-    const fNum = localStorage.getItem('uw_founder_num');
+    // Entitlements are not user data — carry them through the wipe. That means
+    // the granted founder spot (the Supabase claim is anonymous; re-claiming
+    // would burn a second slot) AND paid membership + its plan metadata: a
+    // wipe erases someone's history, it must never eat what they paid for.
+    // (Play restore remains the recovery path for reinstalls/new devices.)
+    const keep = {};
+    ['uw_founder_state', 'uw_founder_num', 'uw_unlocked', 'sub_plan',
+     'sub_price', 'sub_price_disp', 'sub_trial_start', 'sub_trial_days',
+     'sub_renew_notified'].forEach(function(k) {
+      const v = localStorage.getItem(k);
+      if(v !== null) keep[k] = v;
+    });
     localStorage.clear();
-    if(fState === 'granted') {
-      localStorage.setItem('uw_founder_state', fState);
-      if(fNum) localStorage.setItem('uw_founder_num', fNum);
-    }
+    if(keep.uw_founder_state !== 'granted') { delete keep.uw_founder_state; delete keep.uw_founder_num; }
+    Object.keys(keep).forEach(function(k) { localStorage.setItem(k, keep[k]); });
     location.reload();
   });
 
