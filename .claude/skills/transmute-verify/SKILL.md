@@ -100,6 +100,37 @@ Report the concrete observations: the function ran, the DOM/state changed as
 expected, and `console_logs` showed no errors. Quote the values you checked.
 Never claim a change works from reading the diff alone — exercise it.
 
+## Stub recipes for notification / push / wipe testing (proven July 2026)
+
+- **Notification permission**: `Object.defineProperty(Notification, 'permission', {get: () => 'granted', configurable: true})` — works in Chrome; wrap in try. The preview
+  browser's real permission is usually 'denied' or 'default', never 'granted'.
+- **Capture notifications**: stub the SW route, not the constructor —
+  `navigator.serviceWorker.getRegistration = () => Promise.resolve({showNotification: (t,o) => {calls.push({t,o}); return Promise.resolve();}})`.
+  For `_pushSync`, stub the `ready` getter on the instance:
+  `Object.defineProperty(navigator.serviceWorker, 'ready', {get: () => Promise.resolve({pushManager: {subscribe: () => Promise.resolve({toJSON: () => ({endpoint:'https://x', keys:{p256dh:'p',auth:'a'}})})}}), configurable: true})`.
+- **Capture /api/subscribe POSTs**: wrap `window.fetch`, intercept by URL,
+  return `Promise.resolve({ok:true,status:200})`, restore after.
+- **visibilityState is a TRAP**: the preview pane flips between genuinely
+  'visible' and 'hidden' depending on focus, and `notify()` deliberately skips
+  display while visible (#159). Stub it explicitly per direction:
+  `Object.defineProperty(document, 'visibilityState', {get: () => 'hidden', configurable: true})`
+  (and `delete document.visibilityState` to restore). A test that "fails" may
+  just be the guard doing its job in the pane's real state.
+- **Run SW logic in the page sandbox** (no real push needed):
+  `src = await (await fetch('/sw.js?x='+Date.now())).text()`, then
+  `new Function('self','caches','clients','fetch','indexedDB', src + '\n;return {handleEveningPush}')`
+  called with a fake `self` (addEventListener no-op, registration stub) and the
+  REAL indexedDB — seed via the page's `_idbSet`, assert on captured
+  showNotification calls. Fire the actual push listener by capturing it from
+  `addEventListener` and passing `{data:{json:()=>({...})}, waitUntil: p=>p}`.
+- **Testing across location.reload()** (e.g. the wipe handler): state persists
+  in the preview origin — click the real button in one eval, assert
+  localStorage in the NEXT eval after the reload. Stale timers from earlier
+  evals can fire after reload and pollute results — prefer a fresh cache-busted
+  load before timing-sensitive assertions.
+- **Time-of-day gates**: `Date.prototype.getHours = () => 19` (restore after).
+  Never trust `TZ=Europe/London date` in Git Bash — off by one vs BST.
+
 ## Notes that save time
 
 - `applyLang()` rewrites many labels via `ic.innerHTML`/`set(...)`; if you changed

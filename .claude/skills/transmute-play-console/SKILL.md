@@ -5,16 +5,22 @@ description: Drive the Google Play Console for the Transmute app via the claude-
 
 # Transmute on Google Play Console
 
-## THE file-upload recipe (works for listing assets AND .aab releases)
-The old "patch HTMLInputElement.prototype.click" trick does NOT fire for the asset
-library (it mounts its own input late). Instead:
-1. JS-click the "Add assets"/upload button → an `input[type=file]` appears in the DOM.
-2. Serve the file from localhost with CORS: python `SimpleHTTPRequestHandler` subclass
-   sending `Access-Control-Allow-Origin: *` on a spare port (3012+), run_in_background.
-3. In the page: `fetch('http://127.0.0.1:PORT/file') → blob → new File → DataTransfer →
-   input.files = dt.files` + dispatch `input` and `change`. (HTTPS pages may fetch
-   localhost http — it's exempt from mixed-content.)
-4. Kill the server after (`netstat -ano | grep :PORT` → `taskkill //F //PID`).
+## File uploads (.aab releases AND listing assets) — current reality
+**The JS file-injection route is now BLOCKED by the permission classifier**
+(fetch-localhost → DataTransfer → input.files via javascript_tool — denied twice
+on 2026-07-18, even with Lewis's explicit go-ahead). Don't burn turns retrying.
+The working flow:
+1. Drive the console to the page with the file input (release prepare page has a
+   real `input[type=file]` immediately; asset library mounts its own on click).
+2. Ask Lewis for the 10-second human step: click Upload and pick the file — give
+   him the exact path (e.g. `Desktop → Transmute App → signing-keys → <name>.aab`).
+3. Confirm via screenshot: bottom-left toast "1 app bundle uploaded", Release
+   name auto-fills "N (N)". Then do everything else yourself (notes, Save, submit).
+
+(Historic CORS-server recipe, in case the classifier ever permits it again:
+serve the file dir with `Access-Control-Allow-Origin: *` on port 3012+, then in
+the page fetch → blob → File → DataTransfer → dispatch input+change. Kill the
+server after: `netstat -ano | grep :PORT` → `taskkill //F //PID`.)
 
 **Swapping a listing image**: after adding, the slot holds BOTH images ("Too many
 images") — remove the old one via its `aria-label` (e.g. "Remove App icon"; the newly
@@ -56,6 +62,27 @@ Base: `https://play.google.com/console/u/0/developers/6775960790393968580`
 **Add a free-trial offer**: subscription page → Add offer → base plan preselected → Offer ID → Eligibility "New customer acquisition" → scroll to Phases → Add phase → Type "Free trial" → Duration (triple-click the field to replace the default `1`, dropdown Months→Days) → Apply → Save → **Activate**.
 
 **One-time product**: two-step wizard. Step 1: product ID, Name, Description (required). Step 2: Purchase option ID (users never see it; `buy`), type Buy, Set prices → **Bulk edit pricing** → select-all → Continue → price → Apply → **Activate** (submit can take ~10s of "Submitting…").
+
+## Browser-session gotchas (learned 2026-07-16/18)
+
+- **Tab groups die between turns** ("tab group no longer exists") — always
+  `tabs_context_mcp {createIfEmpty:true}` first, then re-navigate by URL. Don't
+  cache tabIds across user messages.
+- **Busy pages wedge script injection** ("Script injection timed out") — Vercel
+  logs and sometimes the console do this. A reload rarely helps; a FRESH TAB
+  always does.
+- **"Create track" ≠ "Create new release"** — `find` on the closed-testing
+  overview offers "Create track" (which would create a whole new track). The
+  "Create new release" button lives on the TRACK page:
+  `{base}/app/4973933796371250215/tracks/4699381906178792655`. Navigate there directly.
+- **Release flow refs go stale after upload** — re-`find` before each click.
+  Full happy path: track page → Create new release → [Lewis uploads] → notes via
+  form_input (keep the `<en-GB>` wrapper) → Next → review "Ready to release" →
+  Save → dialog "Go to Publishing overview?" → Go to overview → "Submit 1 change
+  for review" → confirm dialog (~3s LATE, sometimes skipped entirely — if find
+  shows "Changes in review" already, it went through).
+- **Abandoning a draft**: "Discard draft release" (top right of prepare page) →
+  confirm dialog. An empty draft is harmless but clutters the track.
 
 ## Gotchas
 
