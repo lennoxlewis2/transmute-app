@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "crons": [
+    { "path": "/api/cron-evening", "schedule": "10 17 * * *" },
+    { "path": "/api/cron-evening", "schedule": "10 19 * * *" }
+  ],
+  "functions": {
+    "api/cron-evening.js": { "maxDuration": 60 }
+  },
   "headers": [
     {
       "source": "/(.*)",
