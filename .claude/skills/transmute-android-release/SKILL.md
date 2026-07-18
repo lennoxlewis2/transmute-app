@@ -57,16 +57,29 @@ unzip -o app-release-bundle.aab 'base/res/mipmap-xxxhdpi-v4/ic_launcher.png' -d 
 Then Read the extracted PNG to eyeball it. `bubblewrap update` prints the new
 versionCode — confirm it's higher than the last release.
 
+**White-on-transparent assets look BLANK when Read** (white preview background).
+To actually see them, composite onto dark first:
+`npx --yes sharp-cli -i <png> -o check.png --background "#1a1a2e" flatten` → Read check.png.
+Applies to `ic_notification_icon.png` (must be the flame silhouette — a purple
+square here = the white-square status-bar bug is back; `monochromeIconUrl` in
+twa-manifest.json feeds it) and the splash (must be the transparent glowing
+flame, not the square icon tile).
+
+**Archive every uploaded bundle** to `Desktop\Transmute App\signing-keys\Transmute-vN-<what>.aab`.
+State as of 2026-07-18: v5 (stable browser-helper) live on closed testing;
+v6 (mono notification icon + smooth splash) submitted for review.
+
 ## Upload to the closed track (claude-in-chrome)
 
 1. Archive first: `cp app-release-bundle.aab 'Desktop/Transmute App/signing-keys/Transmute-vN-<what>.aab'`
 2. Navigate `{console base}/app/4973933796371250215/closed-testing` → Manage track →
    Create new release (lands on `/tracks/<id>/releases/N/prepare`, which has a real
    `input[type=file]` in the DOM immediately).
-3. File upload = the **localhost CORS server trick** (see transmute-play-console skill):
-   serve the project dir, then in the page fetch → File → DataTransfer → `input.files` +
-   dispatch `input`+`change`. Success = bottom-left toast "1 app bundle uploaded" and
-   Release name auto-fills "N (N)". (A stray "Error" string elsewhere in the DOM is noise.)
+3. File upload: the JS-injection trick is now blocked by the permission
+   classifier — **ask Lewis to click Upload and pick the archived .aab** (give
+   the exact path); see transmute-play-console for the full current flow.
+   Success = bottom-left toast "1 app bundle uploaded" and Release name
+   auto-fills "N (N)". (A stray "Error" string elsewhere in the DOM is noise.)
 4. Release notes textarea: keep the `<en-GB>…</en-GB>` wrapper, set via the native value
    setter + input event.
 5. Next → review page ("Ready to release") → Save → auto-lands on Publishing overview →
