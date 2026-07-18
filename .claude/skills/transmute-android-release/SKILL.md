@@ -31,6 +31,11 @@ bash apply-splash.sh    # REQUIRED: replaces the square-tile splash with the
                         # transparent glowing flame (update regenerates the
                         # squares from iconUrl every time — skipping this step
                         # ships the ugly square splash again)
+bash apply-patches.sh   # REQUIRED (v7+): re-applies patches/DelegationService.java —
+                        # the override that strips the site-origin subtext Chrome
+                        # stamps on delegated notifications. `bubblewrap update`
+                        # regenerates the Java sources, so skipping this brings
+                        # the "URL in the notification" bug back.
 bubblewrap build        # → app-release-bundle.aab + app-release-signed.apk
 ```
 
@@ -66,8 +71,9 @@ twa-manifest.json feeds it) and the splash (must be the transparent glowing
 flame, not the square icon tile).
 
 **Archive every uploaded bundle** to `Desktop\Transmute App\signing-keys\Transmute-vN-<what>.aab`.
-State as of 2026-07-18: v5 (stable browser-helper) live on closed testing;
-v6 (mono notification icon + smooth splash) submitted for review.
+State as of 2026-07-18 (late): v6 (mono notification icon + smooth splash) live
+on closed testing; v7 (DelegationService subtext strip → fully native
+notification look) submitted for review.
 
 ## Upload to the closed track (claude-in-chrome)
 

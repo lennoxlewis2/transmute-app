@@ -128,7 +128,19 @@ This found every root cause of the July saga. PRs #152/#156 (added) and #158
   18:07 local but can skip a whole evening; the Vercel crons guarantee UK
   delivery by ~19:10 BST / ~20:10 GMT worst case (Hobby crons run once daily,
   up to 59 min late). Non-European timezones still depend on GH cron alone.
-- Notifications rendered by Chrome show the site URL — unavoidable web-side;
-  the clean native look requires delegation display through the app (v6 shell +
-  permission granted via the app dialog, not Chrome site settings).
+- Notification rendering (July 18 evening saga, verified on-device via adb):
+  delegation works on the v6+ shell — `dumpsys notification` shows the record
+  posted by `pkg=com.transmute.app` — but Chrome still stamps the site origin
+  into the notification **subText** ("sr-tracker-rho.v…" in the tray header).
+  The v7 shell strips it (DelegationService overrides
+  onNotifyNotificationWithChannel, recoverBuilder + setSubText(null); patch
+  lives in transmute-twa/patches/, re-applied by apply-patches.sh — see
+  transmute-android-release). Also learned: the app-level POST_NOTIFICATIONS
+  grant SURVIVES uninstall/reinstall (Android restores runtime permissions), so
+  "the bell is already green on a fresh install" is normal, not a bug — and
+  Chrome-site-settings resets can't clear it. Chrome-rendered (URL-visible)
+  notifications correlate with Chrome owning a `web:<origin>` notification
+  channel; delegated ones use the app's `general_channel_id`. Distinguish the
+  persistent quiet "Running in Chrome" TWA disclosure notification from the
+  push itself before debugging.
 - iOS/web-desktop users can subscribe (same flow) but nobody has tested Safari.
