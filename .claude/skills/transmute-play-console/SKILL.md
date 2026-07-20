@@ -52,7 +52,15 @@ Base: `https://play.google.com/console/u/0/developers/6775960790393968580`
 
 - Products all **Active**: `transmute_annual` (base plan `yearly`, £24.99/yr) and `transmute_monthly` (base plan `monthly`, £3.99/mo), each with offer `freetrial7` (7-day free trial, "New customer acquisition", per-product entitlement). `transmute_lifetime` one-time (purchase option `buy`, type Buy, £39.99, backwards-compatible).
 - Licence testers active: email list "Transmute testers" = lennoxlewis1258@googlemail.com, ggaldrat@gmail.com. RESPOND_NORMALLY.
-- Closed testing live; tester opt-in link `https://play.google.com/apps/testing/com.transmute.app`; Google Group `transmute-testers@googlegroups.com`. 12-tester/14-day clock started ~2026-07-07 → production application ~Jul 21 (button on dashboard when eligible).
+- Closed testing live; tester opt-in link `https://play.google.com/apps/testing/com.transmute.app`; Google Group `transmute-testers@googlegroups.com`. 12-tester/14-day clock started ~2026-07-07.
+- **PRODUCTION ACCESS APPLIED 2026-07-19 19:03** — all three criteria met, 3-step
+  questionnaire submitted (recruitment via Reddit communities; "neither difficult
+  or easy"; installs steady 18-22 across UK/US/SE/AT; feedback via DMs, main issue
+  the evening reminder → fixed in v6/v7; audience adult men 18-40; 0-10K expected
+  first-year installs). Google reviews and emails the account owner, "7 days or
+  less". Every answer is 300 chars max — the counter blocks submit at 301.
+  NEXT once granted: Test and release → Production → Create release → **Add from
+  library** (promote v7, don't re-upload) → staged rollout (start ~20%).
 - Payments profile exists (merchant name "Transmute", statement TRANSMUTE) but had a red "urgent issue" notification — bank/ID verification is Lewis's job.
 
 ## Recipes
